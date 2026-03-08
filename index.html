@@ -283,7 +283,7 @@
                         <thead>
                             <tr style="background-color: rgba(0,0,0,0.03);">
                                 <th style="width: 15%;">Requerimiento</th>
-                                <th style="width: 28%;">Repuestos / Obs</th>
+                                <th style="width: 28%;">Repuestos / Obs / Estado</th>
                                 <th style="width: 17%;">Gestión Económica</th>
                                 <th style="width: 25%;">Documentación</th>
                                 <th style="width: 15%; text-align: center;">Acciones</th>
@@ -344,6 +344,37 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalServicio" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-info"><i class="fas fa-camera-retro me-2"></i>Reporte de Servicio Técnico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="modServId">
+                    
+                    <div class="bg-light p-3 rounded-3 mb-3 border">
+                        <label class="fw-bold text-muted small mb-2"><i class="fas fa-link me-1"></i> Enlace de Fotos (Portal Externo)</label>
+                        <input type="url" id="modServLink" class="form-control" placeholder="https://mi-portal.com/fotos...">
+                    </div>
+
+                    <div class="form-check form-switch d-flex align-items-center bg-light p-3 rounded-3 border">
+                        <input class="form-check-input mt-0 me-3" type="checkbox" role="switch" id="modServCheck" style="transform: scale(1.5); cursor: pointer;">
+                        <label class="form-check-label fw-bold mt-1" for="modServCheck" style="cursor: pointer;">
+                            Marcar como SERVICIO REALIZADO
+                            <div class="text-muted fw-normal" style="font-size: 0.75rem;">Avisa a la ejecutiva que puede facturar este requerimiento.</div>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-secondary rounded-pill fw-bold px-4" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-info text-white rounded-pill fw-bold px-4 shadow-sm" onclick="guardarModalServicio()"><i class="fas fa-save me-1"></i> Guardar Reporte</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <script>
     // ==========================================
     // 0. LÓGICA DE TEMA (MODO OSCURO)
@@ -360,7 +391,6 @@
         btnIcon.className = next === 'dark' ? 'btn btn-sm btn-dark border-light rounded-circle shadow-sm' : 'btn btn-sm btn-light border rounded-circle shadow-sm';
     }
 
-    // Ajustar icono inicial
     window.addEventListener('DOMContentLoaded', () => {
         const theme = localStorage.getItem('maquipan_theme') || 'light';
         const btnIcon = document.getElementById('btnThemeToggle');
@@ -584,7 +614,6 @@
         }
     }
 
-
     // ==========================================
     // 5. BUSCADORES Y FORMULARIO (Creación)
     // ==========================================
@@ -731,6 +760,7 @@
             enlaces: enlacesFinales,
             observaciones: document.getElementById('observaciones').value || 'N/A',
             valorCot: '', numCot: '', ocRecibida: false, numNV: '', numOC: '',
+            servicioRealizado: false, linkFotos: '', // Nuevos campos para el reporte técnico
             fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
         };
 
@@ -774,6 +804,15 @@
                     data.enlaces.map((link, i) => `<a href="${link}" target="_blank" class="text-decoration-none mx-1 text-primary fw-bold">Link ${i+1}</a>`).join('') + `</div>` 
                     : '';
 
+                // LÓGICA DE SERVICIO REALIZADO (Agregado para el reporte de fotos)
+                let servicioHtml = "";
+                if (data.servicioRealizado) {
+                    servicioHtml += `<div class="mt-2 p-2 bg-success bg-opacity-10 border border-success rounded-3 text-success fw-bold small text-center shadow-sm"><i class="fas fa-check-circle me-1"></i> SERVICIO REALIZADO <br> <span class="fw-normal" style="font-size:0.8em">Listo para facturar</span></div>`;
+                }
+                if (data.linkFotos && data.linkFotos.trim() !== '') {
+                    servicioHtml += `<div class="mt-2 text-center"><a href="${data.linkFotos}" target="_blank" class="btn btn-sm btn-info text-white rounded-pill fw-bold shadow-sm" style="font-size: 0.75rem;"><i class="fas fa-camera-retro me-1"></i> Ver Fotos del Servicio</a></div>`;
+                }
+
                 let claseEstado = "estado-nuevo";
                 if (data.ocRecibida) claseEstado = "estado-completado"; 
                 else if (data.numCot && data.numCot.trim() !== "") claseEstado = "estado-cotizado"; 
@@ -782,10 +821,11 @@
                 tr.className = `fila-registro ${claseEstado}`;
                 tr.dataset.ejecutiva = data.ejecutiva ? data.ejecutiva.toLowerCase() : "n/a"; 
 
-                // PODER TOTAL PARA EL SUPERVISOR (Elimina siempre)
-                let botonEliminar = "";
+                // PODER TOTAL PARA EL SUPERVISOR
+                let botonesSupervisor = "";
                 if (rolActual === 'admin') {
-                    botonEliminar = `<button class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill shadow-sm" onclick="eliminarSolicitud('${id}')"><i class="fas fa-trash me-1"></i> Eliminar Fila</button>`;
+                    botonesSupervisor += `<button class="btn btn-outline-info btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="abrirModalServicio('${id}')"><i class="fas fa-camera me-1"></i> Reporte Técnico</button>`;
+                    botonesSupervisor += `<button class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill shadow-sm" onclick="eliminarSolicitud('${id}')"><i class="fas fa-trash me-1"></i> Eliminar Fila</button>`;
                 }
 
                 // FIX VISUAL PARA EL BOTÓN DE OC RECIBIDA (Bootstrap nativo sin forzar flex raro)
@@ -800,6 +840,7 @@
                         ${repuestosHtml}
                         ${data.observaciones && data.observaciones !== 'N/A' ? `<div class="mt-2 pt-2 border-top border-opacity-25 fst-italic opacity-75 small"><i class="fas fa-comment-dots me-1"></i>${data.observaciones}</div>` : ''}
                         ${enlacesHtml}
+                        ${servicioHtml}
                     </td>
                     <td>
                         <input type="text" id="valor_${id}" class="form-control form-control-sm border-primary fw-bold text-success mb-2 text-center" value="${data.valorCot || ''}" placeholder="$ Valor Total" onkeyup="formatearMoneda(this)">
@@ -827,7 +868,7 @@
                         <button class="btn btn-primary btn-sm w-100 rounded-pill shadow-sm fw-bold" onclick="actualizarEjecutiva('${id}')">
                             <i class="fas fa-save me-1"></i> Guardar
                         </button>
-                        ${botonEliminar}
+                        ${botonesSupervisor}
                     </td>
                 `;
                 tabla.appendChild(tr);
@@ -855,7 +896,35 @@
     }
 
     // ==========================================
-    // 7. FILTROS Y EXPORTACIÓN
+    // 7. FUNCIONES DEL REPORTE TÉCNICO
+    // ==========================================
+    function abrirModalServicio(id) {
+        const doc = datosTablaActual.find(d => d.id === id);
+        if(!doc) return;
+        
+        document.getElementById('modServId').value = id;
+        document.getElementById('modServLink').value = doc.linkFotos || '';
+        document.getElementById('modServCheck').checked = doc.servicioRealizado || false;
+        
+        new bootstrap.Modal(document.getElementById('modalServicio')).show();
+    }
+
+    function guardarModalServicio() {
+        const id = document.getElementById('modServId').value;
+        const link = document.getElementById('modServLink').value.trim();
+        const realizado = document.getElementById('modServCheck').checked;
+
+        db.collection("cotizaciones").doc(id).update({
+            linkFotos: link,
+            servicioRealizado: realizado
+        }).then(() => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalServicio'));
+            if(modal) modal.hide();
+        }).catch(e => alert("Error al guardar: " + e));
+    }
+
+    // ==========================================
+    // 8. FILTROS Y EXPORTACIÓN
     // ==========================================
     function aplicarFiltroEjecutiva() {
         const seleccion = document.getElementById('filtroEjecutivas').value.toLowerCase();
@@ -884,7 +953,10 @@
             return {
                 "Fecha Solicitud": doc.fecha, "Requerimiento": doc.reqNumber, "Local / Cliente": doc.local,
                 "Ejecutiva Asignada": doc.ejecutiva, "ID Equipo": doc.idAplica, "N° Serie": doc.serie,
-                "Repuestos": repuestosTexto, "Observaciones": doc.observaciones, "Valor Cotizado": doc.valorCot,
+                "Repuestos": repuestosTexto, "Observaciones": doc.observaciones, 
+                "Servicio Realizado": doc.servicioRealizado ? "SÍ" : "NO",
+                "Link de Fotos": doc.linkFotos || "N/A",
+                "Valor Cotizado": doc.valorCot,
                 "N° Cotización": doc.numCot, "N° OC Cliente": doc.numOC, "OC Recibida": doc.ocRecibida ? "SÍ" : "NO",
                 "N° Nota Venta": doc.numNV
             };
