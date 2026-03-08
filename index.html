@@ -184,8 +184,11 @@
             </div>
 
             <div id="seccionFormulario" class="glass p-4 mb-4 animate__animated animate__fadeInUp">
-                <h5 class="fw-bold text-primary mb-4"><i class="fas fa-plus-circle me-2"></i>Nueva Solicitud de Cotización</h5>
+                <h5 class="fw-bold text-primary mb-4"><i class="fas fa-plus-circle me-2"></i>Nueva Solicitud / Edición</h5>
+                
                 <form id="formSupervisor">
+                    <input type="hidden" id="editandoId" value="">
+                
                     <div class="row g-3">
                         <div class="col-md-3">
                             <div class="form-floating">
@@ -202,7 +205,7 @@
                             <div id="cajaSugerenciasLocales"></div>
                             <input type="hidden" id="nombreLocalOculto">
                         </div>
-
+                
                         <div class="col-md-5">
                             <div class="form-floating">
                                 <input type="text" class="form-control rounded-3 bg-light" id="cuentaInfo" readonly placeholder="Info de cuenta">
@@ -210,19 +213,25 @@
                             </div>
                         </div>
                         
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-floating">
                                 <input type="date" class="form-control rounded-3" id="fechaSolicitud" required>
                                 <label>Fecha de Solicitud</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control rounded-3 border-info" id="equipoAplica" placeholder="Ej: Amasadora" required>
+                                <label>Equipo (Máquina)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-floating">
                                 <input type="text" class="form-control rounded-3" id="idAplica" placeholder="N° ID">
                                 <label>N° ID Equipo (Opcional)</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-floating">
                                 <input type="text" class="form-control rounded-3" id="serieAplica" placeholder="Serie">
                                 <label>N° de Serie (Opcional)</label>
@@ -235,7 +244,7 @@
                     <button type="button" class="btn btn-outline-primary btn-sm fw-bold rounded-pill mb-4" onclick="agregarRepuesto()">
                         <i class="fas fa-plus me-1"></i> Añadir Repuesto
                     </button>
-
+                
                     <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2"><i class="fas fa-link me-2"></i>Enlaces de Respaldo</h6>
                     <div id="contenedorEnlaces">
                         <input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">
@@ -243,14 +252,17 @@
                     <button type="button" class="btn btn-outline-success btn-sm fw-bold rounded-pill mb-4" onclick="agregarEnlace()">
                         <i class="fas fa-plus me-1"></i> Añadir otro enlace
                     </button>
-
+                
                     <div class="form-floating mb-4">
                         <textarea class="form-control rounded-3" id="observaciones" style="height: 100px" placeholder="Observaciones"></textarea>
                         <label>Observaciones o Notas Adicionales</label>
                     </div>
-
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold rounded-pill shadow">
+                
+                    <div class="text-end d-flex justify-content-end gap-2">
+                        <button type="button" id="btnCancelarEdicion" class="btn btn-secondary px-4 py-2 fw-bold rounded-pill shadow hidden" onclick="cancelarEdicion()">
+                            <i class="fas fa-times me-2"></i> Cancelar
+                        </button>
+                        <button type="submit" id="btnSubmitForm" class="btn btn-primary px-5 py-2 fw-bold rounded-pill shadow">
                             <i class="fas fa-paper-plane me-2"></i> Generar Solicitud
                         </button>
                     </div>
@@ -633,7 +645,7 @@
     }
 
     // ==========================================
-    // 5. BUSCADORES Y FORMULARIO (Creación)
+    // 5. BUSCADORES Y FORMULARIO (Creación y Edición)
     // ==========================================
     function filtrarLocales(inputElement) {
         const texto = inputElement.value.toLowerCase().trim();
@@ -766,31 +778,44 @@
             ejecutivaExtraida = cuentaInfoCompleta.split('Ejecutiva:')[1].trim();
         }
 
-        const nuevaSolicitud = {
+        const payloadSolicitud = {
             reqNumber: document.getElementById('reqNumber').value,
             local: document.getElementById('inputBuscarLocal').value,
             cuenta: cuentaInfoCompleta,
             ejecutiva: ejecutivaExtraida,
             fecha: document.getElementById('fechaSolicitud').value,
+            equipo: document.getElementById('equipoAplica').value,
             idAplica: document.getElementById('idAplica').value || 'N/A',
             serie: document.getElementById('serieAplica').value || 'N/A',
             repuestos: repuestosFinales,
             enlaces: enlacesFinales,
-            observaciones: document.getElementById('observaciones').value || 'N/A',
-            valorCot: '', numCot: '', ocRecibida: false, numNV: '', numOC: '', reqInstalacion: '',
-            servicioRealizado: false, linkFotos: [],
-            enviadoFacturar: false,
-            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+            observaciones: document.getElementById('observaciones').value || 'N/A'
         };
 
-        db.collection("cotizaciones").add(nuevaSolicitud).then(() => {
-            alert("¡Solicitud generada exitosamente!");
-            document.getElementById('formSupervisor').reset();
-            document.getElementById('cuentaInfo').value = '';
-            document.getElementById('contenedorRepuestos').innerHTML = ''; 
-            document.getElementById('contenedorEnlaces').innerHTML = '<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">';
-            agregarRepuesto(); 
-        });
+        const editId = document.getElementById('editandoId').value;
+
+        if (editId) {
+            db.collection("cotizaciones").doc(editId).update(payloadSolicitud).then(() => {
+                alert("¡Solicitud actualizada exitosamente!");
+                cancelarEdicion();
+            }).catch(err => alert("Error al actualizar: " + err));
+        } else {
+            payloadSolicitud.valorCot = ''; 
+            payloadSolicitud.numCot = ''; 
+            payloadSolicitud.ocRecibida = false; 
+            payloadSolicitud.numNV = ''; 
+            payloadSolicitud.numOC = ''; 
+            payloadSolicitud.reqInstalacion = '';
+            payloadSolicitud.servicioRealizado = false; 
+            payloadSolicitud.linkFotos = [];
+            payloadSolicitud.enviadoFacturar = false;
+            payloadSolicitud.fechaCreacion = firebase.firestore.FieldValue.serverTimestamp();
+
+            db.collection("cotizaciones").add(payloadSolicitud).then(() => {
+                alert("¡Solicitud generada exitosamente!");
+                cancelarEdicion(); 
+            }).catch(err => alert("Error al crear: " + err));
+        }
     });
 
     function formatearMoneda(input) {
@@ -817,7 +842,6 @@
                     `<div class="mb-1"><span class="badge bg-secondary rounded-pill me-1">${r.cantidad || '1'}</span> <span class="opacity-75 small">[${r.sku || 'N/A'}]</span> <span class="fw-medium">${(r.nombre && r.nombre !== 'undefined') ? r.nombre : 'Repuesto manual'}</span></div>`
                 ).join('') : '<span class="text-muted fst-italic">Sin repuestos</span>';
 
-                // CORRECCIÓN: Renderizar enlaces del formulario inicial (Base64 ready)
                 const enlacesHtml = (data.enlaces && data.enlaces.length > 0) ? 
                     `<div class="mt-2 pt-2 border-top border-opacity-25"><i class="fas fa-paperclip opacity-50"></i> ` + 
                     data.enlaces.map((link, i) => {
@@ -827,7 +851,6 @@
                     }).join('') + `</div>` 
                     : '';
 
-                // LÓGICA VISUAL: SERVICIO REALIZADO Y ENLACES CON NOMBRE (Base64 ready)
                 let servicioHtml = "";
                 if (data.servicioRealizado) {
                     servicioHtml += `<div class="mt-2 p-2 bg-success bg-opacity-10 border border-success rounded-3 text-success fw-bold small text-center shadow-sm"><i class="fas fa-check-circle me-1"></i> SERVICIO REALIZADO <br> <span class="fw-normal" style="font-size:0.8em">Listo para facturar</span></div>`;
@@ -843,7 +866,6 @@
                             
                             if (!urlLink || urlLink.trim() === '') return;
 
-                            // Asignar colores según el tipo de documento
                             let btnClasses = "btn-info text-white";
                             let iconClass = "fa-image";
                             
@@ -855,7 +877,6 @@
                                 iconClass = 'fa-truck'; 
                             }
 
-                            // NUEVO: Verificamos si es Base64 para forzar descarga en vez de abrir pestaña
                             let isBase64 = urlLink.trim().startsWith('data:image');
                             let actionAttr = isBase64 ? `download="${nombreLink.replace(/\s+/g, '_')}.jpg"` : `target="_blank"`;
                             let extraIcon = isBase64 ? ' <i class="fas fa-download"></i>' : '';
@@ -883,6 +904,7 @@
 
                 let botonesSupervisor = "";
                 if (rolActual === 'admin') {
+                    botonesSupervisor += `<button class="btn btn-outline-warning btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="cargarEdicion('${id}')"><i class="fas fa-edit me-1"></i> Editar Solicitud</button>`;
                     botonesSupervisor += `<button class="btn btn-outline-info btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="abrirModalServicio('${id}')"><i class="fas fa-camera me-1"></i> Reporte Técnico</button>`;
                     botonesSupervisor += `<button class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill shadow-sm" onclick="eliminarSolicitud('${id}')"><i class="fas fa-trash me-1"></i> Eliminar Fila</button>`;
                 }
@@ -892,7 +914,7 @@
                         <div class="fw-bold fs-6 text-primary mb-1">${data.reqNumber}</div>
                         <div class="fw-bold small mb-1">${data.local}</div>
                         <div class="opacity-75" style="font-size: 0.75rem;"><i class="fas fa-calendar-alt me-1"></i>${data.fecha}</div>
-                        <div class="opacity-75" style="font-size: 0.75rem;">ID: ${data.idAplica} | S: ${data.serie}</div>
+                        <div class="opacity-75" style="font-size: 0.75rem;">Eq: ${data.equipo || 'N/A'} | ID: ${data.idAplica} | S: ${data.serie}</div>
                     </td>
                     <td>
                         ${repuestosHtml}
@@ -1006,7 +1028,6 @@
         const cont = document.getElementById('contenedorLinksExtra');
         const div = document.createElement('div');
         div.className = 'row g-1 mb-2 align-items-center link-extra-item';
-        // Cambiado url-extra a type="text"
         div.innerHTML = `
             <div class="col-4">
                 <input type="text" class="form-control form-control-sm nombre-extra border-info" placeholder="Nombre (Ej: Tablero)" value="${nombre}">
@@ -1077,7 +1098,6 @@
         const dataExcel = datosTablaActual.map(doc => {
             const repuestosTexto = doc.repuestos ? doc.repuestos.map(r => `${r.cantidad}x ${r.sku} - ${r.nombre}`).join(" | ") : "";
             
-            // Para excel, acortamos los data:image para que no rompa el archivo
             const linksExtraidos = Array.isArray(doc.linkFotos) 
                 ? doc.linkFotos.map(l => {
                     let urlLimpia = typeof l === 'object' ? l.url : l;
@@ -1088,7 +1108,7 @@
             
             return {
                 "Fecha Solicitud": doc.fecha, "Requerimiento (Cotización)": doc.reqNumber, "Local / Cliente": doc.local,
-                "Ejecutiva Asignada": doc.ejecutiva, "ID Equipo": doc.idAplica, "N° Serie": doc.serie,
+                "Ejecutiva Asignada": doc.ejecutiva, "Equipo": doc.equipo || "N/A", "ID Equipo": doc.idAplica, "N° Serie": doc.serie,
                 "Repuestos": repuestosTexto, "Observaciones": doc.observaciones, 
                 "Servicio Realizado": doc.servicioRealizado ? "SÍ" : "NO",
                 "Link de Documentos": linksExtraidos,
@@ -1164,6 +1184,80 @@
             });
         };
         reader.readAsText(archivo);
+    }
+
+    // ==========================================
+    // 9. LÓGICA DE EDICIÓN DE SUPERVISOR
+    // ==========================================
+    function cargarEdicion(id) {
+        const doc = datosTablaActual.find(d => d.id === id);
+        if(!doc) return;
+
+        // Subir suavemente hacia el formulario
+        document.getElementById('seccionFormulario').scrollIntoView({ behavior: 'smooth' });
+
+        // Rellenar campos de texto
+        document.getElementById('editandoId').value = id;
+        document.getElementById('reqNumber').value = doc.reqNumber || '';
+        document.getElementById('inputBuscarLocal').value = doc.local || '';
+        document.getElementById('cuentaInfo').value = doc.cuenta || '';
+        document.getElementById('fechaSolicitud').value = doc.fecha || '';
+        document.getElementById('equipoAplica').value = doc.equipo || '';
+        document.getElementById('idAplica').value = doc.idAplica === 'N/A' ? '' : doc.idAplica;
+        document.getElementById('serieAplica').value = doc.serie === 'N/A' ? '' : doc.serie;
+        document.getElementById('observaciones').value = doc.observaciones === 'N/A' ? '' : doc.observaciones;
+
+        // Rellenar Repuestos
+        const contenedorRepuestos = document.getElementById('contenedorRepuestos');
+        contenedorRepuestos.innerHTML = '';
+        if (doc.repuestos && doc.repuestos.length > 0) {
+            doc.repuestos.forEach(rep => {
+                agregarRepuesto(); 
+                const lastRow = contenedorRepuestos.lastElementChild;
+                lastRow.querySelector('.rep-sku').value = rep.sku;
+                lastRow.querySelector('.rep-nombre').value = rep.nombre;
+                lastRow.querySelector('.rep-cantidad').value = rep.cantidad;
+            });
+        } else {
+            agregarRepuesto(); 
+        }
+
+        // Rellenar Enlaces
+        const contenedorEnlaces = document.getElementById('contenedorEnlaces');
+        contenedorEnlaces.innerHTML = '';
+        if (doc.enlaces && doc.enlaces.length > 0) {
+            doc.enlaces.forEach(link => {
+                const div = document.createElement('div');
+                div.innerHTML = `<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí..." value="${link}">`;
+                contenedorEnlaces.appendChild(div);
+            });
+        } else {
+            agregarEnlace();
+        }
+
+        // Cambiar estado visual de los botones
+        const btnSubmit = document.getElementById('btnSubmitForm');
+        btnSubmit.innerHTML = '<i class="fas fa-save me-2"></i> Actualizar Solicitud';
+        btnSubmit.classList.replace('btn-primary', 'btn-warning');
+        btnSubmit.classList.add('text-dark');
+        document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+    }
+
+    function cancelarEdicion() {
+        document.getElementById('editandoId').value = '';
+        document.getElementById('formSupervisor').reset();
+        document.getElementById('cuentaInfo').value = '';
+        
+        document.getElementById('contenedorRepuestos').innerHTML = '';
+        agregarRepuesto();
+        
+        document.getElementById('contenedorEnlaces').innerHTML = '<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">';
+        
+        const btnSubmit = document.getElementById('btnSubmitForm');
+        btnSubmit.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Generar Solicitud';
+        btnSubmit.classList.replace('btn-warning', 'btn-primary');
+        btnSubmit.classList.remove('text-dark');
+        document.getElementById('btnCancelarEdicion').classList.add('hidden');
     }
 </script>
 
