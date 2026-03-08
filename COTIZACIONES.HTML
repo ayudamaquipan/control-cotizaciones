@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizaciones y OC | Maquipan PRO</title>
+    
+    <script>
+        const savedTheme = localStorage.getItem('maquipan_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <style>
+        :root { 
+            --bg-body-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --surface: rgba(255, 255, 255, 0.85); 
+            --primary: #2c3e50; 
+            --radius: 16px; 
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); 
+            --text-main: #333;
+            --border-color: rgba(0,0,0,0.1);
+        }
+
+        /* VARIABLES MODO OSCURO */
+        [data-theme="dark"] {
+            --bg-body-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --surface: rgba(30, 41, 59, 0.85);
+            --text-main: #f8fafc;
+            --border-color: rgba(255,255,255,0.1);
+        }
+        
+        body { 
+            background: var(--bg-body-gradient);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif; 
+            color: var(--text-main); 
+            padding-bottom: 80px; 
+            background-attachment: fixed;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        .glass {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            color: var(--text-main);
+        }
+
+        /* PANTALLA DE LOGIN */
+        .login-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: white; padding: 3rem; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: zoomIn 0.5s ease; color: #333; }
+        .hidden { display: none !important; }
+
+        .navbar-custom { padding: 1rem 0; position: sticky; top: 0; z-index: 1000; transition: 0.3s; margin-bottom: 2rem; }
+        
+        .sugerencias-box, #cajaSugerenciasLocales {
+            position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); 
+            border: 1px solid var(--border-color); border-radius: 0 0 8px 8px; max-height: 200px; 
+            overflow-y: auto; z-index: 1050; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none;
+        }
+        .sugerencias-box div, #cajaSugerenciasLocales div { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        .sugerencias-box div:hover, #cajaSugerenciasLocales div:hover { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        
+        .estado-nuevo { border-left: 4px solid #f59e0b; }
+        .estado-cotizado { border-left: 4px solid #3b82f6; }
+        .estado-completado { border-left: 4px solid #10b981; }
+
+        .table-custom td { vertical-align: middle; }
+        .repuesto-item-box { background: rgba(128,128,128,0.05); padding: 15px; border-radius: 12px; border: 1px dashed var(--border-color); margin-bottom: 10px; }
+
+        /* REGLAS ESPECÍFICAS PARA MODO OSCURO */
+        [data-theme="dark"] .bg-white, [data-theme="dark"] .bg-light { background-color: rgba(15, 23, 42, 0.6) !important; color: #f8fafc !important; border-color: #334155 !important; }
+        [data-theme="dark"] .text-dark, [data-theme="dark"] .text-muted { color: #cbd5e1 !important; }
+        [data-theme="dark"] .table { color: #f8fafc; }
+        [data-theme="dark"] .table-hover tbody tr:hover { background-color: rgba(255,255,255,0.05); }
+        [data-theme="dark"] .form-control, [data-theme="dark"] .form-select { background-color: #1e293b; color: #f8fafc; border-color: #475569; }
+        [data-theme="dark"] .form-control::placeholder { color: #94a3b8; }
+        [data-theme="dark"] .modal-content { background-color: #1e293b; color: #f8fafc; }
+        [data-theme="dark"] .estado-nuevo { background-color: rgba(245, 158, 11, 0.1) !important; }
+        [data-theme="dark"] .estado-completado { background-color: rgba(16, 185, 129, 0.1) !important; }
+        [data-theme="dark"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+        [data-theme="dark"] .input-group-text { background-color: #334155; color: #f8fafc; border-color: #475569; }
+    </style>
+</head>
+<body>
+
+    <div id="loginScreen" class="login-wrapper">
+        <div class="login-card glass">
+            <div class="mb-4 text-primary">
+                <i class="fas fa-file-invoice-dollar fa-3x animate__animated animate__bounceIn"></i>
+            </div>
+            <h3 class="fw-bold mb-1 text-dark">MAQUIPAN</h3>
+            <p class="text-muted small mb-4">Portal Comercial de Cotizaciones</p>
+            <form id="loginForm" onsubmit="iniciarSesion(event)">
+                <div class="form-floating mb-3">
+                    <select class="form-select rounded-4 fw-bold text-primary border-primary" id="uUser" onchange="verificarRol()" required>
+                        <option value="">Selecciona tu perfil...</option>
+                        <option value="supervisor">Supervisor (Cristian)</option>
+                        <option value="keillyn">Ejecutiva: Keillyn</option>
+                        <option value="katherine">Ejecutiva: Katherine</option>
+                        <option value="johanna">Ejecutiva: Johanna</option>
+                    </select>
+                    <label>Perfil de Usuario</label>
+                </div>
+                
+                <div class="form-floating mb-4 hidden" id="passContainer">
+                    <input type="password" class="form-control rounded-4" id="uPass" placeholder="Contraseña">
+                    <label>Contraseña de Supervisor</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-4 shadow-sm">INGRESAR AL SISTEMA</button>
+                <p id="loginError" class="text-danger small mt-3 fw-bold hidden animate__animated animate__headShake">Contraseña incorrecta.</p>
+            </form>
+        </div>
+    </div>
+
+    <div id="mainApp" class="hidden">
+        <nav class="navbar-custom glass">
+            <div class="container d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                    <i class="fas fa-file-invoice-dollar text-primary"></i> MAQUIPAN 
+                    <span class="badge bg-light text-secondary border rounded-pill fw-normal" style="font-size:0.6em">COTIZACIONES</span>
+                </h5>
+                <div class="d-flex align-items-center bg-white rounded-pill px-3 py-1 border gap-3 shadow-sm">
+                    <button class="btn btn-sm btn-light rounded-circle shadow-sm" id="btnThemeToggle" onclick="toggleTheme()" title="Cambiar Tema" style="width:32px; height:32px;">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <span id="displayNombreUsuario" class="fw-bold small text-primary"><i class="fas fa-user-circle me-1"></i> Usuario</span>
+                    <a href="#" class="text-danger border-start ps-2" onclick="cerrarSesion()" title="Cerrar Sesión"><i class="fas fa-sign-out-alt"></i></a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            
+            <div id="seccionAdmin" class="glass p-4 mb-4 animate__animated animate__fadeInDown">
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h5 class="fw-bold text-warning mb-0"><i class="fas fa-database me-2"></i>Gestión de Bases de Datos</h5>
+                    <button type="button" class="btn btn-sm btn-warning fw-bold rounded-pill text-dark shadow-sm" onclick="sincronizarCatalogos()">
+                        <i class="fas fa-sync-alt me-1"></i> Sincronizar Caché
+                    </button>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
+                            <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
+                                Catálogo de Repuestos
+                                <a href="#" class="text-primary small text-decoration-none" onclick="abrirModalRepuestos()"><i class="fas fa-edit"></i> Gestionar Individual</a>
+                            </label>
+                            <div class="input-group mb-2">
+                                <input type="file" class="form-control" id="archivoJSON" accept=".json">
+                                <button class="btn btn-warning text-dark fw-bold" type="button" onclick="cargarRepuestosMasivos()">Subir JSON</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
+                            <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
+                                Base de Locales / Clientes
+                                <span>
+                                    <a href="#" class="text-primary small text-decoration-none me-3" onclick="abrirModalLocales()"><i class="fas fa-edit"></i> Gestionar Individual</a>
+                                    <a href="#" class="text-danger small text-decoration-none" onclick="eliminarTodosLosLocales()"><i class="fas fa-trash"></i> Vaciar BD</a>
+                                </span>
+                            </label>
+                            <div class="input-group mb-2">
+                                <input type="file" class="form-control" id="archivoExcelLocales" accept=".xlsx, .xls">
+                                <button class="btn btn-success fw-bold" type="button" onclick="cargarLocalesExcel()">Subir Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="seccionFormulario" class="glass p-4 mb-4 animate__animated animate__fadeInUp">
+                <h5 class="fw-bold text-primary mb-4"><i class="fas fa-plus-circle me-2"></i>Nueva Solicitud de Cotización</h5>
+                <form id="formSupervisor">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control rounded-3" id="reqNumber" required placeholder="REQ-1023">
+                                <label>N° Requerimiento</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 position-relative">
+                            <div class="form-floating">
+                                <input type="text" class="form-control rounded-3 border-primary" id="inputBuscarLocal" placeholder="Escribe para buscar local..." onkeyup="filtrarLocales(this)" autocomplete="off" required>
+                                <label><i class="fas fa-search"></i> Buscar Local / Cliente</label>
+                            </div>
+                            <div id="cajaSugerenciasLocales"></div>
+                            <input type="hidden" id="nombreLocalOculto">
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-floating">
+                                <input type="text" class="form-control rounded-3 bg-light" id="cuentaInfo" readonly placeholder="Info de cuenta">
+                                <label>Información de Cuenta y Ejecutiva</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="date" class="form-control rounded-3" id="fechaSolicitud" required>
+                                <label>Fecha de Solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control rounded-3" id="idAplica" placeholder="N° ID">
+                                <label>N° ID Equipo (Opcional)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control rounded-3" id="serieAplica" placeholder="Serie">
+                                <label>N° de Serie (Opcional)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6 class="fw-bold text-secondary mt-4 mb-3 border-bottom pb-2"><i class="fas fa-tools me-2"></i>Repuestos a Instalar</h6>
+                    <div id="contenedorRepuestos"></div>
+                    <button type="button" class="btn btn-outline-primary btn-sm fw-bold rounded-pill mb-4" onclick="agregarRepuesto()">
+                        <i class="fas fa-plus me-1"></i> Añadir Repuesto
+                    </button>
+
+                    <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2"><i class="fas fa-link me-2"></i>Enlaces de Respaldo</h6>
+                    <div id="contenedorEnlaces">
+                        <input type="url" class="form-control rounded-3 mb-2 enlace-input" placeholder="https://drive.google.com/...">
+                    </div>
+                    <button type="button" class="btn btn-outline-success btn-sm fw-bold rounded-pill mb-4" onclick="agregarEnlace()">
+                        <i class="fas fa-plus me-1"></i> Añadir otro enlace
+                    </button>
+
+                    <div class="form-floating mb-4">
+                        <textarea class="form-control rounded-3" id="observaciones" style="height: 100px" placeholder="Observaciones"></textarea>
+                        <label>Observaciones o Notas Adicionales</label>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold rounded-pill shadow">
+                            <i class="fas fa-paper-plane me-2"></i> Generar Solicitud
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="glass p-4 mb-5 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                    <h5 class="fw-bold mb-0" id="tituloPanelEjecutivas"><i class="fas fa-tasks text-primary me-2"></i>Panel de Ejecutivas</h5>
+                    
+                    <div class="d-flex gap-3 align-items-center bg-white p-2 rounded-pill shadow-sm border">
+                        <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEjecutivas">
+                            <i class="fas fa-filter text-muted me-2"></i>
+                            <select id="filtroEjecutivas" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltroEjecutiva()" style="cursor: pointer;">
+                                <option value="TODAS">Ver Todas</option>
+                                <option value="keillyn">Keillyn (kcuellar)</option>
+                                <option value="katherine">Katherine (kcarrasco)</option>
+                                <option value="johanna">Johanna (jdiazb)</option>
+                                <option value="otra">Otras Asignaciones</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="exportarExcel()">
+                            <i class="fas fa-file-excel me-1"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive bg-white rounded-4 shadow-sm border">
+                    <table class="table table-hover table-custom mb-0" id="tablaEjecutiva">
+                        <thead>
+                            <tr style="background-color: rgba(0,0,0,0.03);">
+                                <th style="width: 15%;">Requerimiento</th>
+                                <th style="width: 28%;">Repuestos / Obs</th>
+                                <th style="width: 17%;">Gestión Económica</th>
+                                <th style="width: 25%;">Documentación</th>
+                                <th style="width: 15%; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoTabla">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalLocales" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-primary"><i class="fas fa-store me-2"></i>Gestionar Locales</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="bg-light p-3 rounded-3 mb-3 border">
+                        <h6 class="fw-bold mb-3 small text-muted">Añadir Nuevo Local</h6>
+                        <div class="row g-2">
+                            <div class="col-md-3"><input type="text" id="newLocNum" class="form-control form-control-sm" placeholder="N° Local"></div>
+                            <div class="col-md-5"><input type="text" id="newLocNom" class="form-control form-control-sm" placeholder="Nombre Local/Cliente"></div>
+                            <div class="col-md-3"><input type="text" id="newLocEjec" class="form-control form-control-sm" placeholder="Ejecutiva"></div>
+                            <div class="col-md-1"><button class="btn btn-sm btn-success w-100" onclick="agregarLocalBd()"><i class="fas fa-plus"></i></button></div>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush" id="listaLocalesAdmin" style="max-height: 300px; overflow-y: auto;">
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalRepuestos" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-primary"><i class="fas fa-cogs me-2"></i>Gestionar Repuestos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="bg-light p-3 rounded-3 mb-3 border">
+                        <h6 class="fw-bold mb-3 small text-muted">Añadir Nuevo Repuesto</h6>
+                        <div class="row g-2">
+                            <div class="col-md-4"><input type="text" id="newRepSku" class="form-control form-control-sm" placeholder="Código SKU"></div>
+                            <div class="col-md-7"><input type="text" id="newRepNom" class="form-control form-control-sm" placeholder="Nombre del Repuesto"></div>
+                            <div class="col-md-1"><button class="btn btn-sm btn-success w-100" onclick="agregarRepuestoBd()"><i class="fas fa-plus"></i></button></div>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush" id="listaRepuestosAdmin" style="max-height: 300px; overflow-y: auto;">
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // ==========================================
+    // 0. LÓGICA DE TEMA (MODO OSCURO)
+    // ==========================================
+    function toggleTheme() {
+        const doc = document.documentElement;
+        const current = doc.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        doc.setAttribute('data-theme', next);
+        localStorage.setItem('maquipan_theme', next);
+        
+        const btnIcon = document.getElementById('btnThemeToggle');
+        btnIcon.innerHTML = next === 'dark' ? '<i class="fas fa-sun text-warning"></i>' : '<i class="fas fa-moon text-dark"></i>';
+        btnIcon.className = next === 'dark' ? 'btn btn-sm btn-dark border-light rounded-circle shadow-sm' : 'btn btn-sm btn-light border rounded-circle shadow-sm';
+    }
+
+    // Ajustar icono inicial
+    window.addEventListener('DOMContentLoaded', () => {
+        const theme = localStorage.getItem('maquipan_theme') || 'light';
+        const btnIcon = document.getElementById('btnThemeToggle');
+        if (theme === 'dark') {
+            btnIcon.innerHTML = '<i class="fas fa-sun text-warning"></i>';
+            btnIcon.className = 'btn btn-sm btn-dark border-light rounded-circle shadow-sm';
+        }
+    });
+
+    // ==========================================
+    // 1. LÓGICA DE LOGIN Y ROLES
+    // ==========================================
+    let rolActual = null;
+    let usuarioActual = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const sesionGuardada = sessionStorage.getItem('maquipan_coti_user');
+        const rolGuardado = sessionStorage.getItem('maquipan_coti_rol');
+        if (sesionGuardada && rolGuardado) {
+            usuarioActual = sesionGuardada;
+            rolActual = rolGuardado;
+            arrancarSistema();
+        }
+    });
+
+    function verificarRol() {
+        const user = document.getElementById('uUser').value;
+        const passContainer = document.getElementById('passContainer');
+        const passInput = document.getElementById('uPass');
+        
+        if (user === 'supervisor') {
+            passContainer.classList.remove('hidden');
+            passInput.required = true;
+        } else {
+            passContainer.classList.add('hidden');
+            passInput.required = false;
+        }
+    }
+
+    function iniciarSesion(e) {
+        e.preventDefault();
+        const user = document.getElementById('uUser').value;
+        const pass = document.getElementById('uPass').value;
+        const errorMsg = document.getElementById('loginError');
+
+        errorMsg.classList.add('hidden');
+
+        if (user === 'supervisor') {
+            if (pass !== 'admin123') { 
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            rolActual = 'admin';
+            usuarioActual = 'supervisor';
+        } else {
+            rolActual = 'ejecutiva';
+            usuarioActual = user;
+        }
+
+        sessionStorage.setItem('maquipan_coti_user', usuarioActual);
+        sessionStorage.setItem('maquipan_coti_rol', rolActual);
+        arrancarSistema();
+    }
+
+    function cerrarSesion() {
+        sessionStorage.removeItem('maquipan_coti_user');
+        sessionStorage.removeItem('maquipan_coti_rol');
+        window.location.reload();
+    }
+
+    function arrancarSistema() {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+
+        if (rolActual === 'ejecutiva') {
+            document.getElementById('seccionAdmin').classList.add('hidden');
+            document.getElementById('seccionFormulario').classList.add('hidden');
+            document.getElementById('contenedorFiltroEjecutivas').classList.add('hidden');
+            
+            document.getElementById('filtroEjecutivas').value = usuarioActual;
+            
+            const nombreMuestra = usuarioActual.charAt(0).toUpperCase() + usuarioActual.slice(1);
+            document.getElementById('displayNombreUsuario').innerHTML = `<i class="fas fa-headset me-1"></i> Hola, ${nombreMuestra}`;
+            document.getElementById('tituloPanelEjecutivas').innerHTML = `<i class="fas fa-tasks text-primary me-2"></i>Mis Cotizaciones Asignadas`;
+        } else {
+            document.getElementById('displayNombreUsuario').innerHTML = `<i class="fas fa-user-tie me-1"></i> Supervisor Cristian`;
+        }
+
+        inicializarCatalogos();
+        cargarTablaFirebase();
+    }
+
+    // ==========================================
+    // 2. CONFIGURACIÓN DE FIREBASE
+    // ==========================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfk1H8_uKIe2sZxf0Bo1wWZPsWDYZy7xk",
+      authDomain: "control-cotizaciones.firebaseapp.com",
+      projectId: "control-cotizaciones",
+      storageBucket: "control-cotizaciones.firebasestorage.app",
+      messagingSenderId: "896776935936",
+      appId: "1:896776935936:web:767f182071b705ec8216e5"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    let datosTablaActual = [];
+
+    // ==========================================
+    // 3. SISTEMA DE CACHÉ
+    // ==========================================
+    let catalogoRepuestos = [];
+    let catalogoLocales = [];
+    
+    function inicializarCatalogos() {
+        if(rolActual !== 'admin') return; 
+        const cacheRepuestos = localStorage.getItem('maquipan_repuestos');
+        const cacheLocales = localStorage.getItem('maquipan_locales');
+
+        if (cacheRepuestos && cacheLocales) {
+            catalogoRepuestos = JSON.parse(cacheRepuestos);
+            catalogoLocales = JSON.parse(cacheLocales);
+            if(document.getElementById('contenedorRepuestos').innerHTML.trim() === '') agregarRepuesto(); 
+        } else {
+            sincronizarCatalogos();
+        }
+    }
+
+    function sincronizarCatalogos(refrescarModales = false) {
+        catalogoRepuestos = [];
+        catalogoLocales = [];
+        
+        db.collection("repuestos").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => { catalogoRepuestos.push({ id: doc.id, ...doc.data() }); });
+            localStorage.setItem('maquipan_repuestos', JSON.stringify(catalogoRepuestos));
+            
+            db.collection("locales").get().then((querySnapshotLocales) => {
+                querySnapshotLocales.forEach((doc) => { catalogoLocales.push({ id: doc.id, ...doc.data() }); });
+                localStorage.setItem('maquipan_locales', JSON.stringify(catalogoLocales));
+                
+                if(document.getElementById('contenedorRepuestos').innerHTML.trim() === '') agregarRepuesto();
+                
+                if(refrescarModales) {
+                    if(document.getElementById('modalLocales').classList.contains('show')) renderizarListaLocalesModal();
+                    if(document.getElementById('modalRepuestos').classList.contains('show')) renderizarListaRepuestosModal();
+                } else {
+                    alert("Datos sincronizados con la nube.");
+                }
+            });
+        }).catch(err => alert("Error al sincronizar: " + err));
+    }
+
+    // ==========================================
+    // 4. FUNCIONES CRUD INDIVIDUALES (LOCALES Y REPUESTOS)
+    // ==========================================
+    function abrirModalLocales() {
+        renderizarListaLocalesModal();
+        new bootstrap.Modal(document.getElementById('modalLocales')).show();
+    }
+    
+    function renderizarListaLocalesModal() {
+        const ul = document.getElementById('listaLocalesAdmin');
+        ul.innerHTML = catalogoLocales.map(l => `
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent border-bottom">
+                <span><strong class="text-primary">[${l.numLocal || 'S/N'}]</strong> ${l.nombre} <small class="text-muted">(${l.ejecutiva || 'Sin ejecutiva'})</small></span>
+                <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm" onclick="eliminarLocalBd('${l.id}')"><i class="fas fa-trash"></i></button>
+            </li>
+        `).join('');
+    }
+
+    function agregarLocalBd() {
+        const num = document.getElementById('newLocNum').value.trim();
+        const nom = document.getElementById('newLocNom').value.trim();
+        const ejec = document.getElementById('newLocEjec').value.trim();
+        if(!nom) return alert("El nombre del local es obligatorio");
+        
+        db.collection("locales").add({numLocal: num, nombre: nom, ejecutiva: ejec}).then(() => {
+            document.getElementById('newLocNum').value = '';
+            document.getElementById('newLocNom').value = '';
+            document.getElementById('newLocEjec').value = '';
+            sincronizarCatalogos(true);
+        });
+    }
+
+    function eliminarLocalBd(id) {
+        if(confirm("¿Seguro que deseas eliminar este local de la base de datos?")) {
+            db.collection("locales").doc(id).delete().then(() => sincronizarCatalogos(true));
+        }
+    }
+
+    function abrirModalRepuestos() {
+        renderizarListaRepuestosModal();
+        new bootstrap.Modal(document.getElementById('modalRepuestos')).show();
+    }
+
+    function renderizarListaRepuestosModal() {
+        const ul = document.getElementById('listaRepuestosAdmin');
+        ul.innerHTML = catalogoRepuestos.map(r => `
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent border-bottom">
+                <span><span class="badge bg-secondary me-2">${r.sku || 'S/N'}</span> ${r.nombre}</span>
+                <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm" onclick="eliminarRepuestoBd('${r.id}')"><i class="fas fa-trash"></i></button>
+            </li>
+        `).join('');
+    }
+
+    function agregarRepuestoBd() {
+        const sku = document.getElementById('newRepSku').value.trim();
+        const nom = document.getElementById('newRepNom').value.trim();
+        if(!nom) return alert("El nombre del repuesto es obligatorio");
+        
+        db.collection("repuestos").add({sku: sku, nombre: nom}).then(() => {
+            document.getElementById('newRepSku').value = '';
+            document.getElementById('newRepNom').value = '';
+            sincronizarCatalogos(true);
+        });
+    }
+
+    function eliminarRepuestoBd(id) {
+        if(confirm("¿Seguro que deseas eliminar este repuesto del catálogo?")) {
+            db.collection("repuestos").doc(id).delete().then(() => sincronizarCatalogos(true));
+        }
+    }
+
+
+    // ==========================================
+    // 5. BUSCADORES Y FORMULARIO (Creación)
+    // ==========================================
+    function filtrarLocales(inputElement) {
+        const texto = inputElement.value.toLowerCase().trim();
+        const cajaSugerencias = document.getElementById('cajaSugerenciasLocales');
+        
+        if (texto.length < 2) { cajaSugerencias.style.display = 'none'; return; }
+
+        const resultados = catalogoLocales.filter(local => 
+            (local.numLocal && local.numLocal.toLowerCase().includes(texto)) || 
+            (local.nombre && local.nombre.toLowerCase().includes(texto))
+        ).slice(0, 15); 
+
+        if (resultados.length > 0) {
+            cajaSugerencias.innerHTML = '';
+            resultados.forEach(local => {
+                const div = document.createElement('div');
+                div.innerHTML = `<span class="badge bg-secondary me-2">${local.numLocal || ''}</span> <strong>${local.nombre}</strong>`;
+                div.onclick = () => {
+                    inputElement.value = `${local.numLocal || ''} - ${local.nombre}`;
+                    document.getElementById('nombreLocalOculto').value = local.nombre;
+                    const matriz = local.nombre.split(' ')[0];
+                    document.getElementById('cuentaInfo').value = `Matriz: ${matriz} | Ejecutiva: ${local.ejecutiva || 'N/A'}`;
+                    cajaSugerencias.style.display = 'none';
+                };
+                cajaSugerencias.appendChild(div);
+            });
+            cajaSugerencias.style.display = 'block';
+        } else {
+            cajaSugerencias.innerHTML = '<div class="text-muted fst-italic p-2">No encontrado. Revise su texto.</div>';
+            cajaSugerencias.style.display = 'block';
+        }
+    }
+
+    function agregarEnlace() {
+        const div = document.createElement('div');
+        div.innerHTML = `<input type="url" class="form-control rounded-3 mb-2 enlace-input" placeholder="https://...">`;
+        document.getElementById('contenedorEnlaces').appendChild(div);
+    }
+
+    function agregarRepuesto() {
+        const contenedor = document.getElementById('contenedorRepuestos');
+        const div = document.createElement('div');
+        div.className = 'repuesto-item-box row g-2 align-items-center animate__animated animate__fadeIn';
+
+        div.innerHTML = `
+            <div class="col-md-4 position-relative">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" class="form-control rep-input-search" placeholder="Buscar por SKU o Nombre..." onkeyup="mostrarSugerenciasRepuestos(this)" autocomplete="off">
+                </div>
+                <div class="sugerencias-box shadow-sm"></div>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control rep-sku" placeholder="SKU" readonly required>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control rep-nombre" placeholder="Nombre del Repuesto" required>
+            </div>
+            <div class="col-md-1">
+                <input type="number" class="form-control rep-cantidad" value="1" min="1" required>
+            </div>
+            <div class="col-md-1 text-end">
+                <button type="button" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm" onclick="this.parentElement.parentElement.remove()" title="Quitar fila"><i class="fas fa-times"></i></button>
+            </div>
+        `;
+        contenedor.appendChild(div);
+    }
+
+    function mostrarSugerenciasRepuestos(inputElement) {
+        const texto = inputElement.value.toLowerCase().trim();
+        const cajaSugerencias = inputElement.nextElementSibling;
+        
+        if (texto.length < 2) { cajaSugerencias.style.display = 'none'; return; }
+
+        const resultados = catalogoRepuestos.filter(rep => 
+            (rep.sku && rep.sku.toLowerCase().includes(texto)) || 
+            (rep.nombre && rep.nombre.toLowerCase().includes(texto))
+        ).slice(0, 15);
+
+        if (resultados.length > 0) {
+            cajaSugerencias.innerHTML = '';
+            resultados.forEach(rep => {
+                const div = document.createElement('div');
+                div.innerHTML = `<span class="badge bg-secondary me-2">${rep.sku || ''}</span> ${rep.nombre}`;
+                div.onclick = () => {
+                    const contenedorPadre = inputElement.closest('.repuesto-item-box');
+                    contenedorPadre.querySelector('.rep-sku').value = rep.sku;
+                    contenedorPadre.querySelector('.rep-nombre').value = rep.nombre;
+                    inputElement.value = '';
+                    cajaSugerencias.style.display = 'none';
+                };
+                cajaSugerencias.appendChild(div);
+            });
+            cajaSugerencias.style.display = 'block';
+        } else {
+            cajaSugerencias.innerHTML = '<div class="text-muted p-2">Ingreso manual requerido.</div>';
+            cajaSugerencias.style.display = 'block';
+        }
+    }
+
+    document.addEventListener('click', function(e) {
+        if (e.target.id !== 'inputBuscarLocal') { document.getElementById('cajaSugerenciasLocales').style.display = 'none'; }
+        if (!e.target.classList.contains('rep-input-search')) {
+            document.querySelectorAll('.sugerencias-box').forEach(box => { box.style.display = 'none'; });
+        }
+    });
+
+    document.getElementById('formSupervisor').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const nodosRepuestos = document.querySelectorAll('.repuesto-item-box');
+        const repuestosFinales = [];
+        nodosRepuestos.forEach(nodo => {
+            const sku = nodo.querySelector('.rep-sku').value.trim();
+            const nombre = nodo.querySelector('.rep-nombre').value.trim();
+            const cantidad = nodo.querySelector('.rep-cantidad').value;
+            if (nombre !== "") { repuestosFinales.push({ sku, nombre, cantidad }); }
+        });
+
+        if(repuestosFinales.length === 0) { alert("Agrega al menos un repuesto válido."); return; }
+
+        let enlacesFinales = [];
+        document.querySelectorAll('.enlace-input').forEach(inp => {
+            if(inp.value.trim() !== "") enlacesFinales.push(inp.value.trim());
+        });
+
+        const cuentaInfoCompleta = document.getElementById('cuentaInfo').value;
+        let ejecutivaExtraida = "N/A";
+        if (cuentaInfoCompleta.includes('Ejecutiva:')) {
+            ejecutivaExtraida = cuentaInfoCompleta.split('Ejecutiva:')[1].trim();
+        }
+
+        const nuevaSolicitud = {
+            reqNumber: document.getElementById('reqNumber').value,
+            local: document.getElementById('inputBuscarLocal').value,
+            cuenta: cuentaInfoCompleta,
+            ejecutiva: ejecutivaExtraida,
+            fecha: document.getElementById('fechaSolicitud').value,
+            idAplica: document.getElementById('idAplica').value || 'N/A',
+            serie: document.getElementById('serieAplica').value || 'N/A',
+            repuestos: repuestosFinales,
+            enlaces: enlacesFinales,
+            observaciones: document.getElementById('observaciones').value || 'N/A',
+            valorCot: '', numCot: '', ocRecibida: false, numNV: '', numOC: '',
+            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        db.collection("cotizaciones").add(nuevaSolicitud).then(() => {
+            alert("¡Solicitud generada exitosamente!");
+            document.getElementById('formSupervisor').reset();
+            document.getElementById('cuentaInfo').value = '';
+            document.getElementById('contenedorRepuestos').innerHTML = ''; 
+            document.getElementById('contenedorEnlaces').innerHTML = '<input type="url" class="form-control rounded-3 mb-2 enlace-input" placeholder="https://...">';
+            agregarRepuesto(); 
+        });
+    });
+
+    function formatearMoneda(input) {
+        let valorNumerico = input.value.replace(/\D/g, ""); 
+        if (valorNumerico === "") { input.value = ""; return; }
+        input.value = "$" + new Intl.NumberFormat("es-CL").format(valorNumerico);
+    }
+
+    // ==========================================
+    // 6. TABLA EJECUTIVA EN TIEMPO REAL
+    // ==========================================
+    function cargarTablaFirebase() {
+        db.collection("cotizaciones").orderBy("fechaCreacion", "desc").limit(50).onSnapshot((querySnapshot) => {
+            const tabla = document.getElementById('cuerpoTabla');
+            tabla.innerHTML = '';
+            datosTablaActual = []; 
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const id = doc.id;
+                datosTablaActual.push({ id, ...data });
+
+                // PARCHE: Filtrar datos erróneos ("undefined")
+                const repuestosHtml = data.repuestos ? data.repuestos.map(r => 
+                    `<div class="mb-1"><span class="badge bg-secondary rounded-pill me-1">${r.cantidad || '1'}</span> <span class="opacity-75 small">[${r.sku || 'N/A'}]</span> <span class="fw-medium">${(r.nombre && r.nombre !== 'undefined') ? r.nombre : 'Repuesto manual'}</span></div>`
+                ).join('') : '<span class="text-muted fst-italic">Sin repuestos</span>';
+
+                const enlacesHtml = (data.enlaces && data.enlaces.length > 0) ? 
+                    `<div class="mt-2 pt-2 border-top border-opacity-25"><i class="fas fa-paperclip opacity-50"></i> ` + 
+                    data.enlaces.map((link, i) => `<a href="${link}" target="_blank" class="text-decoration-none mx-1 text-primary fw-bold">Link ${i+1}</a>`).join('') + `</div>` 
+                    : '';
+
+                let claseEstado = "estado-nuevo";
+                if (data.ocRecibida) claseEstado = "estado-completado"; 
+                else if (data.numCot && data.numCot.trim() !== "") claseEstado = "estado-cotizado"; 
+
+                const tr = document.createElement('tr');
+                tr.className = `fila-registro ${claseEstado}`;
+                tr.dataset.ejecutiva = data.ejecutiva ? data.ejecutiva.toLowerCase() : "n/a"; 
+
+                // PODER TOTAL PARA EL SUPERVISOR (Elimina siempre)
+                let botonEliminar = "";
+                if (rolActual === 'admin') {
+                    botonEliminar = `<button class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill shadow-sm" onclick="eliminarSolicitud('${id}')"><i class="fas fa-trash me-1"></i> Eliminar Fila</button>`;
+                }
+
+                // FIX VISUAL PARA EL BOTÓN DE OC RECIBIDA (Bootstrap nativo sin forzar flex raro)
+                tr.innerHTML = `
+                    <td>
+                        <div class="fw-bold fs-6 text-primary mb-1">${data.reqNumber}</div>
+                        <div class="fw-bold small mb-1">${data.local}</div>
+                        <div class="opacity-75" style="font-size: 0.75rem;"><i class="fas fa-calendar-alt me-1"></i>${data.fecha}</div>
+                        <div class="opacity-75" style="font-size: 0.75rem;">ID: ${data.idAplica} | S: ${data.serie}</div>
+                    </td>
+                    <td>
+                        ${repuestosHtml}
+                        ${data.observaciones && data.observaciones !== 'N/A' ? `<div class="mt-2 pt-2 border-top border-opacity-25 fst-italic opacity-75 small"><i class="fas fa-comment-dots me-1"></i>${data.observaciones}</div>` : ''}
+                        ${enlacesHtml}
+                    </td>
+                    <td>
+                        <input type="text" id="valor_${id}" class="form-control form-control-sm border-primary fw-bold text-success mb-2 text-center" value="${data.valorCot || ''}" placeholder="$ Valor Total" onkeyup="formatearMoneda(this)">
+                        
+                        <div class="form-check form-switch mt-3 ps-5">
+                            <input class="form-check-input" type="checkbox" role="switch" id="check_${id}" ${data.ocRecibida ? 'checked' : ''} style="cursor:pointer; transform: scale(1.3);">
+                            <label class="form-check-label ms-1 fw-bold small mt-1" for="check_${id}" style="cursor:pointer;">OC Recibida</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group input-group-sm mb-1">
+                            <span class="input-group-text" style="width: 45px;">COT</span>
+                            <input type="text" id="numCot_${id}" class="form-control" value="${data.numCot || ''}" placeholder="N°">
+                        </div>
+                        <div class="input-group input-group-sm mb-1">
+                            <span class="input-group-text" style="width: 45px;">OC</span>
+                            <input type="text" id="numOC_${id}" class="form-control" value="${data.numOC || ''}" placeholder="N° Cliente">
+                        </div>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text" style="width: 45px;">NV</span>
+                            <input type="text" id="numNV_${id}" class="form-control" value="${data.numNV || ''}" placeholder="N°">
+                        </div>
+                    </td>
+                    <td class="text-center align-middle">
+                        <button class="btn btn-primary btn-sm w-100 rounded-pill shadow-sm fw-bold" onclick="actualizarEjecutiva('${id}')">
+                            <i class="fas fa-save me-1"></i> Guardar
+                        </button>
+                        ${botonEliminar}
+                    </td>
+                `;
+                tabla.appendChild(tr);
+            });
+            aplicarFiltroEjecutiva(); 
+        });
+    }
+
+    function actualizarEjecutiva(id) {
+        db.collection("cotizaciones").doc(id).update({
+            valorCot: document.getElementById(`valor_${id}`).value,
+            numCot: document.getElementById(`numCot_${id}`).value,
+            numOC: document.getElementById(`numOC_${id}`).value,
+            numNV: document.getElementById(`numNV_${id}`).value,
+            ocRecibida: document.getElementById(`check_${id}`).checked
+        }).then(() => alert("¡Datos actualizados correctamente!")).catch(error => console.error(error));
+    }
+
+    function eliminarSolicitud(id) {
+        if (confirm("ATENCIÓN: Tienes poder de Supervisor.\n¿Estás seguro de eliminar permanentemente este requerimiento?")) {
+            db.collection("cotizaciones").doc(id).delete()
+            .then(() => alert("Requerimiento eliminado con éxito."))
+            .catch(error => alert("Error: " + error));
+        }
+    }
+
+    // ==========================================
+    // 7. FILTROS Y EXPORTACIÓN
+    // ==========================================
+    function aplicarFiltroEjecutiva() {
+        const seleccion = document.getElementById('filtroEjecutivas').value.toLowerCase();
+        const filas = document.querySelectorAll('.fila-registro');
+
+        filas.forEach(fila => {
+            const ejecFila = fila.dataset.ejecutiva.toLowerCase(); 
+            if (seleccion === "todas") { fila.style.display = ""; } 
+            else if (seleccion === "otra") {
+                const esPrincipal = ["keillyn", "kcuellar", "katherine", "kcarrasco", "johanna", "jdiazb"].some(val => ejecFila.includes(val));
+                fila.style.display = esPrincipal ? "none" : "";
+            } else {
+                let coincide = false;
+                if (seleccion === "keillyn" && (ejecFila.includes("keillyn") || ejecFila.includes("kcuellar"))) coincide = true;
+                if (seleccion === "katherine" && (ejecFila.includes("katherine") || ejecFila.includes("kcarrasco"))) coincide = true;
+                if (seleccion === "johanna" && (ejecFila.includes("johanna") || ejecFila.includes("jdiazb"))) coincide = true;
+                fila.style.display = coincide ? "" : "none"; 
+            }
+        });
+    }
+
+    function exportarExcel() {
+        if (datosTablaActual.length === 0) { alert("No hay datos para exportar."); return; }
+        const dataExcel = datosTablaActual.map(doc => {
+            const repuestosTexto = doc.repuestos ? doc.repuestos.map(r => `${r.cantidad}x ${r.sku} - ${r.nombre}`).join(" | ") : "";
+            return {
+                "Fecha Solicitud": doc.fecha, "Requerimiento": doc.reqNumber, "Local / Cliente": doc.local,
+                "Ejecutiva Asignada": doc.ejecutiva, "ID Equipo": doc.idAplica, "N° Serie": doc.serie,
+                "Repuestos": repuestosTexto, "Observaciones": doc.observaciones, "Valor Cotizado": doc.valorCot,
+                "N° Cotización": doc.numCot, "N° OC Cliente": doc.numOC, "OC Recibida": doc.ocRecibida ? "SÍ" : "NO",
+                "N° Nota Venta": doc.numNV
+            };
+        });
+        const hoja = XLSX.utils.json_to_sheet(dataExcel);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Cotizaciones");
+        const fechaHoy = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(libro, `Reporte_Cotizaciones_Maquipan_${fechaHoy}.xlsx`);
+    }
+
+    // Funciones Masivas
+    async function eliminarTodosLosLocales() {
+        if(confirm("ATENCIÓN: ¿Deseas eliminar TODOS los locales de la base de datos?")) {
+            try {
+                const snapshot = await db.collection("locales").get();
+                const batch = db.batch();
+                snapshot.docs.forEach((doc) => batch.delete(doc.ref));
+                await batch.commit();
+                localStorage.removeItem('maquipan_locales');
+                sincronizarCatalogos();
+            } catch (error) { alert("Error al eliminar."); }
+        }
+    }
+
+    function cargarLocalesExcel() {
+        const archivo = document.getElementById('archivoExcelLocales').files[0];
+        if (!archivo) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
+            const filasDatos = json.slice(1).filter(fila => fila.length >= 2);
+            let procesados = 0;
+
+            filasDatos.forEach((columna) => {
+                const numLocal = String(columna[0] || '').trim();
+                const cliente = String(columna[1] || '').trim();
+                const ejecutiva = String(columna[2] || '').trim();
+
+                if (cliente !== '') {
+                    db.collection("locales").add({ numLocal, nombre: cliente, ejecutiva }).then(() => {
+                        procesados++;
+                        if (procesados === filasDatos.length) { sincronizarCatalogos(); }
+                    });
+                } else { procesados++; }
+            });
+        };
+        reader.readAsArrayBuffer(archivo);
+    }
+
+    function cargarRepuestosMasivos() {
+        const archivo = document.getElementById('archivoJSON').files[0];
+        if (!archivo) return;
+        const reader = new FileReader();
+        reader.onload = function(evento) {
+            const datos = JSON.parse(evento.target.result);
+            const totalRepuestos = Object.keys(datos).length;
+            let procesados = 0;
+            Object.keys(datos).forEach(key => {
+                const item = datos[key];
+                db.collection("repuestos").doc(key).set({ sku: item.sku || key, nombre: item.nombre || 'Sin nombre' }).then(() => {
+                    procesados++;
+                    if (procesados === totalRepuestos) { sincronizarCatalogos(); }
+                });
+            });
+        };
+        reader.readAsText(archivo);
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
