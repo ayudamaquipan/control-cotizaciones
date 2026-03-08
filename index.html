@@ -148,7 +148,7 @@
             <div id="seccionAdmin" class="glass p-4 mb-4 animate__animated animate__fadeInDown">
                 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                     <h5 class="fw-bold text-warning mb-0"><i class="fas fa-database me-2"></i>Gestión de Bases de Datos</h5>
-                    <button type="button" class="btn btn-sm btn-warning fw-bold rounded-pill text-dark shadow-sm" onclick="sincronizarCatalogos()">
+                    <button type="button" class="btn btn-sm btn-warning fw-bold rounded-pill text-dark shadow-sm" onclick="sincronizarCatalogos(false, true)">
                         <i class="fas fa-sync-alt me-1"></i> Sincronizar Caché
                     </button>
                 </div>
@@ -190,7 +190,7 @@
                         <div class="col-md-3">
                             <div class="form-floating">
                                 <input type="text" class="form-control rounded-3" id="reqNumber" required placeholder="REQ-1023">
-                                <label>N° Requerimiento</label>
+                                <label>N° Requerimiento (Cotización)</label>
                             </div>
                         </div>
                         
@@ -238,7 +238,7 @@
 
                     <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2"><i class="fas fa-link me-2"></i>Enlaces de Respaldo</h6>
                     <div id="contenedorEnlaces">
-                        <input type="url" class="form-control rounded-3 mb-2 enlace-input" placeholder="https://drive.google.com/...">
+                        <input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">
                     </div>
                     <button type="button" class="btn btn-outline-success btn-sm fw-bold rounded-pill mb-4" onclick="agregarEnlace()">
                         <i class="fas fa-plus me-1"></i> Añadir otro enlace
@@ -282,10 +282,10 @@
                     <table class="table table-hover table-custom mb-0" id="tablaEjecutiva">
                         <thead>
                             <tr style="background-color: rgba(0,0,0,0.03);">
-                                <th style="width: 15%;">Requerimiento</th>
-                                <th style="width: 28%;">Repuestos / Obs / Estado</th>
-                                <th style="width: 17%;">Gestión Económica</th>
-                                <th style="width: 25%;">Documentación</th>
+                                <th style="width: 15%;">Requerimientos</th>
+                                <th style="width: 25%;">Repuestos / Obs / Estado</th>
+                                <th style="width: 22%;">Gestión Económica</th>
+                                <th style="width: 23%;">Documentación</th>
                                 <th style="width: 15%; text-align: center;">Acciones</th>
                             </tr>
                         </thead>
@@ -314,8 +314,7 @@
                             <div class="col-md-1"><button class="btn btn-sm btn-success w-100" onclick="agregarLocalBd()"><i class="fas fa-plus"></i></button></div>
                         </div>
                     </div>
-                    <ul class="list-group list-group-flush" id="listaLocalesAdmin" style="max-height: 300px; overflow-y: auto;">
-                        </ul>
+                    <ul class="list-group list-group-flush" id="listaLocalesAdmin" style="max-height: 300px; overflow-y: auto;"></ul>
                 </div>
             </div>
         </div>
@@ -337,8 +336,7 @@
                             <div class="col-md-1"><button class="btn btn-sm btn-success w-100" onclick="agregarRepuestoBd()"><i class="fas fa-plus"></i></button></div>
                         </div>
                     </div>
-                    <ul class="list-group list-group-flush" id="listaRepuestosAdmin" style="max-height: 300px; overflow-y: auto;">
-                        </ul>
+                    <ul class="list-group list-group-flush" id="listaRepuestosAdmin" style="max-height: 300px; overflow-y: auto;"></ul>
                 </div>
             </div>
         </div>
@@ -348,19 +346,39 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow-lg">
                 <div class="modal-header border-bottom">
-                    <h5 class="modal-title fw-bold text-info"><i class="fas fa-camera-retro me-2"></i>Reporte de Servicio Técnico</h5>
+                    <h5 class="modal-title fw-bold text-info"><i class="fas fa-clipboard-check me-2"></i>Reporte de Servicio y Facturación</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="modServId">
                     
                     <div class="bg-light p-3 rounded-3 mb-3 border">
-                        <label class="fw-bold text-muted small mb-2"><i class="fas fa-link me-1"></i> Enlace de Fotos (Portal Externo)</label>
-                        <input type="url" id="modServLink" class="form-control" placeholder="https://mi-portal.com/fotos...">
+                        <h6 class="fw-bold text-dark small mb-3 border-bottom pb-2"><i class="fas fa-folder-open me-1"></i> Documentos Principales</h6>
+                        
+                        <div class="mb-3">
+                            <label class="small fw-bold text-primary mb-1">1. Ficha del Servicio</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white"><i class="fas fa-file-signature text-primary"></i></span>
+                                <input type="text" id="linkFicha" class="form-control border-primary" placeholder="Pega link o código de imagen aquí...">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="small fw-bold text-warning text-dark mb-1">2. Guía de Despacho</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white"><i class="fas fa-truck text-warning"></i></span>
+                                <input type="text" id="linkGuia" class="form-control border-warning" placeholder="Pega link o código de imagen aquí...">
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-dark small mb-2 border-bottom pb-2 mt-4"><i class="fas fa-images me-1"></i> Imágenes/Documentos Adicionales</h6>
+                        <div id="contenedorLinksExtra">
+                            </div>
+                        <button class="btn btn-sm btn-outline-info rounded-pill fw-bold mt-2" type="button" onclick="agregarLinkExtraServicio()"><i class="fas fa-plus"></i> Añadir otra imagen</button>
                     </div>
 
                     <div class="form-check form-switch d-flex align-items-center bg-light p-3 rounded-3 border">
-                        <input class="form-check-input mt-0 me-3" type="checkbox" role="switch" id="modServCheck" style="transform: scale(1.5); cursor: pointer;">
+                        <input class="form-check-input mt-0 me-3 border-success" type="checkbox" role="switch" id="modServCheck" style="transform: scale(1.5); cursor: pointer;">
                         <label class="form-check-label fw-bold mt-1" for="modServCheck" style="cursor: pointer;">
                             Marcar como SERVICIO REALIZADO
                             <div class="text-muted fw-normal" style="font-size: 0.75rem;">Avisa a la ejecutiva que puede facturar este requerimiento.</div>
@@ -519,7 +537,7 @@
         }
     }
 
-    function sincronizarCatalogos(refrescarModales = false) {
+    function sincronizarCatalogos(refrescarModales = false, mostrarAlerta = false) {
         catalogoRepuestos = [];
         catalogoLocales = [];
         
@@ -536,7 +554,7 @@
                 if(refrescarModales) {
                     if(document.getElementById('modalLocales').classList.contains('show')) renderizarListaLocalesModal();
                     if(document.getElementById('modalRepuestos').classList.contains('show')) renderizarListaRepuestosModal();
-                } else {
+                } else if(mostrarAlerta) {
                     alert("Datos sincronizados con la nube.");
                 }
             });
@@ -544,7 +562,7 @@
     }
 
     // ==========================================
-    // 4. FUNCIONES CRUD INDIVIDUALES (LOCALES Y REPUESTOS)
+    // 4. FUNCIONES CRUD INDIVIDUALES
     // ==========================================
     function abrirModalLocales() {
         renderizarListaLocalesModal();
@@ -571,13 +589,13 @@
             document.getElementById('newLocNum').value = '';
             document.getElementById('newLocNom').value = '';
             document.getElementById('newLocEjec').value = '';
-            sincronizarCatalogos(true);
+            sincronizarCatalogos(true, false);
         });
     }
 
     function eliminarLocalBd(id) {
         if(confirm("¿Seguro que deseas eliminar este local de la base de datos?")) {
-            db.collection("locales").doc(id).delete().then(() => sincronizarCatalogos(true));
+            db.collection("locales").doc(id).delete().then(() => sincronizarCatalogos(true, false));
         }
     }
 
@@ -604,13 +622,13 @@
         db.collection("repuestos").add({sku: sku, nombre: nom}).then(() => {
             document.getElementById('newRepSku').value = '';
             document.getElementById('newRepNom').value = '';
-            sincronizarCatalogos(true);
+            sincronizarCatalogos(true, false);
         });
     }
 
     function eliminarRepuestoBd(id) {
         if(confirm("¿Seguro que deseas eliminar este repuesto del catálogo?")) {
-            db.collection("repuestos").doc(id).delete().then(() => sincronizarCatalogos(true));
+            db.collection("repuestos").doc(id).delete().then(() => sincronizarCatalogos(true, false));
         }
     }
 
@@ -624,8 +642,8 @@
         if (texto.length < 2) { cajaSugerencias.style.display = 'none'; return; }
 
         const resultados = catalogoLocales.filter(local => 
-            (local.numLocal && local.numLocal.toLowerCase().includes(texto)) || 
-            (local.nombre && local.nombre.toLowerCase().includes(texto))
+            (local.numLocal && String(local.numLocal).toLowerCase().includes(texto)) || 
+            (local.nombre && String(local.nombre).toLowerCase().includes(texto))
         ).slice(0, 15); 
 
         if (resultados.length > 0) {
@@ -651,7 +669,7 @@
 
     function agregarEnlace() {
         const div = document.createElement('div');
-        div.innerHTML = `<input type="url" class="form-control rounded-3 mb-2 enlace-input" placeholder="https://...">`;
+        div.innerHTML = `<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">`;
         document.getElementById('contenedorEnlaces').appendChild(div);
     }
 
@@ -664,12 +682,12 @@
             <div class="col-md-4 position-relative">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search text-muted"></i></span>
-                    <input type="text" class="form-control rep-input-search" placeholder="Buscar por SKU o Nombre..." onkeyup="mostrarSugerenciasRepuestos(this)" autocomplete="off">
+                    <input type="text" class="form-control rep-input-search" placeholder="Buscar Repuesto..." onkeyup="mostrarSugerenciasRepuestos(this)" autocomplete="off">
                 </div>
                 <div class="sugerencias-box shadow-sm"></div>
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control rep-sku" placeholder="SKU" readonly required>
+                <input type="text" class="form-control rep-sku" placeholder="SKU Manual" required>
             </div>
             <div class="col-md-4">
                 <input type="text" class="form-control rep-nombre" placeholder="Nombre del Repuesto" required>
@@ -686,13 +704,13 @@
 
     function mostrarSugerenciasRepuestos(inputElement) {
         const texto = inputElement.value.toLowerCase().trim();
-        const cajaSugerencias = inputElement.nextElementSibling;
+        const cajaSugerencias = inputElement.closest('.position-relative').querySelector('.sugerencias-box');
         
         if (texto.length < 2) { cajaSugerencias.style.display = 'none'; return; }
 
         const resultados = catalogoRepuestos.filter(rep => 
-            (rep.sku && rep.sku.toLowerCase().includes(texto)) || 
-            (rep.nombre && rep.nombre.toLowerCase().includes(texto))
+            (rep.sku && String(rep.sku).toLowerCase().includes(texto)) || 
+            (rep.nombre && String(rep.nombre).toLowerCase().includes(texto))
         ).slice(0, 15);
 
         if (resultados.length > 0) {
@@ -759,8 +777,9 @@
             repuestos: repuestosFinales,
             enlaces: enlacesFinales,
             observaciones: document.getElementById('observaciones').value || 'N/A',
-            valorCot: '', numCot: '', ocRecibida: false, numNV: '', numOC: '',
-            servicioRealizado: false, linkFotos: '', // Nuevos campos para el reporte técnico
+            valorCot: '', numCot: '', ocRecibida: false, numNV: '', numOC: '', reqInstalacion: '',
+            servicioRealizado: false, linkFotos: [],
+            enviadoFacturar: false,
             fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
         };
 
@@ -769,7 +788,7 @@
             document.getElementById('formSupervisor').reset();
             document.getElementById('cuentaInfo').value = '';
             document.getElementById('contenedorRepuestos').innerHTML = ''; 
-            document.getElementById('contenedorEnlaces').innerHTML = '<input type="url" class="form-control rounded-3 mb-2 enlace-input" placeholder="https://...">';
+            document.getElementById('contenedorEnlaces').innerHTML = '<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">';
             agregarRepuesto(); 
         });
     });
@@ -794,23 +813,64 @@
                 const id = doc.id;
                 datosTablaActual.push({ id, ...data });
 
-                // PARCHE: Filtrar datos erróneos ("undefined")
                 const repuestosHtml = data.repuestos ? data.repuestos.map(r => 
                     `<div class="mb-1"><span class="badge bg-secondary rounded-pill me-1">${r.cantidad || '1'}</span> <span class="opacity-75 small">[${r.sku || 'N/A'}]</span> <span class="fw-medium">${(r.nombre && r.nombre !== 'undefined') ? r.nombre : 'Repuesto manual'}</span></div>`
                 ).join('') : '<span class="text-muted fst-italic">Sin repuestos</span>';
 
+                // CORRECCIÓN: Renderizar enlaces del formulario inicial (Base64 ready)
                 const enlacesHtml = (data.enlaces && data.enlaces.length > 0) ? 
                     `<div class="mt-2 pt-2 border-top border-opacity-25"><i class="fas fa-paperclip opacity-50"></i> ` + 
-                    data.enlaces.map((link, i) => `<a href="${link}" target="_blank" class="text-decoration-none mx-1 text-primary fw-bold">Link ${i+1}</a>`).join('') + `</div>` 
+                    data.enlaces.map((link, i) => {
+                        let isBase64 = link.trim().startsWith('data:image');
+                        let actionAttr = isBase64 ? `download="Documento_${i+1}.jpg"` : `target="_blank"`;
+                        return `<a href="${link}" ${actionAttr} class="text-decoration-none mx-1 text-primary fw-bold" style="display:inline-block; max-width:80px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:bottom;">Link ${i+1}</a>`;
+                    }).join('') + `</div>` 
                     : '';
 
-                // LÓGICA DE SERVICIO REALIZADO (Agregado para el reporte de fotos)
+                // LÓGICA VISUAL: SERVICIO REALIZADO Y ENLACES CON NOMBRE (Base64 ready)
                 let servicioHtml = "";
                 if (data.servicioRealizado) {
                     servicioHtml += `<div class="mt-2 p-2 bg-success bg-opacity-10 border border-success rounded-3 text-success fw-bold small text-center shadow-sm"><i class="fas fa-check-circle me-1"></i> SERVICIO REALIZADO <br> <span class="fw-normal" style="font-size:0.8em">Listo para facturar</span></div>`;
                 }
-                if (data.linkFotos && data.linkFotos.trim() !== '') {
-                    servicioHtml += `<div class="mt-2 text-center"><a href="${data.linkFotos}" target="_blank" class="btn btn-sm btn-info text-white rounded-pill fw-bold shadow-sm" style="font-size: 0.75rem;"><i class="fas fa-camera-retro me-1"></i> Ver Fotos del Servicio</a></div>`;
+                
+                if (data.linkFotos) {
+                    let linksArray = Array.isArray(data.linkFotos) ? data.linkFotos : (data.linkFotos.trim() !== '' ? [{nombre: 'Documento/Foto', url: data.linkFotos}] : []);
+                    if (linksArray.length > 0) {
+                        servicioHtml += `<div class="mt-2 d-flex flex-column gap-1">`;
+                        linksArray.forEach((link, idx) => {
+                            let nombreLink = (typeof link === 'object') ? link.nombre : `Foto/Doc #${idx+1}`;
+                            let urlLink = (typeof link === 'object') ? link.url : link;
+                            
+                            if (!urlLink || urlLink.trim() === '') return;
+
+                            // Asignar colores según el tipo de documento
+                            let btnClasses = "btn-info text-white";
+                            let iconClass = "fa-image";
+                            
+                            if (nombreLink === 'Ficha del servicio') { 
+                                btnClasses = 'btn-primary text-white'; 
+                                iconClass = 'fa-file-signature'; 
+                            } else if (nombreLink === 'Guía de despacho') { 
+                                btnClasses = 'btn-warning text-dark'; 
+                                iconClass = 'fa-truck'; 
+                            }
+
+                            // NUEVO: Verificamos si es Base64 para forzar descarga en vez de abrir pestaña
+                            let isBase64 = urlLink.trim().startsWith('data:image');
+                            let actionAttr = isBase64 ? `download="${nombreLink.replace(/\s+/g, '_')}.jpg"` : `target="_blank"`;
+                            let extraIcon = isBase64 ? ' <i class="fas fa-download"></i>' : '';
+                            
+                            servicioHtml += `<a href="${urlLink}" ${actionAttr} class="btn btn-sm ${btnClasses} rounded-pill fw-bold shadow-sm" style="font-size: 0.75rem; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${nombreLink}"><i class="fas ${iconClass} me-1"></i> ${nombreLink}${extraIcon}</a>`;
+                        });
+                        servicioHtml += `</div>`;
+                    }
+                }
+
+                let btnFacturado = "";
+                if (data.enviadoFacturar) {
+                    btnFacturado = `<button class="btn btn-success btn-sm w-100 rounded-pill shadow-sm fw-bold mt-3 border-2" onclick="toggleFacturado('${id}', false)"><i class="fas fa-check-double me-1"></i> ✅ ENVIADO A FACTURADO</button>`;
+                } else {
+                    btnFacturado = `<button class="btn btn-outline-primary btn-sm w-100 rounded-pill shadow-sm fw-bold mt-3 border-2" onclick="toggleFacturado('${id}', true)"><i class="fas fa-file-invoice-dollar me-1"></i> Marcar Facturado</button>`;
                 }
 
                 let claseEstado = "estado-nuevo";
@@ -821,14 +881,12 @@
                 tr.className = `fila-registro ${claseEstado}`;
                 tr.dataset.ejecutiva = data.ejecutiva ? data.ejecutiva.toLowerCase() : "n/a"; 
 
-                // PODER TOTAL PARA EL SUPERVISOR
                 let botonesSupervisor = "";
                 if (rolActual === 'admin') {
                     botonesSupervisor += `<button class="btn btn-outline-info btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="abrirModalServicio('${id}')"><i class="fas fa-camera me-1"></i> Reporte Técnico</button>`;
                     botonesSupervisor += `<button class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill shadow-sm" onclick="eliminarSolicitud('${id}')"><i class="fas fa-trash me-1"></i> Eliminar Fila</button>`;
                 }
 
-                // FIX VISUAL PARA EL BOTÓN DE OC RECIBIDA (Bootstrap nativo sin forzar flex raro)
                 tr.innerHTML = `
                     <td>
                         <div class="fw-bold fs-6 text-primary mb-1">${data.reqNumber}</div>
@@ -849,19 +907,27 @@
                             <input class="form-check-input" type="checkbox" role="switch" id="check_${id}" ${data.ocRecibida ? 'checked' : ''} style="cursor:pointer; transform: scale(1.3);">
                             <label class="form-check-label ms-1 fw-bold small mt-1" for="check_${id}" style="cursor:pointer;">OC Recibida</label>
                         </div>
+                        
+                        <div class="mt-2 pt-2 border-top border-opacity-25 text-center">
+                            ${btnFacturado}
+                        </div>
                     </td>
                     <td>
                         <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text" style="width: 45px;">COT</span>
+                            <span class="input-group-text fw-bold text-muted" style="width: 50px;">COT</span>
                             <input type="text" id="numCot_${id}" class="form-control" value="${data.numCot || ''}" placeholder="N°">
                         </div>
                         <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text" style="width: 45px;">OC</span>
+                            <span class="input-group-text fw-bold text-muted" style="width: 50px;">OC</span>
                             <input type="text" id="numOC_${id}" class="form-control" value="${data.numOC || ''}" placeholder="N° Cliente">
                         </div>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text" style="width: 45px;">NV</span>
+                        <div class="input-group input-group-sm mb-1">
+                            <span class="input-group-text fw-bold text-muted" style="width: 50px;">NV</span>
                             <input type="text" id="numNV_${id}" class="form-control" value="${data.numNV || ''}" placeholder="N°">
+                        </div>
+                        <div class="input-group input-group-sm border-top border-opacity-25 pt-2 mt-2">
+                            <span class="input-group-text bg-warning bg-opacity-10 text-dark fw-bold" style="width: 50px;" title="REQ de Instalación">R.I.</span>
+                            <input type="text" id="reqInst_${id}" class="form-control border-warning" value="${data.reqInstalacion || ''}" placeholder="REQ Instalación">
                         </div>
                     </td>
                     <td class="text-center align-middle">
@@ -877,12 +943,19 @@
         });
     }
 
+    window.toggleFacturado = function(id, estado) {
+        db.collection("cotizaciones").doc(id).update({
+            enviadoFacturar: estado
+        }).catch(error => console.error("Error al actualizar estado de facturación:", error));
+    };
+
     function actualizarEjecutiva(id) {
         db.collection("cotizaciones").doc(id).update({
             valorCot: document.getElementById(`valor_${id}`).value,
             numCot: document.getElementById(`numCot_${id}`).value,
             numOC: document.getElementById(`numOC_${id}`).value,
             numNV: document.getElementById(`numNV_${id}`).value,
+            reqInstalacion: document.getElementById(`reqInst_${id}`).value,
             ocRecibida: document.getElementById(`check_${id}`).checked
         }).then(() => alert("¡Datos actualizados correctamente!")).catch(error => console.error(error));
     }
@@ -896,26 +969,79 @@
     }
 
     // ==========================================
-    // 7. FUNCIONES DEL REPORTE TÉCNICO
+    // 7. FUNCIONES DEL REPORTE TÉCNICO (ETIQUETAS)
     // ==========================================
     function abrirModalServicio(id) {
         const doc = datosTablaActual.find(d => d.id === id);
         if(!doc) return;
         
         document.getElementById('modServId').value = id;
-        document.getElementById('modServLink').value = doc.linkFotos || '';
         document.getElementById('modServCheck').checked = doc.servicioRealizado || false;
+        
+        document.getElementById('linkFicha').value = '';
+        document.getElementById('linkGuia').value = '';
+        const contenedorExtra = document.getElementById('contenedorLinksExtra');
+        contenedorExtra.innerHTML = ''; 
+
+        if (doc.linkFotos && Array.isArray(doc.linkFotos)) {
+            doc.linkFotos.forEach(item => {
+                if (typeof item === 'string') {
+                    agregarLinkExtraServicio('Foto/Documento antiguo', item);
+                } else if (item.nombre === 'Ficha del servicio') {
+                    document.getElementById('linkFicha').value = item.url;
+                } else if (item.nombre === 'Guía de despacho') {
+                    document.getElementById('linkGuia').value = item.url;
+                } else {
+                    agregarLinkExtraServicio(item.nombre, item.url);
+                }
+            });
+        } else if (doc.linkFotos && typeof doc.linkFotos === 'string' && doc.linkFotos.trim() !== '') {
+            agregarLinkExtraServicio('Documento Respaldo', doc.linkFotos);
+        }
         
         new bootstrap.Modal(document.getElementById('modalServicio')).show();
     }
 
+    function agregarLinkExtraServicio(nombre = '', url = '') {
+        const cont = document.getElementById('contenedorLinksExtra');
+        const div = document.createElement('div');
+        div.className = 'row g-1 mb-2 align-items-center link-extra-item';
+        // Cambiado url-extra a type="text"
+        div.innerHTML = `
+            <div class="col-4">
+                <input type="text" class="form-control form-control-sm nombre-extra border-info" placeholder="Nombre (Ej: Tablero)" value="${nombre}">
+            </div>
+            <div class="col-7">
+                <input type="text" class="form-control form-control-sm url-extra" placeholder="Pega link o imagen base64..." value="${url}">
+            </div>
+            <div class="col-1 text-end">
+                <button class="btn btn-sm btn-outline-danger w-100" type="button" onclick="this.parentElement.parentElement.remove()" title="Eliminar"><i class="fas fa-times"></i></button>
+            </div>
+        `;
+        cont.appendChild(div);
+    }
+
     function guardarModalServicio() {
         const id = document.getElementById('modServId').value;
-        const link = document.getElementById('modServLink').value.trim();
         const realizado = document.getElementById('modServCheck').checked;
 
+        const linksFinales = [];
+        
+        const ficha = document.getElementById('linkFicha').value.trim();
+        if (ficha) linksFinales.push({ nombre: 'Ficha del servicio', url: ficha });
+        
+        const guia = document.getElementById('linkGuia').value.trim();
+        if (guia) linksFinales.push({ nombre: 'Guía de despacho', url: guia });
+
+        const itemsExtra = document.querySelectorAll('.link-extra-item');
+        itemsExtra.forEach(item => {
+            const nom = item.querySelector('.nombre-extra').value.trim() || 'Documento Adicional';
+            const url = item.querySelector('.url-extra').value.trim();
+            if (url) linksFinales.push({ nombre: nom, url: url });
+        });
+
         db.collection("cotizaciones").doc(id).update({
-            linkFotos: link,
+            linkFotos: linksFinales,
             servicioRealizado: realizado
         }).then(() => {
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalServicio'));
@@ -950,15 +1076,26 @@
         if (datosTablaActual.length === 0) { alert("No hay datos para exportar."); return; }
         const dataExcel = datosTablaActual.map(doc => {
             const repuestosTexto = doc.repuestos ? doc.repuestos.map(r => `${r.cantidad}x ${r.sku} - ${r.nombre}`).join(" | ") : "";
+            
+            // Para excel, acortamos los data:image para que no rompa el archivo
+            const linksExtraidos = Array.isArray(doc.linkFotos) 
+                ? doc.linkFotos.map(l => {
+                    let urlLimpia = typeof l === 'object' ? l.url : l;
+                    if(urlLimpia.startsWith('data:image')) urlLimpia = "[Imagen Adjunta en Sistema]";
+                    return typeof l === 'object' ? `${l.nombre}: ${urlLimpia}` : urlLimpia;
+                }).join(" | ") 
+                : (doc.linkFotos || "N/A");
+            
             return {
-                "Fecha Solicitud": doc.fecha, "Requerimiento": doc.reqNumber, "Local / Cliente": doc.local,
+                "Fecha Solicitud": doc.fecha, "Requerimiento (Cotización)": doc.reqNumber, "Local / Cliente": doc.local,
                 "Ejecutiva Asignada": doc.ejecutiva, "ID Equipo": doc.idAplica, "N° Serie": doc.serie,
                 "Repuestos": repuestosTexto, "Observaciones": doc.observaciones, 
                 "Servicio Realizado": doc.servicioRealizado ? "SÍ" : "NO",
-                "Link de Fotos": doc.linkFotos || "N/A",
+                "Link de Documentos": linksExtraidos,
+                "Enviado a Facturar": doc.enviadoFacturar ? "SÍ" : "NO",
                 "Valor Cotizado": doc.valorCot,
                 "N° Cotización": doc.numCot, "N° OC Cliente": doc.numOC, "OC Recibida": doc.ocRecibida ? "SÍ" : "NO",
-                "N° Nota Venta": doc.numNV
+                "N° Nota Venta": doc.numNV, "REQ Instalación": doc.reqInstalacion || "N/A"
             };
         });
         const hoja = XLSX.utils.json_to_sheet(dataExcel);
@@ -977,7 +1114,7 @@
                 snapshot.docs.forEach((doc) => batch.delete(doc.ref));
                 await batch.commit();
                 localStorage.removeItem('maquipan_locales');
-                sincronizarCatalogos();
+                sincronizarCatalogos(false, true);
             } catch (error) { alert("Error al eliminar."); }
         }
     }
@@ -1002,7 +1139,7 @@
                 if (cliente !== '') {
                     db.collection("locales").add({ numLocal, nombre: cliente, ejecutiva }).then(() => {
                         procesados++;
-                        if (procesados === filasDatos.length) { sincronizarCatalogos(); }
+                        if (procesados === filasDatos.length) { sincronizarCatalogos(false, true); }
                     });
                 } else { procesados++; }
             });
@@ -1022,7 +1159,7 @@
                 const item = datos[key];
                 db.collection("repuestos").doc(key).set({ sku: item.sku || key, nombre: item.nombre || 'Sin nombre' }).then(() => {
                     procesados++;
-                    if (procesados === totalRepuestos) { sincronizarCatalogos(); }
+                    if (procesados === totalRepuestos) { sincronizarCatalogos(false, true); }
                 });
             });
         };
