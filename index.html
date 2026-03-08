@@ -274,9 +274,21 @@
                     <h5 class="fw-bold mb-0" id="tituloPanelEjecutivas"><i class="fas fa-tasks text-primary me-2"></i>Panel de Ejecutivas</h5>
                     
                     <div class="d-flex gap-3 align-items-center bg-white p-2 rounded-pill shadow-sm border">
+                        
+                        <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEstados">
+                            <i class="fas fa-layer-group text-muted me-2"></i>
+                            <select id="filtroEstados" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltros()" style="cursor: pointer;">
+                                <option value="TODOS">Todos los Estados</option>
+                                <option value="PENDIENTE_COTIZAR">⏱️ Pendientes de Cotizar</option>
+                                <option value="COTIZADO">⏳ Cotizado (Esperando OC)</option>
+                                <option value="PENDIENTE_FACTURAR">💰 Pendiente Facturar (Servicio Listo)</option>
+                                <option value="FACTURADO">✅ Facturado / Terminado</option>
+                            </select>
+                        </div>
+
                         <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEjecutivas">
                             <i class="fas fa-filter text-muted me-2"></i>
-                            <select id="filtroEjecutivas" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltroEjecutiva()" style="cursor: pointer;">
+                            <select id="filtroEjecutivas" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltros()" style="cursor: pointer;">
                                 <option value="TODAS">Ver Todas</option>
                                 <option value="keillyn">Keillyn (kcuellar)</option>
                                 <option value="katherine">Katherine (kcarrasco)</option>
@@ -284,6 +296,7 @@
                                 <option value="otra">Otras Asignaciones</option>
                             </select>
                         </div>
+
                         <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="exportarExcel()">
                             <i class="fas fa-file-excel me-1"></i> Exportar
                         </button>
@@ -302,7 +315,7 @@
                             </tr>
                         </thead>
                         <tbody id="cuerpoTabla">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -400,6 +413,60 @@
                 <div class="modal-footer border-top-0">
                     <button type="button" class="btn btn-secondary rounded-pill fw-bold px-4" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-info text-white rounded-pill fw-bold px-4 shadow-sm" onclick="guardarModalServicio()"><i class="fas fa-save me-1"></i> Guardar Reporte</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDetallesReq" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom bg-light rounded-top-4">
+                    <h5 class="modal-title fw-bold text-primary"><i class="fas fa-file-invoice me-2"></i>Detalles del Requerimiento <span id="detReqNum" class="text-secondary ms-1"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-muted mb-2 border-bottom pb-2"><i class="fas fa-info-circle me-1"></i> Información Comercial</h6>
+                            <p class="mb-1 small"><strong>Local/Cliente:</strong> <span id="detLocal" class="text-dark"></span></p>
+                            <p class="mb-1 small"><strong>Ejecutiva Asignada:</strong> <span id="detEjecutiva" class="text-dark"></span></p>
+                            <p class="mb-1 small"><strong>Fecha Solicitud:</strong> <span id="detFecha" class="text-dark"></span></p>
+                            <p class="mb-1 small"><strong>Estado Actual:</strong> <span id="detEstado" class="badge bg-primary"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-muted mb-2 border-bottom pb-2"><i class="fas fa-hdd me-1"></i> Detalles del Equipo</h6>
+                            <p class="mb-1 small"><strong>Equipo:</strong> <span id="detEquipo" class="text-dark"></span></p>
+                            <p class="mb-1 small"><strong>N° ID:</strong> <span id="detId" class="text-dark"></span></p>
+                            <p class="mb-1 small"><strong>N° Serie:</strong> <span id="detSerie" class="text-dark"></span></p>
+                            <p class="mb-1 small"><strong>REQ Instalación:</strong> <span id="detReqInst" class="text-dark"></span></p>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2"><i class="fas fa-tools me-2"></i>Repuestos a Cotizar</h6>
+                    <div class="table-responsive mb-4 bg-white rounded-3 border">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 20%;">SKU</th>
+                                    <th style="width: 60%;">Nombre del Repuesto</th>
+                                    <th style="width: 20%;" class="text-center">Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detListaRepuestos">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h6 class="fw-bold text-secondary mb-2 border-bottom pb-2"><i class="fas fa-comment-dots me-2"></i>Observaciones del Supervisor</h6>
+                    <div class="p-3 bg-light border rounded-3 mb-4 small text-dark shadow-sm" id="detObservaciones" style="white-space: pre-wrap;"></div>
+
+                    <h6 class="fw-bold text-secondary mb-2 border-bottom pb-2"><i class="fas fa-paperclip me-2"></i>Documentos y Enlaces Adjuntos</h6>
+                    <div id="detEnlaces" class="d-flex flex-wrap gap-2 mb-2 p-2 bg-light rounded-3 border">
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 bg-light rounded-bottom-4">
+                    <button type="button" class="btn btn-secondary rounded-pill fw-bold px-5 shadow-sm" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -900,10 +967,17 @@
 
                 const tr = document.createElement('tr');
                 tr.className = `fila-registro ${claseEstado}`;
+                
                 tr.dataset.ejecutiva = data.ejecutiva ? data.ejecutiva.toLowerCase() : "n/a"; 
+                tr.dataset.tieneCot = (data.numCot && data.numCot.trim() !== "") ? "si" : "no";
+                tr.dataset.tieneOc = data.ocRecibida ? "si" : "no";
+                tr.dataset.servicioListo = data.servicioRealizado ? "si" : "no";
+                tr.dataset.facturado = data.enviadoFacturar ? "si" : "no";
 
                 let botonesSupervisor = "";
                 if (rolActual === 'admin') {
+                    // BOTÓN PARA DUPLICAR SOLICITUD
+                    botonesSupervisor += `<button class="btn btn-outline-success btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" onclick="duplicarSolicitud('${id}')"><i class="fas fa-copy me-1"></i> Duplicar</button>`;
                     botonesSupervisor += `<button class="btn btn-outline-warning btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="cargarEdicion('${id}')"><i class="fas fa-edit me-1"></i> Editar Solicitud</button>`;
                     botonesSupervisor += `<button class="btn btn-outline-info btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="abrirModalServicio('${id}')"><i class="fas fa-camera me-1"></i> Reporte Técnico</button>`;
                     botonesSupervisor += `<button class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill shadow-sm" onclick="eliminarSolicitud('${id}')"><i class="fas fa-trash me-1"></i> Eliminar Fila</button>`;
@@ -914,7 +988,10 @@
                         <div class="fw-bold fs-6 text-primary mb-1">${data.reqNumber}</div>
                         <div class="fw-bold small mb-1">${data.local}</div>
                         <div class="opacity-75" style="font-size: 0.75rem;"><i class="fas fa-calendar-alt me-1"></i>${data.fecha}</div>
-                        <div class="opacity-75" style="font-size: 0.75rem;">Eq: ${data.equipo || 'N/A'} | ID: ${data.idAplica} | S: ${data.serie}</div>
+                        <div class="opacity-75 mb-2" style="font-size: 0.75rem;">Eq: ${data.equipo || 'N/A'} | ID: ${data.idAplica} | S: ${data.serie}</div>
+                        <button class="btn btn-outline-primary btn-sm w-100 rounded-pill shadow-sm fw-bold border-2" onclick="verDetallesReq('${id}')">
+                            <i class="fas fa-expand-arrows-alt me-1"></i> Ver Detalles
+                        </button>
                     </td>
                     <td>
                         ${repuestosHtml}
@@ -961,7 +1038,7 @@
                 `;
                 tabla.appendChild(tr);
             });
-            aplicarFiltroEjecutiva(); 
+            aplicarFiltros(); 
         });
     }
 
@@ -1073,22 +1150,51 @@
     // ==========================================
     // 8. FILTROS Y EXPORTACIÓN
     // ==========================================
-    function aplicarFiltroEjecutiva() {
-        const seleccion = document.getElementById('filtroEjecutivas').value.toLowerCase();
+    function aplicarFiltros() {
+        const selectEjecutiva = document.getElementById('filtroEjecutivas').value.toLowerCase();
+        const selectEstado = document.getElementById('filtroEstados').value;
         const filas = document.querySelectorAll('.fila-registro');
 
         filas.forEach(fila => {
+            // Lógica de Ejecutiva
             const ejecFila = fila.dataset.ejecutiva.toLowerCase(); 
-            if (seleccion === "todas") { fila.style.display = ""; } 
-            else if (seleccion === "otra") {
+            let mostrarPorEjecutiva = false;
+
+            if (selectEjecutiva === "todas") { 
+                mostrarPorEjecutiva = true; 
+            } else if (selectEjecutiva === "otra") {
                 const esPrincipal = ["keillyn", "kcuellar", "katherine", "kcarrasco", "johanna", "jdiazb"].some(val => ejecFila.includes(val));
-                fila.style.display = esPrincipal ? "none" : "";
+                mostrarPorEjecutiva = !esPrincipal;
             } else {
-                let coincide = false;
-                if (seleccion === "keillyn" && (ejecFila.includes("keillyn") || ejecFila.includes("kcuellar"))) coincide = true;
-                if (seleccion === "katherine" && (ejecFila.includes("katherine") || ejecFila.includes("kcarrasco"))) coincide = true;
-                if (seleccion === "johanna" && (ejecFila.includes("johanna") || ejecFila.includes("jdiazb"))) coincide = true;
-                fila.style.display = coincide ? "" : "none"; 
+                if (selectEjecutiva === "keillyn" && (ejecFila.includes("keillyn") || ejecFila.includes("kcuellar"))) mostrarPorEjecutiva = true;
+                if (selectEjecutiva === "katherine" && (ejecFila.includes("katherine") || ejecFila.includes("kcarrasco"))) mostrarPorEjecutiva = true;
+                if (selectEjecutiva === "johanna" && (ejecFila.includes("johanna") || ejecFila.includes("jdiazb"))) mostrarPorEjecutiva = true;
+            }
+
+            // Lógica de Estado
+            let mostrarPorEstado = false;
+            const tieneCot = fila.dataset.tieneCot === "si";
+            const tieneOc = fila.dataset.tieneOc === "si";
+            const servicioListo = fila.dataset.servicioListo === "si";
+            const facturado = fila.dataset.facturado === "si";
+
+            if (selectEstado === "TODOS") {
+                mostrarPorEstado = true;
+            } else if (selectEstado === "PENDIENTE_COTIZAR") {
+                mostrarPorEstado = !tieneCot; 
+            } else if (selectEstado === "COTIZADO") {
+                mostrarPorEstado = tieneCot && !tieneOc; 
+            } else if (selectEstado === "PENDIENTE_FACTURAR") {
+                mostrarPorEstado = servicioListo && !facturado; 
+            } else if (selectEstado === "FACTURADO") {
+                mostrarPorEstado = facturado; 
+            }
+
+            // Aplicar ambos filtros
+            if (mostrarPorEjecutiva && mostrarPorEstado) {
+                fila.style.display = "";
+            } else {
+                fila.style.display = "none";
             }
         });
     }
@@ -1238,8 +1344,8 @@
         // Cambiar estado visual de los botones
         const btnSubmit = document.getElementById('btnSubmitForm');
         btnSubmit.innerHTML = '<i class="fas fa-save me-2"></i> Actualizar Solicitud';
-        btnSubmit.classList.replace('btn-primary', 'btn-warning');
-        btnSubmit.classList.add('text-dark');
+        btnSubmit.classList.remove('btn-primary', 'btn-success');
+        btnSubmit.classList.add('btn-warning', 'text-dark');
         document.getElementById('btnCancelarEdicion').classList.remove('hidden');
     }
 
@@ -1255,9 +1361,157 @@
         
         const btnSubmit = document.getElementById('btnSubmitForm');
         btnSubmit.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Generar Solicitud';
-        btnSubmit.classList.replace('btn-warning', 'btn-primary');
-        btnSubmit.classList.remove('text-dark');
+        
+        // Limpiamos colores de edición (amarillo) y duplicación (verde)
+        btnSubmit.classList.remove('btn-warning', 'btn-success', 'text-dark');
+        btnSubmit.classList.add('btn-primary');
+        
         document.getElementById('btnCancelarEdicion').classList.add('hidden');
+    }
+
+    // ==========================================
+    // LÓGICA PARA CLONAR/DUPLICAR SOLICITUDES
+    // ==========================================
+    function duplicarSolicitud(id) {
+        const doc = datosTablaActual.find(d => d.id === id);
+        if(!doc) return;
+
+        // Subir suavemente hacia el formulario
+        document.getElementById('seccionFormulario').scrollIntoView({ behavior: 'smooth' });
+
+        // Rellenar campos de texto (¡El editandoId queda vacío para que sea un registro nuevo!)
+        document.getElementById('editandoId').value = ''; 
+        document.getElementById('reqNumber').value = doc.reqNumber || '';
+        document.getElementById('inputBuscarLocal').value = doc.local || '';
+        document.getElementById('cuentaInfo').value = doc.cuenta || '';
+        document.getElementById('fechaSolicitud').value = doc.fecha || '';
+        document.getElementById('equipoAplica').value = doc.equipo || '';
+        document.getElementById('idAplica').value = doc.idAplica === 'N/A' ? '' : doc.idAplica;
+        document.getElementById('serieAplica').value = doc.serie === 'N/A' ? '' : doc.serie;
+        document.getElementById('observaciones').value = doc.observaciones === 'N/A' ? '' : doc.observaciones;
+
+        // Rellenar Repuestos
+        const contenedorRepuestos = document.getElementById('contenedorRepuestos');
+        contenedorRepuestos.innerHTML = '';
+        if (doc.repuestos && doc.repuestos.length > 0) {
+            doc.repuestos.forEach(rep => {
+                agregarRepuesto(); 
+                const lastRow = contenedorRepuestos.lastElementChild;
+                lastRow.querySelector('.rep-sku').value = rep.sku;
+                lastRow.querySelector('.rep-nombre').value = rep.nombre;
+                lastRow.querySelector('.rep-cantidad').value = rep.cantidad;
+            });
+        } else {
+            agregarRepuesto(); 
+        }
+
+        // Rellenar Enlaces
+        const contenedorEnlaces = document.getElementById('contenedorEnlaces');
+        contenedorEnlaces.innerHTML = '';
+        if (doc.enlaces && doc.enlaces.length > 0) {
+            doc.enlaces.forEach(link => {
+                const div = document.createElement('div');
+                div.innerHTML = `<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí..." value="${link}">`;
+                contenedorEnlaces.appendChild(div);
+            });
+        } else {
+            agregarEnlace();
+        }
+
+        // Cambiar estado visual del botón para indicar que es una copia
+        const btnSubmit = document.getElementById('btnSubmitForm');
+        btnSubmit.innerHTML = '<i class="fas fa-copy me-2"></i> Guardar como Nueva Solicitud';
+        btnSubmit.classList.remove('btn-primary', 'btn-warning', 'text-dark');
+        btnSubmit.classList.add('btn-success');
+        document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+    }
+
+    // ==========================================
+    // 10. MODAL DE VISTA DETALLADA (EJECUTIVAS)
+    // ==========================================
+    function verDetallesReq(id) {
+        const doc = datosTablaActual.find(d => d.id === id);
+        if(!doc) return;
+
+        // 1. Textos Generales
+        document.getElementById('detReqNum').innerText = `(${doc.reqNumber})`;
+        document.getElementById('detLocal').innerText = doc.local || 'N/A';
+        document.getElementById('detEjecutiva').innerText = doc.ejecutiva || 'N/A';
+        document.getElementById('detFecha').innerText = doc.fecha || 'N/A';
+        
+        // 2. Determinar Estado Actual
+        let estadoStr = "⏱️ Pendiente de Cotizar";
+        let badgeColor = "bg-warning text-dark";
+        
+        if (doc.enviadoFacturar) { estadoStr = "✅ Facturado / Terminado"; badgeColor = "bg-secondary"; }
+        else if (doc.servicioRealizado) { estadoStr = "💰 Pendiente Facturar (Servicio Listo)"; badgeColor = "bg-success"; }
+        else if (doc.ocRecibida) { estadoStr = "🛠️ OC Recibida (Aprobado)"; badgeColor = "bg-info text-dark"; }
+        else if (doc.numCot && doc.numCot.trim() !== "") { estadoStr = "⏳ Cotizado (Esperando OC)"; badgeColor = "bg-primary"; }
+        
+        const badgeEstado = document.getElementById('detEstado');
+        badgeEstado.className = `badge ${badgeColor} fs-6`;
+        badgeEstado.innerText = estadoStr;
+
+        // 3. Info Equipo
+        document.getElementById('detEquipo').innerText = doc.equipo || 'N/A';
+        document.getElementById('detId').innerText = doc.idAplica || 'N/A';
+        document.getElementById('detSerie').innerText = doc.serie || 'N/A';
+        document.getElementById('detReqInst').innerText = doc.reqInstalacion || 'N/A';
+
+        // 4. Tabla de Repuestos
+        const repTable = document.getElementById('detListaRepuestos');
+        repTable.innerHTML = '';
+        if (doc.repuestos && doc.repuestos.length > 0) {
+            doc.repuestos.forEach(rep => {
+                repTable.innerHTML += `
+                <tr>
+                    <td class="align-middle"><span class="badge bg-secondary border">${rep.sku || 'N/A'}</span></td>
+                    <td class="align-middle fw-medium">${rep.nombre}</td>
+                    <td class="text-center align-middle fw-bold fs-6">${rep.cantidad}</td>
+                </tr>`;
+            });
+        } else {
+            repTable.innerHTML = `<tr><td colspan="3" class="text-center text-muted fst-italic py-3">Sin repuestos registrados</td></tr>`;
+        }
+
+        // 5. Observaciones
+        document.getElementById('detObservaciones').innerText = (doc.observaciones && doc.observaciones !== 'N/A') ? doc.observaciones : 'Sin observaciones adicionales.';
+
+        // 6. Enlaces y Documentos
+        const contEnlaces = document.getElementById('detEnlaces');
+        contEnlaces.innerHTML = '';
+        let hasLinks = false;
+        
+        if (doc.enlaces && doc.enlaces.length > 0) {
+            doc.enlaces.forEach((link, i) => {
+                let isBase64 = link.trim().startsWith('data:image');
+                let actionAttr = isBase64 ? `download="Respaldo_Supervisor_${i+1}.jpg"` : `target="_blank"`;
+                contEnlaces.innerHTML += `<a href="${link}" ${actionAttr} class="btn btn-sm btn-outline-primary shadow-sm rounded-pill fw-bold"><i class="fas fa-link me-1"></i> Respaldo Inicial ${i+1}</a>`;
+                hasLinks = true;
+            });
+        }
+        
+        if (doc.linkFotos && doc.linkFotos.length > 0) {
+            let linksArray = Array.isArray(doc.linkFotos) ? doc.linkFotos : (doc.linkFotos.trim() !== '' ? [{nombre: 'Documento/Foto', url: doc.linkFotos}] : []);
+            linksArray.forEach((link, idx) => {
+                let nombreLink = (typeof link === 'object') ? link.nombre : `Doc_Técnico_${idx+1}`;
+                let urlLink = (typeof link === 'object') ? link.url : link;
+                if (!urlLink || urlLink.trim() === '') return;
+                
+                let isBase64 = urlLink.trim().startsWith('data:image');
+                let actionAttr = isBase64 ? `download="${nombreLink.replace(/\s+/g, '_')}.jpg"` : `target="_blank"`;
+                let icon = nombreLink === 'Ficha del servicio' ? 'fa-file-signature' : (nombreLink === 'Guía de despacho' ? 'fa-truck' : 'fa-camera');
+                let btnColor = nombreLink === 'Ficha del servicio' ? 'btn-primary' : (nombreLink === 'Guía de despacho' ? 'btn-warning text-dark' : 'btn-info text-white');
+                
+                contEnlaces.innerHTML += `<a href="${urlLink}" ${actionAttr} class="btn btn-sm ${btnColor} shadow-sm rounded-pill fw-bold"><i class="fas ${icon} me-1"></i> ${nombreLink}</a>`;
+                hasLinks = true;
+            });
+        }
+        
+        if(!hasLinks) contEnlaces.innerHTML = '<span class="text-muted small fst-italic p-2">No hay documentos adjuntos en este requerimiento.</span>';
+
+        // 7. Lanzar Modal
+        new bootstrap.Modal(document.getElementById('modalDetallesReq')).show();
     }
 </script>
 
