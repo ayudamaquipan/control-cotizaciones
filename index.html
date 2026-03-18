@@ -65,13 +65,13 @@
 
         .navbar-custom { padding: 1rem 0; position: sticky; top: 0; z-index: 1000; transition: 0.3s; margin-bottom: 2rem; }
         
-        .sugerencias-box, #cajaSugerenciasLocales {
+        .sugerencias-box, #cajaSugerenciasLocales, #cajaSugerenciasLocalesHistorial {
             position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); 
             border: 1px solid var(--border-color); border-radius: 0 0 8px 8px; max-height: 200px; 
             overflow-y: auto; z-index: 1050; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none;
         }
-        .sugerencias-box div, #cajaSugerenciasLocales div { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
-        .sugerencias-box div:hover, #cajaSugerenciasLocales div:hover { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .sugerencias-box div, #cajaSugerenciasLocales div, #cajaSugerenciasLocalesHistorial div { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        .sugerencias-box div:hover, #cajaSugerenciasLocales div:hover, #cajaSugerenciasLocalesHistorial div:hover { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
         
         .estado-nuevo { border-left: 4px solid #f59e0b; }
         .estado-cotizado { border-left: 4px solid #3b82f6; }
@@ -92,6 +92,12 @@
         [data-theme="dark"] .estado-completado { background-color: rgba(16, 185, 129, 0.1) !important; }
         [data-theme="dark"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
         [data-theme="dark"] .input-group-text { background-color: #334155; color: #f8fafc; border-color: #475569; }
+        
+        /* ESTILOS DE PESTAÑAS (TABS) */
+        .nav-pills .nav-link { color: var(--text-main); border: 1px solid transparent; transition: 0.3s; }
+        .nav-pills .nav-link:hover { background-color: rgba(255,255,255,0.5); }
+        .nav-pills .nav-link.active { background-color: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        [data-theme="dark"] .nav-pills .nav-link:hover { background-color: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -145,181 +151,247 @@
 
         <div class="container">
             
-            <div id="seccionAdmin" class="glass p-4 mb-4 animate__animated animate__fadeInDown">
-                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                    <h5 class="fw-bold text-warning mb-0"><i class="fas fa-database me-2"></i>Gestión de Bases de Datos</h5>
-                    <button type="button" class="btn btn-sm btn-warning fw-bold rounded-pill text-dark shadow-sm" onclick="sincronizarCatalogos(false, true)">
-                        <i class="fas fa-sync-alt me-1"></i> Sincronizar Caché
+            <ul class="nav nav-pills mb-4 d-flex justify-content-center bg-white p-2 rounded-pill shadow-sm border mx-auto" id="pills-tab" role="tablist" style="max-width: 500px;">
+                <li class="nav-item w-50" role="presentation">
+                    <button class="nav-link active rounded-pill fw-bold w-100 text-center" id="pills-main-tab" data-bs-toggle="pill" data-bs-target="#pills-main" type="button" role="tab" aria-selected="true">
+                        <i class="fas fa-home me-1"></i> Panel General
                     </button>
-                </div>
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
-                            <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
-                                Catálogo de Repuestos
-                                <a href="#" class="text-primary small text-decoration-none" onclick="abrirModalRepuestos()"><i class="fas fa-edit"></i> Gestionar Individual</a>
-                            </label>
-                            <div class="input-group mb-2">
-                                <input type="file" class="form-control" id="archivoJSON" accept=".json">
-                                <button class="btn btn-warning text-dark fw-bold" type="button" onclick="cargarRepuestosMasivos()">Subir JSON</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
-                            <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
-                                Base de Locales / Clientes
-                                <span>
-                                    <a href="#" class="text-primary small text-decoration-none me-3" onclick="abrirModalLocales()"><i class="fas fa-edit"></i> Gestionar Individual</a>
-                                    <a href="#" class="text-danger small text-decoration-none" onclick="eliminarTodosLosLocales()"><i class="fas fa-trash"></i> Vaciar BD</a>
-                                </span>
-                            </label>
-                            <div class="input-group mb-2">
-                                <input type="file" class="form-control" id="archivoExcelLocales" accept=".xlsx, .xls">
-                                <button class="btn btn-success fw-bold" type="button" onclick="cargarLocalesExcel()">Subir Excel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </li>
+                <li class="nav-item w-50" role="presentation">
+                    <button class="nav-link rounded-pill fw-bold w-100 text-center" id="pills-historial-tab" data-bs-toggle="pill" data-bs-target="#pills-historial" type="button" role="tab" aria-selected="false">
+                        <i class="fas fa-search-location me-1"></i> Historial por Local
+                    </button>
+                </li>
+            </ul>
 
-            <div id="seccionFormulario" class="glass p-4 mb-4 animate__animated animate__fadeInUp">
-                <h5 class="fw-bold text-primary mb-4"><i class="fas fa-plus-circle me-2"></i>Nueva Solicitud / Edición</h5>
+            <div class="tab-content" id="pills-tabContent">
                 
-                <form id="formSupervisor">
-                    <input type="hidden" id="editandoId" value="">
-                
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control rounded-3" id="reqNumber" required placeholder="REQ-1023">
-                                <label>N° Requerimiento (Cotización)</label>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4 position-relative">
-                            <div class="form-floating">
-                                <input type="text" class="form-control rounded-3 border-primary" id="inputBuscarLocal" placeholder="Escribe para buscar local..." onkeyup="filtrarLocales(this)" autocomplete="off" required>
-                                <label><i class="fas fa-search"></i> Buscar Local / Cliente</label>
-                            </div>
-                            <div id="cajaSugerenciasLocales"></div>
-                            <input type="hidden" id="nombreLocalOculto">
-                        </div>
-                
-                        <div class="col-md-5">
-                            <div class="form-floating">
-                                <input type="text" class="form-control rounded-3 bg-light" id="cuentaInfo" readonly placeholder="Info de cuenta">
-                                <label>Información de Cuenta y Ejecutiva</label>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-3">
-                            <div class="form-floating">
-                                <input type="date" class="form-control rounded-3" id="fechaSolicitud" required>
-                                <label>Fecha de Solicitud</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control rounded-3 border-info" id="equipoAplica" placeholder="Ej: Amasadora" required>
-                                <label>Equipo (Máquina)</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control rounded-3" id="idAplica" placeholder="N° ID">
-                                <label>N° ID Equipo (Opcional)</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control rounded-3" id="serieAplica" placeholder="Serie">
-                                <label>N° de Serie (Opcional)</label>
-                            </div>
-                        </div>
-                    </div>
+                <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
                     
-                    <h6 class="fw-bold text-secondary mt-4 mb-3 border-bottom pb-2"><i class="fas fa-tools me-2"></i>Repuestos a Instalar</h6>
-                    <div id="contenedorRepuestos"></div>
-                    <button type="button" class="btn btn-outline-primary btn-sm fw-bold rounded-pill mb-4" onclick="agregarRepuesto()">
-                        <i class="fas fa-plus me-1"></i> Añadir Repuesto
-                    </button>
-                
-                    <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2"><i class="fas fa-link me-2"></i>Enlaces de Respaldo</h6>
-                    <div id="contenedorEnlaces">
-                        <input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">
+                    <div id="seccionAdmin" class="glass p-4 mb-4 animate__animated animate__fadeInDown">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                            <h5 class="fw-bold text-warning mb-0"><i class="fas fa-database me-2"></i>Gestión de Bases de Datos</h5>
+                            <button type="button" class="btn btn-sm btn-warning fw-bold rounded-pill text-dark shadow-sm" onclick="sincronizarCatalogos(false, true)">
+                                <i class="fas fa-sync-alt me-1"></i> Sincronizar Caché
+                            </button>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
+                                    <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
+                                        Catálogo de Repuestos
+                                        <a href="#" class="text-primary small text-decoration-none" onclick="abrirModalRepuestos()"><i class="fas fa-edit"></i> Gestionar Individual</a>
+                                    </label>
+                                    <div class="input-group mb-2">
+                                        <input type="file" class="form-control" id="archivoJSON" accept=".json">
+                                        <button class="btn btn-warning text-dark fw-bold" type="button" onclick="cargarRepuestosMasivos()">Subir JSON</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
+                                    <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
+                                        Base de Locales / Clientes
+                                        <span>
+                                            <a href="#" class="text-primary small text-decoration-none me-3" onclick="abrirModalLocales()"><i class="fas fa-edit"></i> Gestionar Individual</a>
+                                            <a href="#" class="text-danger small text-decoration-none" onclick="eliminarTodosLosLocales()"><i class="fas fa-trash"></i> Vaciar BD</a>
+                                        </span>
+                                    </label>
+                                    <div class="input-group mb-2">
+                                        <input type="file" class="form-control" id="archivoExcelLocales" accept=".xlsx, .xls">
+                                        <button class="btn btn-success fw-bold" type="button" onclick="cargarLocalesExcel()">Subir Excel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-outline-success btn-sm fw-bold rounded-pill mb-4" onclick="agregarEnlace()">
-                        <i class="fas fa-plus me-1"></i> Añadir otro enlace
-                    </button>
-                
-                    <div class="form-floating mb-4">
-                        <textarea class="form-control rounded-3" id="observaciones" style="height: 100px" placeholder="Observaciones"></textarea>
-                        <label>Observaciones o Notas Adicionales</label>
-                    </div>
-                
-                    <div class="text-end d-flex justify-content-end gap-2">
-                        <button type="button" id="btnCancelarEdicion" class="btn btn-secondary px-4 py-2 fw-bold rounded-pill shadow hidden" onclick="cancelarEdicion()">
-                            <i class="fas fa-times me-2"></i> Cancelar
-                        </button>
-                        <button type="submit" id="btnSubmitForm" class="btn btn-primary px-5 py-2 fw-bold rounded-pill shadow">
-                            <i class="fas fa-paper-plane me-2"></i> Generar Solicitud
-                        </button>
-                    </div>
-                </form>
-            </div>
 
-            <div class="glass p-4 mb-5 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-                    <h5 class="fw-bold mb-0" id="tituloPanelEjecutivas"><i class="fas fa-tasks text-primary me-2"></i>Panel de Ejecutivas</h5>
-                    
-                    <div class="d-flex gap-3 align-items-center bg-white p-2 rounded-pill shadow-sm border">
+                    <div id="seccionFormulario" class="glass p-4 mb-4 animate__animated animate__fadeInUp">
+                        <h5 class="fw-bold text-primary mb-4"><i class="fas fa-plus-circle me-2"></i>Nueva Solicitud / Edición</h5>
                         
-                        <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEstados">
-                            <i class="fas fa-layer-group text-muted me-2"></i>
-                            <select id="filtroEstados" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltros()" style="cursor: pointer;">
-                                <option value="TODOS">Todos los Estados</option>
-                                <option value="PENDIENTE_COTIZAR">⏱️ Pendientes de Cotizar</option>
-                                <option value="COTIZADO">⏳ Cotizado (Esperando OC)</option>
-                                <option value="PENDIENTE_FACTURAR">💰 Pendiente Facturar (Servicio Listo)</option>
-                                <option value="FACTURADO">✅ Facturado / Terminado</option>
-                            </select>
+                        <form id="formSupervisor">
+                            <input type="hidden" id="editandoId" value="">
+                        
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-3" id="reqNumber" required placeholder="REQ-1023">
+                                        <label>N° Requerimiento (Cotización)</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 position-relative">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-3 border-primary" id="inputBuscarLocal" placeholder="Escribe para buscar local..." onkeyup="filtrarLocales(this)" autocomplete="off" required>
+                                        <label><i class="fas fa-search"></i> Buscar Local / Cliente</label>
+                                    </div>
+                                    <div id="cajaSugerenciasLocales"></div>
+                                    <input type="hidden" id="nombreLocalOculto">
+                                </div>
+                        
+                                <div class="col-md-5">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-3 bg-light" id="cuentaInfo" readonly placeholder="Info de cuenta">
+                                        <label>Información de Cuenta y Ejecutiva</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <input type="date" class="form-control rounded-3" id="fechaSolicitud" required>
+                                        <label>Fecha de Solicitud</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-3 border-info" id="equipoAplica" placeholder="Ej: Amasadora" required>
+                                        <label>Equipo (Máquina)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-3" id="idAplica" placeholder="N° ID">
+                                        <label>N° ID Equipo (Opcional)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-3" id="serieAplica" placeholder="Serie">
+                                        <label>N° de Serie (Opcional)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h6 class="fw-bold text-secondary mt-4 mb-3 border-bottom pb-2"><i class="fas fa-tools me-2"></i>Repuestos a Instalar</h6>
+                            <div id="contenedorRepuestos"></div>
+                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold rounded-pill mb-4" onclick="agregarRepuesto()">
+                                <i class="fas fa-plus me-1"></i> Añadir Repuesto
+                            </button>
+                        
+                            <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2"><i class="fas fa-link me-2"></i>Enlaces de Respaldo</h6>
+                            <div id="contenedorEnlaces">
+                                <input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">
+                            </div>
+                            <button type="button" class="btn btn-outline-success btn-sm fw-bold rounded-pill mb-4" onclick="agregarEnlace()">
+                                <i class="fas fa-plus me-1"></i> Añadir otro enlace
+                            </button>
+                        
+                            <div class="form-floating mb-4">
+                                <textarea class="form-control rounded-3" id="observaciones" style="height: 100px" placeholder="Observaciones"></textarea>
+                                <label>Observaciones o Notas Adicionales</label>
+                            </div>
+                        
+                            <div class="text-end d-flex justify-content-end gap-2">
+                                <button type="button" id="btnCancelarEdicion" class="btn btn-secondary px-4 py-2 fw-bold rounded-pill shadow hidden" onclick="cancelarEdicion()">
+                                    <i class="fas fa-times me-2"></i> Cancelar
+                                </button>
+                                <button type="submit" id="btnSubmitForm" class="btn btn-primary px-5 py-2 fw-bold rounded-pill shadow">
+                                    <i class="fas fa-paper-plane me-2"></i> Generar Solicitud
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="glass p-4 mb-5 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                            <h5 class="fw-bold mb-0" id="tituloPanelEjecutivas"><i class="fas fa-tasks text-primary me-2"></i>Panel de Ejecutivas</h5>
+                            
+                            <div class="d-flex gap-3 align-items-center bg-white p-2 rounded-pill shadow-sm border">
+                                
+                                <div class="d-flex align-items-center px-3 border-end">
+                                    <i class="fas fa-search text-muted me-2"></i>
+                                    <input type="text" id="busquedaGeneral" class="form-control form-control-sm border-0 bg-transparent fw-bold text-secondary shadow-none" placeholder="Buscar NV, OC, COT, ID, REQ..." onkeyup="aplicarFiltros()" style="width: 200px; outline: none;">
+                                </div>
+
+                                <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEstados">
+                                    <i class="fas fa-layer-group text-muted me-2"></i>
+                                    <select id="filtroEstados" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltros()" style="cursor: pointer;">
+    <option value="TODOS">Todos los Estados</option>
+    <option value="PENDIENTE_COTIZAR">⏱️ Pendientes de Cotizar</option>
+    <option value="COTIZADO">⏳ Cotizado (Esperando OC)</option>
+    <option value="OC_RECIBIDA">🛠️ OC Recibida (Pendiente Servicio)</option>
+    <option value="PENDIENTE_FACTURAR">💰 Pendiente Facturar (Servicio Listo)</option>
+    <option value="FACTURADO">✅ Facturado / Terminado</option>
+</select>
+                                </div>
+
+                                <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEjecutivas">
+                                    <i class="fas fa-filter text-muted me-2"></i>
+                                    <select id="filtroEjecutivas" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltros()" style="cursor: pointer;">
+                                        <option value="TODAS">Ver Todas</option>
+                                        <option value="keillyn">Keillyn (kcuellar)</option>
+                                        <option value="katherine">Katherine (kcarrasco)</option>
+                                        <option value="johanna">Johanna (jdiazb)</option>
+                                        <option value="otra">Otras Asignaciones</option>
+                                    </select>
+                                </div>
+
+                                <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="exportarExcel()">
+                                    <i class="fas fa-file-excel me-1"></i> Exportar
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEjecutivas">
-                            <i class="fas fa-filter text-muted me-2"></i>
-                            <select id="filtroEjecutivas" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltros()" style="cursor: pointer;">
-                                <option value="TODAS">Ver Todas</option>
-                                <option value="keillyn">Keillyn (kcuellar)</option>
-                                <option value="katherine">Katherine (kcarrasco)</option>
-                                <option value="johanna">Johanna (jdiazb)</option>
-                                <option value="otra">Otras Asignaciones</option>
-                            </select>
+                        <div class="table-responsive bg-white rounded-4 shadow-sm border">
+                            <table class="table table-hover table-custom mb-0" id="tablaEjecutiva">
+                                <thead>
+                                    <tr style="background-color: rgba(0,0,0,0.03);">
+                                        <th style="width: 15%;">Requerimientos</th>
+                                        <th style="width: 25%;">Repuestos / Obs / Estado</th>
+                                        <th style="width: 22%;">Gestión Económica</th>
+                                        <th style="width: 23%;">Documentación</th>
+                                        <th style="width: 15%; text-align: center;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTabla">
+                                </tbody>
+                            </table>
                         </div>
-
-                        <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="exportarExcel()">
-                            <i class="fas fa-file-excel me-1"></i> Exportar
-                        </button>
                     </div>
                 </div>
 
-                <div class="table-responsive bg-white rounded-4 shadow-sm border">
-                    <table class="table table-hover table-custom mb-0" id="tablaEjecutiva">
-                        <thead>
-                            <tr style="background-color: rgba(0,0,0,0.03);">
-                                <th style="width: 15%;">Requerimientos</th>
-                                <th style="width: 25%;">Repuestos / Obs / Estado</th>
-                                <th style="width: 22%;">Gestión Económica</th>
-                                <th style="width: 23%;">Documentación</th>
-                                <th style="width: 15%; text-align: center;">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cuerpoTabla">
-                        </tbody>
-                    </table>
+                <div class="tab-pane fade" id="pills-historial" role="tabpanel" aria-labelledby="pills-historial-tab">
+                    <div class="glass p-4 mb-4 animate__animated animate__fadeIn">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold text-primary mb-0"><i class="fas fa-store-alt me-2"></i>Historial Histórico por Local</h5>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6 position-relative">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control rounded-3 border-primary shadow-sm" id="inputBuscarLocalHistorial" placeholder="Buscar Local..." onkeyup="filtrarLocalesHistorial(this)" autocomplete="off">
+                                    <label><i class="fas fa-search"></i> Ingresa el nombre o número del local</label>
+                                </div>
+                                <div id="cajaSugerenciasLocalesHistorial" class="sugerencias-box shadow-sm"></div>
+                            </div>
+                            <div class="col-md-6 d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 fw-normal text-muted" id="lblLocalSeleccionado">
+                                    <i class="fas fa-info-circle me-1"></i> Seleccione un local en el buscador para cargar su historial completo.
+                                </h6>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive bg-white rounded-4 shadow-sm border">
+                            <table class="table table-hover table-custom mb-0">
+                                <thead>
+                                    <tr style="background-color: rgba(0,0,0,0.03);">
+                                        <th style="width: 12%;">Fecha</th>
+                                        <th style="width: 15%;">Requerimiento</th>
+                                        <th style="width: 20%;">Equipo / ID</th>
+                                        <th style="width: 25%;">Estado y Documentos</th>
+                                        <th style="width: 15%;">Ejecutiva</th>
+                                        <th style="width: 13%; text-align: center;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTablaHistorial">
+                                    <tr><td colspan="6" class="text-center text-muted fst-italic py-5"><i class="fas fa-search fa-2x mb-2 opacity-50"></i><br>Realiza una búsqueda para ver los resultados</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+
+            </div> </div>
     </div>
 
     <div class="modal fade" id="modalLocales" tabindex="-1">
@@ -746,6 +818,39 @@
         }
     }
 
+    // NUEVO BUSCADOR PARA LA PESTAÑA HISTORIAL
+    function filtrarLocalesHistorial(inputElement) {
+        const texto = inputElement.value.toLowerCase().trim();
+        const cajaSugerencias = document.getElementById('cajaSugerenciasLocalesHistorial');
+        
+        if (texto.length < 2) { cajaSugerencias.style.display = 'none'; return; }
+
+        const resultados = catalogoLocales.filter(local => 
+            (local.numLocal && String(local.numLocal).toLowerCase().includes(texto)) || 
+            (local.nombre && String(local.nombre).toLowerCase().includes(texto))
+        ).slice(0, 15); 
+
+        if (resultados.length > 0) {
+            cajaSugerencias.innerHTML = '';
+            resultados.forEach(local => {
+                const div = document.createElement('div');
+                div.innerHTML = `<span class="badge bg-secondary me-2">${local.numLocal || ''}</span> <strong>${local.nombre}</strong>`;
+                div.onclick = () => {
+                    const valorCompleto = `${local.numLocal || ''} - ${local.nombre}`;
+                    inputElement.value = valorCompleto;
+                    document.getElementById('lblLocalSeleccionado').innerHTML = `<span class="text-primary fw-bold">Viendo historial de:</span> <strong>${local.nombre}</strong> <span class="badge bg-light text-dark border ms-2">Ejecutiva: ${local.ejecutiva || 'N/A'}</span>`;
+                    cajaSugerencias.style.display = 'none';
+                    cargarHistorialLocal(valorCompleto);
+                };
+                cajaSugerencias.appendChild(div);
+            });
+            cajaSugerencias.style.display = 'block';
+        } else {
+            cajaSugerencias.innerHTML = '<div class="text-muted fst-italic p-2">No encontrado en la base de datos.</div>';
+            cajaSugerencias.style.display = 'block';
+        }
+    }
+
     function agregarEnlace() {
         const div = document.createElement('div');
         div.innerHTML = `<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">`;
@@ -815,6 +920,7 @@
 
     document.addEventListener('click', function(e) {
         if (e.target.id !== 'inputBuscarLocal') { document.getElementById('cajaSugerenciasLocales').style.display = 'none'; }
+        if (e.target.id !== 'inputBuscarLocalHistorial') { document.getElementById('cajaSugerenciasLocalesHistorial').style.display = 'none'; }
         if (!e.target.classList.contains('rep-input-search')) {
             document.querySelectorAll('.sugerencias-box').forEach(box => { box.style.display = 'none'; });
         }
@@ -892,7 +998,7 @@
     }
 
     // ==========================================
-    // 6. TABLA EJECUTIVA EN TIEMPO REAL
+    // 6. TABLAS Y LÓGICA DE DATOS
     // ==========================================
     function cargarTablaFirebase() {
         db.collection("cotizaciones").orderBy("fechaCreacion", "desc").limit(50).onSnapshot((querySnapshot) => {
@@ -968,6 +1074,8 @@
                 const tr = document.createElement('tr');
                 tr.className = `fila-registro ${claseEstado}`;
                 
+                tr.dataset.id = id;
+                tr.dataset.reqNumber = data.reqNumber ? data.reqNumber.toLowerCase() : "";
                 tr.dataset.ejecutiva = data.ejecutiva ? data.ejecutiva.toLowerCase() : "n/a"; 
                 tr.dataset.tieneCot = (data.numCot && data.numCot.trim() !== "") ? "si" : "no";
                 tr.dataset.tieneOc = data.ocRecibida ? "si" : "no";
@@ -1039,6 +1147,81 @@
                 tabla.appendChild(tr);
             });
             aplicarFiltros(); 
+        });
+    }
+
+    // NUEVA FUNCIÓN PARA LA PESTAÑA HISTORIAL
+    function cargarHistorialLocal(nombreLocal) {
+        const tbody = document.getElementById('cuerpoTablaHistorial');
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5"><i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i><br><span class="text-muted fw-bold">Buscando historial en la base de datos...</span></td></tr>';
+        
+        db.collection("cotizaciones").where("local", "==", nombreLocal).get().then(snapshot => {
+            const resultados = [];
+            snapshot.forEach(doc => {
+                resultados.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // Ordenar por fechaCreacion descendente (lo más nuevo arriba)
+            resultados.sort((a, b) => {
+                let d1 = a.fechaCreacion ? a.fechaCreacion.toMillis() : 0;
+                let d2 = b.fechaCreacion ? b.fechaCreacion.toMillis() : 0;
+                return d2 - d1;
+            });
+
+            if (resultados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted fst-italic py-5"><i class="fas fa-folder-open fa-2x mb-2 opacity-50"></i><br>No hay cotizaciones históricas para este local.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            resultados.forEach(data => {
+                // Determinar estado
+                let estadoStr = "⏱️ PENDIENTE";
+                let badgeColor = "bg-warning text-dark";
+                if (data.enviadoFacturar) { estadoStr = "✅ FACTURADO / TERMINADO"; badgeColor = "bg-secondary"; }
+                else if (data.servicioRealizado) { estadoStr = "💰 PENDIENTE FACTURAR"; badgeColor = "bg-success"; }
+                else if (data.ocRecibida) { estadoStr = "🛠️ OC RECIBIDA (Aprobado)"; badgeColor = "bg-info text-dark"; }
+                else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ COTIZADO (Esperando OC)"; badgeColor = "bg-primary"; }
+
+                // Asegurar que exista en datosTablaActual para que el modal Detalles funcione
+                if (!datosTablaActual.find(d => d.id === data.id)) {
+                    datosTablaActual.push(data);
+                }
+
+                // Extraer info de links para mostrar un resumen
+                let numDocs = 0;
+                if (data.linkFotos && Array.isArray(data.linkFotos)) numDocs += data.linkFotos.length;
+                else if (data.linkFotos && typeof data.linkFotos === 'string' && data.linkFotos.trim() !== '') numDocs += 1;
+                
+                let docResumen = numDocs > 0 ? `<div class="mt-1 small text-info"><i class="fas fa-paperclip me-1"></i> ${numDocs} Docs. Técnicos</div>` : '';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="align-middle fw-medium">${data.fecha}</td>
+                        <td class="align-middle">
+                            <span class="fw-bold fs-6 text-primary">${data.reqNumber}</span><br>
+                            <span class="small text-muted">COT: ${data.numCot || 'N/A'}</span>
+                        </td>
+                        <td class="align-middle">
+                            <span class="fw-medium">${data.equipo || 'N/A'}</span><br>
+                            <span class="small text-muted">ID: ${data.idAplica}</span>
+                        </td>
+                        <td class="align-middle">
+                            <span class="badge ${badgeColor} w-100 py-2 mb-1">${estadoStr}</span><br>
+                            <span class="fw-bold text-success d-block text-center">${data.valorCot || ''}</span>
+                            ${docResumen}
+                        </td>
+                        <td class="align-middle text-capitalize">${data.ejecutiva}</td>
+                        <td class="align-middle text-center">
+                            <button class="btn btn-sm btn-outline-primary rounded-pill shadow-sm fw-bold w-100" onclick="verDetallesReq('${data.id}')">
+                                <i class="fas fa-expand-arrows-alt me-1"></i> Ver Detalles
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }).catch(err => {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-danger text-center py-4">Error al buscar: ${err.message}</td></tr>`;
         });
     }
 
@@ -1153,6 +1336,9 @@
     function aplicarFiltros() {
         const selectEjecutiva = document.getElementById('filtroEjecutivas').value.toLowerCase();
         const selectEstado = document.getElementById('filtroEstados').value;
+        const inputBusqueda = document.getElementById('busquedaGeneral');
+        const textoBusqueda = inputBusqueda ? inputBusqueda.value.toLowerCase().trim() : '';
+
         const filas = document.querySelectorAll('.fila-registro');
 
         filas.forEach(fila => {
@@ -1179,19 +1365,44 @@
             const facturado = fila.dataset.facturado === "si";
 
             if (selectEstado === "TODOS") {
-                mostrarPorEstado = true;
-            } else if (selectEstado === "PENDIENTE_COTIZAR") {
-                mostrarPorEstado = !tieneCot; 
-            } else if (selectEstado === "COTIZADO") {
-                mostrarPorEstado = tieneCot && !tieneOc; 
-            } else if (selectEstado === "PENDIENTE_FACTURAR") {
-                mostrarPorEstado = servicioListo && !facturado; 
-            } else if (selectEstado === "FACTURADO") {
-                mostrarPorEstado = facturado; 
+    mostrarPorEstado = true;
+} else if (selectEstado === "PENDIENTE_COTIZAR") {
+    mostrarPorEstado = !tieneCot; 
+} else if (selectEstado === "COTIZADO") {
+    mostrarPorEstado = tieneCot && !tieneOc; 
+} else if (selectEstado === "OC_RECIBIDA") {
+    // NUEVA CONDICIÓN AQUÍ
+    mostrarPorEstado = tieneOc && !servicioListo; 
+} else if (selectEstado === "PENDIENTE_FACTURAR") {
+    mostrarPorEstado = servicioListo && !facturado; 
+} else if (selectEstado === "FACTURADO") {
+    mostrarPorEstado = facturado; 
+}
+
+            // Lógica del BUSCADOR GENERAL
+            let pasaBusqueda = true;
+            if (textoBusqueda !== '') {
+                const docId = fila.dataset.id;
+                // Rescatamos los valores de los inputs en vivo
+                const valCot = (document.getElementById(`numCot_${docId}`)?.value || '').toLowerCase();
+                const valOc = (document.getElementById(`numOC_${docId}`)?.value || '').toLowerCase();
+                const valNv = (document.getElementById(`numNV_${docId}`)?.value || '').toLowerCase();
+                
+                // Buscamos en la data base los que no son inputs
+                const dataDoc = datosTablaActual.find(d => d.id === docId) || {};
+                const valIdAplica = (dataDoc.idAplica || '').toLowerCase();
+                const valReq = fila.dataset.reqNumber || ''; 
+
+                // Si el texto está en AL MENOS UNO de los campos, pasa el filtro
+                pasaBusqueda = valReq.includes(textoBusqueda) || 
+                               valIdAplica.includes(textoBusqueda) || 
+                               valCot.includes(textoBusqueda) || 
+                               valOc.includes(textoBusqueda) || 
+                               valNv.includes(textoBusqueda);
             }
 
-            // Aplicar ambos filtros
-            if (mostrarPorEjecutiva && mostrarPorEstado) {
+            // Aplicar TODOS los filtros en conjunto
+            if (mostrarPorEjecutiva && mostrarPorEstado && pasaBusqueda) {
                 fila.style.display = "";
             } else {
                 fila.style.display = "none";
