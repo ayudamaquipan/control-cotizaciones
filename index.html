@@ -30,7 +30,6 @@
             --border-color: rgba(0,0,0,0.1);
         }
 
-        /* VARIABLES MODO OSCURO */
         [data-theme="dark"] {
             --bg-body-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             --surface: rgba(30, 41, 59, 0.85);
@@ -58,7 +57,6 @@
             color: var(--text-main);
         }
 
-        /* PANTALLA DE LOGIN */
         .login-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .login-card { background: white; padding: 3rem; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: zoomIn 0.5s ease; color: #333; }
         .hidden { display: none !important; }
@@ -80,7 +78,11 @@
         .table-custom td { vertical-align: middle; }
         .repuesto-item-box { background: rgba(128,128,128,0.05); padding: 15px; border-radius: 12px; border: 1px dashed var(--border-color); margin-bottom: 10px; }
 
-        /* REGLAS ESPECÍFICAS PARA MODO OSCURO */
+        /* Estilos para la tabla Excel */
+        .tabla-excel-wrapper { max-height: 70vh; overflow-y: auto; overflow-x: auto; }
+        .tabla-excel th { white-space: nowrap; background-color: var(--surface); position: sticky; top: 0; z-index: 10; border-bottom: 2px solid var(--border-color); }
+        .tabla-excel td { white-space: nowrap; padding: 0.5rem 1rem; vertical-align: middle; }
+
         [data-theme="dark"] .bg-white, [data-theme="dark"] .bg-light { background-color: rgba(15, 23, 42, 0.6) !important; color: #f8fafc !important; border-color: #334155 !important; }
         [data-theme="dark"] .text-dark, [data-theme="dark"] .text-muted { color: #cbd5e1 !important; }
         [data-theme="dark"] .table { color: #f8fafc; }
@@ -93,7 +95,6 @@
         [data-theme="dark"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
         [data-theme="dark"] .input-group-text { background-color: #334155; color: #f8fafc; border-color: #475569; }
         
-        /* ESTILOS DE PESTAÑAS (TABS) */
         .nav-pills .nav-link { color: var(--text-main); border: 1px solid transparent; transition: 0.3s; }
         .nav-pills .nav-link:hover { background-color: rgba(255,255,255,0.5); }
         .nav-pills .nav-link.active { background-color: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -151,15 +152,20 @@
 
         <div class="container">
             
-            <ul class="nav nav-pills mb-4 d-flex justify-content-center bg-white p-2 rounded-pill shadow-sm border mx-auto" id="pills-tab" role="tablist" style="max-width: 500px;">
-                <li class="nav-item w-50" role="presentation">
+            <ul class="nav nav-pills mb-4 d-flex justify-content-center bg-white p-2 rounded-pill shadow-sm border mx-auto" id="pills-tab" role="tablist" style="max-width: 800px;">
+                <li class="nav-item flex-fill" role="presentation">
                     <button class="nav-link active rounded-pill fw-bold w-100 text-center" id="pills-main-tab" data-bs-toggle="pill" data-bs-target="#pills-main" type="button" role="tab" aria-selected="true">
                         <i class="fas fa-home me-1"></i> Panel General
                     </button>
                 </li>
-                <li class="nav-item w-50" role="presentation">
+                <li class="nav-item flex-fill" role="presentation">
                     <button class="nav-link rounded-pill fw-bold w-100 text-center" id="pills-historial-tab" data-bs-toggle="pill" data-bs-target="#pills-historial" type="button" role="tab" aria-selected="false">
-                        <i class="fas fa-search-location me-1"></i> Historial por Local
+                        <i class="fas fa-search-location me-1"></i> Historial Local
+                    </button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link rounded-pill fw-bold w-100 text-center text-success" id="pills-excel-tab" data-bs-toggle="pill" data-bs-target="#pills-excel" type="button" role="tab" aria-selected="false">
+                        <i class="fas fa-table me-1"></i> Vista Excel
                     </button>
                 </li>
             </ul>
@@ -213,14 +219,13 @@
                             <input type="hidden" id="editandoId" value="">
                         
                             <div class="row g-3">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-floating">
                                         <input type="text" class="form-control rounded-3" id="reqNumber" required placeholder="REQ-1023">
-                                        <label>N° Requerimiento (Cotización)</label>
+                                        <label>N° REQ</label>
                                     </div>
                                 </div>
-                                
-                                <div class="col-md-4 position-relative">
+                                <div class="col-md-6 position-relative">
                                     <div class="form-floating">
                                         <input type="text" class="form-control rounded-3 border-primary" id="inputBuscarLocal" placeholder="Escribe para buscar local..." onkeyup="filtrarLocales(this)" autocomplete="off" required>
                                         <label><i class="fas fa-search"></i> Buscar Local / Cliente</label>
@@ -228,11 +233,10 @@
                                     <div id="cajaSugerenciasLocales"></div>
                                     <input type="hidden" id="nombreLocalOculto">
                                 </div>
-                        
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <div class="form-floating">
                                         <input type="text" class="form-control rounded-3 bg-light" id="cuentaInfo" readonly placeholder="Info de cuenta">
-                                        <label>Información de Cuenta y Ejecutiva</label>
+                                        <label>Ejecutiva Asignada</label>
                                     </div>
                                 </div>
                                 
@@ -251,13 +255,30 @@
                                 <div class="col-md-3">
                                     <div class="form-floating">
                                         <input type="text" class="form-control rounded-3" id="idAplica" placeholder="N° ID">
-                                        <label>N° ID Equipo (Opcional)</label>
+                                        <label>N° ID Equipo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-floating">
                                         <input type="text" class="form-control rounded-3" id="serieAplica" placeholder="Serie">
-                                        <label>N° de Serie (Opcional)</label>
+                                        <label>N° de Serie</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <select class="form-select rounded-3 border-warning fw-bold text-dark" id="prioridadAplica" required>
+                                            <option value="Normal">Normal</option>
+                                            <option value="Urgente">Urgente 🔥</option>
+                                            <option value="Baja">Baja</option>
+                                        </select>
+                                        <label>Prioridad</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-3 border-success" id="tecnicoAplica" placeholder="Nombre Técnico">
+                                        <label><i class="fas fa-user-cog"></i> Técnico Asignado</label>
                                     </div>
                                 </div>
                             </div>
@@ -306,13 +327,13 @@
                                 <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEstados">
                                     <i class="fas fa-layer-group text-muted me-2"></i>
                                     <select id="filtroEstados" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="aplicarFiltros()" style="cursor: pointer;">
-    <option value="TODOS">Todos los Estados</option>
-    <option value="PENDIENTE_COTIZAR">⏱️ Pendientes de Cotizar</option>
-    <option value="COTIZADO">⏳ Cotizado (Esperando OC)</option>
-    <option value="OC_RECIBIDA">🛠️ OC Recibida (Pendiente Servicio)</option>
-    <option value="PENDIENTE_FACTURAR">💰 Pendiente Facturar (Servicio Listo)</option>
-    <option value="FACTURADO">✅ Facturado / Terminado</option>
-</select>
+                                        <option value="TODOS">Todos los Estados</option>
+                                        <option value="PENDIENTE_COTIZAR">⏱️ Pendientes de Cotizar</option>
+                                        <option value="COTIZADO">⏳ Cotizado (Esperando OC)</option>
+                                        <option value="OC_RECIBIDA">🛠️ OC Recibida (Pdte. Servicio)</option>
+                                        <option value="PENDIENTE_FACTURAR">💰 Pendiente Facturar (Servicio Listo)</option>
+                                        <option value="FACTURADO">✅ Facturado / Terminado</option>
+                                    </select>
                                 </div>
 
                                 <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEjecutivas">
@@ -325,10 +346,6 @@
                                         <option value="otra">Otras Asignaciones</option>
                                     </select>
                                 </div>
-
-                                <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="exportarExcel()">
-                                    <i class="fas fa-file-excel me-1"></i> Exportar
-                                </button>
                             </div>
                         </div>
 
@@ -338,7 +355,7 @@
                                     <tr style="background-color: rgba(0,0,0,0.03);">
                                         <th style="width: 15%;">Requerimientos</th>
                                         <th style="width: 25%;">Repuestos / Obs / Estado</th>
-                                        <th style="width: 22%;">Gestión Económica</th>
+                                        <th style="width: 22%;">Gestión Económica / Fechas</th>
                                         <th style="width: 23%;">Documentación</th>
                                         <th style="width: 15%; text-align: center;">Acciones</th>
                                     </tr>
@@ -391,7 +408,71 @@
                     </div>
                 </div>
 
-            </div> </div>
+                <div class="tab-pane fade" id="pills-excel" role="tabpanel" aria-labelledby="pills-excel-tab">
+                    <div class="glass p-4 mb-4 animate__animated animate__fadeIn">
+                        
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 border-bottom pb-3 gap-3">
+                            <h5 class="fw-bold text-success mb-0"><i class="fas fa-table me-2"></i>Vista General de Datos (Formato Excel)</h5>
+                            
+                            <div class="d-flex flex-wrap gap-2 align-items-center bg-white p-2 rounded-pill shadow-sm border">
+                                <div class="d-flex align-items-center px-2 border-end">
+                                    <i class="fas fa-search text-muted me-2"></i>
+                                    <input type="text" id="busquedaExcel" class="form-control form-control-sm border-0 bg-transparent fw-bold text-secondary shadow-none" placeholder="Buscar en Excel..." onkeyup="renderizarTablaExcel()" style="width: 160px; outline: none;">
+                                </div>
+                                <div class="d-flex align-items-center px-2 border-end">
+                                    <i class="fas fa-layer-group text-muted me-2"></i>
+                                    <select id="filtroEstadoExcel" class="form-select form-select-sm border-0 bg-transparent fw-bold text-secondary shadow-none" onchange="renderizarTablaExcel()" style="cursor: pointer; width: 170px;">
+                                        <option value="TODOS">Todos los Estados</option>
+                                        <option value="PENDIENTE_COTIZAR">⏱️ Ptes. Cotizar</option>
+                                        <option value="COTIZADO">⏳ Cotizado</option>
+                                        <option value="OC_RECIBIDA">🛠️ OC Recibida</option>
+                                        <option value="PENDIENTE_FACTURAR">💰 Pte. Facturar</option>
+                                        <option value="FACTURADO">✅ Facturado</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm ms-2" onclick="exportarExcel()">
+                                    <i class="fas fa-file-excel me-1"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-3 shadow-sm border tabla-excel-wrapper">
+                            <table class="table table-hover table-sm mb-0 tabla-excel" style="font-size: 0.85rem;">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Ingreso</th>
+                                        <th>N° REQ</th>
+                                        <th>Local / Cliente</th>
+                                        <th>Ejecutiva</th>
+                                        <th>Equipo</th>
+                                        <th>ID Equipo</th>
+                                        <th>N° Serie</th>
+                                        <th>Prioridad</th>
+                                        <th>Técnico Asignado</th>
+                                        <th>Estado Actual</th>
+                                        <th class="text-primary bg-light">Estado Walmart</th>
+                                        <th>Valor Cotizado</th>
+                                        <th>N° COT</th>
+                                        <th>N° OC</th>
+                                        <th>NV ST</th>
+                                        <th>NV Comercial</th>
+                                        <th>F. Aprobación</th>
+                                        <th>F. Instalación</th>
+                                        <th>REQ Instalación</th>
+                                        <th>Repuestos</th>
+                                        <th class="border-start border-warning align-middle text-center"><i class="fas fa-edit"></i> Mi Nota (Ejecutiva)</th>
+                                        <th>Observaciones (Sup)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTablaExcel">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div> 
+        </div>
     </div>
 
     <div class="modal fade" id="modalLocales" tabindex="-1">
@@ -490,11 +571,35 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalObsEjecutiva" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom bg-warning bg-opacity-10 rounded-top-4">
+                    <h5 class="modal-title fw-bold text-dark"><i class="fas fa-edit text-warning me-2"></i>Nota de la Ejecutiva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="modObsEjecId">
+                    <div class="form-floating">
+                        <textarea class="form-control rounded-3 border-warning" id="modObsEjecTexto" style="height: 180px" placeholder="Escribe tus observaciones aquí..."></textarea>
+                        <label>Escribe el seguimiento, nota o comentario privado</label>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 bg-light rounded-bottom-4">
+                    <button type="button" class="btn btn-secondary rounded-pill fw-bold px-4 shadow-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning text-dark rounded-pill fw-bold px-4 shadow-sm" onclick="guardarObsEjecutivaModal()">
+                        <i class="fas fa-save me-1"></i> Guardar Nota
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="modalDetallesReq" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content rounded-4 border-0 shadow-lg">
                 <div class="modal-header border-bottom bg-light rounded-top-4">
-                    <h5 class="modal-title fw-bold text-primary"><i class="fas fa-file-invoice me-2"></i>Detalles del Requerimiento <span id="detReqNum" class="text-secondary ms-1"></span></h5>
+                    <h5 class="modal-title fw-bold text-primary"><i class="fas fa-file-invoice me-2"></i>Detalles de Solicitud <span id="detReqNum" class="text-secondary ms-1"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -505,17 +610,29 @@
                             <p class="mb-1 small"><strong>Ejecutiva Asignada:</strong> <span id="detEjecutiva" class="text-dark"></span></p>
                             <p class="mb-1 small"><strong>Fecha Solicitud:</strong> <span id="detFecha" class="text-dark"></span></p>
                             <p class="mb-1 small"><strong>Estado Actual:</strong> <span id="detEstado" class="badge bg-primary"></span></p>
+                            <p class="mb-1 small"><strong>Gestión Documental:</strong> <br>
+                                <span class="badge bg-light text-dark border me-1">COT: <span id="detCOT"></span></span>
+                                <span class="badge bg-light text-dark border me-1">OC: <span id="detOC"></span></span><br>
+                                <span class="badge bg-light text-dark border me-1 mt-1">NV ST: <span id="detNVST"></span></span>
+                                <span class="badge bg-light text-dark border mt-1">NV Comer: <span id="detNVComer"></span></span>
+                            </p>
                         </div>
                         <div class="col-md-6">
-                            <h6 class="fw-bold text-muted mb-2 border-bottom pb-2"><i class="fas fa-hdd me-1"></i> Detalles del Equipo</h6>
+                            <h6 class="fw-bold text-muted mb-2 border-bottom pb-2"><i class="fas fa-hdd me-1"></i> Detalles del Equipo y Servicio</h6>
                             <p class="mb-1 small"><strong>Equipo:</strong> <span id="detEquipo" class="text-dark"></span></p>
                             <p class="mb-1 small"><strong>N° ID:</strong> <span id="detId" class="text-dark"></span></p>
                             <p class="mb-1 small"><strong>N° Serie:</strong> <span id="detSerie" class="text-dark"></span></p>
+                            <p class="mb-1 small"><strong>Prioridad:</strong> <span id="detPrioridad" class="badge bg-warning text-dark"></span></p>
+                            <p class="mb-1 small"><strong>Técnico Asignado:</strong> <span id="detTecnico" class="text-dark fw-bold"></span></p>
+                            <p class="mb-1 small"><strong>Fechas Gestión:</strong> <br>
+                                <span class="small text-muted me-2"><i class="fas fa-calendar-check"></i> Aprob: <span id="detFAprob" class="text-dark fw-medium"></span></span>
+                                <span class="small text-muted"><i class="fas fa-calendar-alt"></i> Instal: <span id="detFInstal" class="text-dark fw-medium"></span></span>
+                            </p>
                             <p class="mb-1 small"><strong>REQ Instalación:</strong> <span id="detReqInst" class="text-dark"></span></p>
                         </div>
                     </div>
 
-                    <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2"><i class="fas fa-tools me-2"></i>Repuestos a Cotizar</h6>
+                    <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2"><i class="fas fa-tools me-2"></i>Repuestos a Cotizar / Instalar</h6>
                     <div class="table-responsive mb-4 bg-white rounded-3 border">
                         <table class="table table-sm table-hover mb-0">
                             <thead class="table-light">
@@ -653,8 +770,9 @@
     }
 
     // ==========================================
-    // 2. CONFIGURACIÓN DE FIREBASE
+    // 2. CONFIGURACIÓN DE FIREBASE (AMBAS BD)
     // ==========================================
+    // BD PRINCIPAL: Cotizaciones
     const firebaseConfig = {
       apiKey: "AIzaSyDfk1H8_uKIe2sZxf0Bo1wWZPsWDYZy7xk",
       authDomain: "control-cotizaciones.firebaseapp.com",
@@ -663,9 +781,19 @@
       messagingSenderId: "896776935936",
       appId: "1:896776935936:web:767f182071b705ec8216e5"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+
+    // BD SECUNDARIA: Planificador (PUENTE)
+    const firebasePlanificadorConfig = {
+      apiKey: "AIzaSyA9tUGGmMqk85Hljw8H1XoTfX2U5iQu85c",
+      authDomain: "control-de-servicios-b8e34.firebaseapp.com",
+      projectId: "control-de-servicios-b8e34"
+    };
+    // Se inicializa como una app secundaria llamada "PlanificadorApp"
+    const appPlanificador = firebase.initializeApp(firebasePlanificadorConfig, "PlanificadorApp");
+    const dbPlanificador = appPlanificador.firestore();
+
     let datosTablaActual = [];
 
     // ==========================================
@@ -805,8 +933,7 @@
                 div.onclick = () => {
                     inputElement.value = `${local.numLocal || ''} - ${local.nombre}`;
                     document.getElementById('nombreLocalOculto').value = local.nombre;
-                    const matriz = local.nombre.split(' ')[0];
-                    document.getElementById('cuentaInfo').value = `Matriz: ${matriz} | Ejecutiva: ${local.ejecutiva || 'N/A'}`;
+                    document.getElementById('cuentaInfo').value = `Ejecutiva: ${local.ejecutiva || 'N/A'}`;
                     cajaSugerencias.style.display = 'none';
                 };
                 cajaSugerencias.appendChild(div);
@@ -818,7 +945,6 @@
         }
     }
 
-    // NUEVO BUSCADOR PARA LA PESTAÑA HISTORIAL
     function filtrarLocalesHistorial(inputElement) {
         const texto = inputElement.value.toLowerCase().trim();
         const cajaSugerencias = document.getElementById('cajaSugerenciasLocalesHistorial');
@@ -954,12 +1080,13 @@
         const payloadSolicitud = {
             reqNumber: document.getElementById('reqNumber').value,
             local: document.getElementById('inputBuscarLocal').value,
-            cuenta: cuentaInfoCompleta,
             ejecutiva: ejecutivaExtraida,
             fecha: document.getElementById('fechaSolicitud').value,
             equipo: document.getElementById('equipoAplica').value,
             idAplica: document.getElementById('idAplica').value || 'N/A',
             serie: document.getElementById('serieAplica').value || 'N/A',
+            prioridad: document.getElementById('prioridadAplica').value || 'Normal',
+            tecnico: document.getElementById('tecnicoAplica').value || 'Sin asignar',
             repuestos: repuestosFinales,
             enlaces: enlacesFinales,
             observaciones: document.getElementById('observaciones').value || 'N/A'
@@ -976,12 +1103,18 @@
             payloadSolicitud.valorCot = ''; 
             payloadSolicitud.numCot = ''; 
             payloadSolicitud.ocRecibida = false; 
-            payloadSolicitud.numNV = ''; 
+            payloadSolicitud.numNV_ST = ''; 
+            payloadSolicitud.numNV_Comer = ''; 
+            payloadSolicitud.fechaAprob = '';
+            payloadSolicitud.fechaInstal = '';
             payloadSolicitud.numOC = ''; 
             payloadSolicitud.reqInstalacion = '';
             payloadSolicitud.servicioRealizado = false; 
             payloadSolicitud.linkFotos = [];
             payloadSolicitud.enviadoFacturar = false;
+            payloadSolicitud.obsEjecutiva = ''; 
+            payloadSolicitud.estadoWalmart = ''; 
+            payloadSolicitud.enviadoPlanificador = false; // Estado de envío al puente
             payloadSolicitud.fechaCreacion = firebase.firestore.FieldValue.serverTimestamp();
 
             db.collection("cotizaciones").add(payloadSolicitud).then(() => {
@@ -996,6 +1129,68 @@
         if (valorNumerico === "") { input.value = ""; return; }
         input.value = "$" + new Intl.NumberFormat("es-CL").format(valorNumerico);
     }
+
+    // ==========================================
+    // NUEVA FUNCIÓN: PUENTE HACIA EL PLANIFICADOR
+    // ==========================================
+    window.enviarAlPlanificador = async function(id) {
+        const doc = datosTablaActual.find(d => d.id === id);
+        if(!doc) return;
+
+        if(!confirm(`¿Confirmas que los repuestos están DESPACHADOS y deseas cargar el REQ ${doc.reqNumber} al portal de Planificación?`)) return;
+
+        // Formatear repuestos para que sean legibles en el otro portal
+        const repuestosTexto = doc.repuestos && doc.repuestos.length > 0 
+            ? doc.repuestos.map(r => `${r.cantidad}x ${r.nombre}`).join(" | ") 
+            : "Sin repuestos";
+
+        // Mapear los datos al esquema exacto que usa index (15).html
+const payloadPlanificador = {
+	    idCotizacion: id, // <--- NUEVA LÍNEA CLAVE: Envía su propio ID
+            numRequerimiento: doc.reqNumber || '',
+            numNV: doc.numNV_Comer || '',
+            cliente: doc.local || '',
+            montoServicio: doc.valorCot ? doc.valorCot.replace(/\D/g, '') : '', 
+            tipoServicio: 'Otro', 
+            vendedor: doc.ejecutiva || '',
+            direccion: '',
+            region: '',
+            comuna: '',
+            nomContacto: '',
+            numContacto: '',
+            infoServicio: `Equipo: ${doc.equipo || 'N/A'} | ID: ${doc.idAplica || 'N/A'}\nRepuestos: ${repuestosTexto}\nObs Sup: ${doc.observaciones || ''}`,
+            
+            // LA LÓGICA CLAVE: Si tiene repuestos, decimos directamente que SÍ están despachados
+            tieneRepuestos: (doc.repuestos && doc.repuestos.length > 0) ? 'Sí' : 'No',
+            repuestosDespachados: (doc.repuestos && doc.repuestos.length > 0) ? 'Sí' : 'N/A', 
+            
+            fechaAsignada: '',
+            horaTraslado: '',
+            horaInicio: '',
+            horaTermino: '',
+            tecnicos: doc.tecnico && doc.tecnico !== 'Sin asignar' ? [doc.tecnico] : [],
+            observacionesPlanificacion: doc.obsEjecutiva || '',
+            estado: 'Pendiente',
+            // CORRECCIÓN: Usar el objeto global firebase.firestore
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            fechaEdicion: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        try {
+            // 1. Enviar a la base de datos del Planificador
+            await dbPlanificador.collection('servicios').add(payloadPlanificador);
+            
+            // 2. Actualizar la cotización actual para marcarla como enviada y bloquear el botón
+            await db.collection("cotizaciones").doc(id).update({
+                enviadoPlanificador: true
+            });
+
+            alert("¡Requerimiento cargado exitosamente en Planificación!");
+        } catch (error) {
+            console.error("Error al enviar al planificador:", error);
+            alert("Ocurrió un error de conexión al enviar los datos.");
+        }
+    };
 
     // ==========================================
     // 6. TABLAS Y LÓGICA DE DATOS
@@ -1071,6 +1266,18 @@
                 if (data.ocRecibida) claseEstado = "estado-completado"; 
                 else if (data.numCot && data.numCot.trim() !== "") claseEstado = "estado-cotizado"; 
 
+                let labelPrioridad = "";
+                if(data.prioridad === "Urgente") labelPrioridad = `<span class="badge bg-danger ms-1" style="font-size:0.65em">URGENTE 🔥</span>`;
+                else if(data.prioridad === "Baja") labelPrioridad = `<span class="badge bg-secondary ms-1" style="font-size:0.65em">BAJA</span>`;
+
+                // NUEVO BOTÓN: Enviar a Planificador (Visible para Ejecutivas)
+                let btnEnviarPlanificador = "";
+                if (data.enviadoPlanificador) {
+                    btnEnviarPlanificador = `<button class="btn btn-success btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" disabled><i class="fas fa-check-double me-1"></i> En Planificación</button>`;
+                } else {
+                    btnEnviarPlanificador = `<button class="btn btn-dark btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" onclick="enviarAlPlanificador('${id}')"><i class="fas fa-paper-plane me-1"></i> Cargar a Planificación</button>`;
+                }
+
                 const tr = document.createElement('tr');
                 tr.className = `fila-registro ${claseEstado}`;
                 
@@ -1084,7 +1291,6 @@
 
                 let botonesSupervisor = "";
                 if (rolActual === 'admin') {
-                    // BOTÓN PARA DUPLICAR SOLICITUD
                     botonesSupervisor += `<button class="btn btn-outline-success btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" onclick="duplicarSolicitud('${id}')"><i class="fas fa-copy me-1"></i> Duplicar</button>`;
                     botonesSupervisor += `<button class="btn btn-outline-warning btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="cargarEdicion('${id}')"><i class="fas fa-edit me-1"></i> Editar Solicitud</button>`;
                     botonesSupervisor += `<button class="btn btn-outline-info btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="abrirModalServicio('${id}')"><i class="fas fa-camera me-1"></i> Reporte Técnico</button>`;
@@ -1093,10 +1299,11 @@
 
                 tr.innerHTML = `
                     <td>
-                        <div class="fw-bold fs-6 text-primary mb-1">${data.reqNumber}</div>
+                        <div class="fw-bold fs-6 text-primary mb-1">${data.reqNumber} ${labelPrioridad}</div>
                         <div class="fw-bold small mb-1">${data.local}</div>
                         <div class="opacity-75" style="font-size: 0.75rem;"><i class="fas fa-calendar-alt me-1"></i>${data.fecha}</div>
-                        <div class="opacity-75 mb-2" style="font-size: 0.75rem;">Eq: ${data.equipo || 'N/A'} | ID: ${data.idAplica} | S: ${data.serie}</div>
+                        <div class="opacity-75 mb-2" style="font-size: 0.75rem;">Eq: ${data.equipo || 'N/A'} | ID: ${data.idAplica}</div>
+                        <div class="opacity-75 mb-2 fw-medium text-success" style="font-size: 0.75rem;"><i class="fas fa-user-cog me-1"></i>Téc: ${data.tecnico || 'N/A'}</div>
                         <button class="btn btn-outline-primary btn-sm w-100 rounded-pill shadow-sm fw-bold border-2" onclick="verDetallesReq('${id}')">
                             <i class="fas fa-expand-arrows-alt me-1"></i> Ver Detalles
                         </button>
@@ -1104,53 +1311,220 @@
                     <td>
                         ${repuestosHtml}
                         ${data.observaciones && data.observaciones !== 'N/A' ? `<div class="mt-2 pt-2 border-top border-opacity-25 fst-italic opacity-75 small"><i class="fas fa-comment-dots me-1"></i>${data.observaciones}</div>` : ''}
+                        ${data.obsEjecutiva && data.obsEjecutiva !== '' ? `<div class="mt-2 p-2 bg-warning bg-opacity-10 rounded text-dark small border border-warning"><i class="fas fa-sticky-note me-1"></i><strong>Mi Nota:</strong> ${data.obsEjecutiva}</div>` : ''}
                         ${enlacesHtml}
                         ${servicioHtml}
                     </td>
                     <td>
                         <input type="text" id="valor_${id}" class="form-control form-control-sm border-primary fw-bold text-success mb-2 text-center" value="${data.valorCot || ''}" placeholder="$ Valor Total" onkeyup="formatearMoneda(this)">
                         
-                        <div class="form-check form-switch mt-3 ps-5">
+                        <div class="form-check form-switch mt-2 ps-5 border-bottom pb-2">
                             <input class="form-check-input" type="checkbox" role="switch" id="check_${id}" ${data.ocRecibida ? 'checked' : ''} style="cursor:pointer; transform: scale(1.3);">
                             <label class="form-check-label ms-1 fw-bold small mt-1" for="check_${id}" style="cursor:pointer;">OC Recibida</label>
                         </div>
                         
-                        <div class="mt-2 pt-2 border-top border-opacity-25 text-center">
+                        <div class="input-group input-group-sm mt-2">
+                            <span class="input-group-text bg-light text-muted" style="font-size: 0.7em; width: 65px;" title="Fecha Aprobación">F. Apr.</span>
+                            <input type="date" id="fechaAprob_${id}" class="form-control" value="${data.fechaAprob || ''}">
+                        </div>
+                        <div class="input-group input-group-sm mt-1 mb-2">
+                            <span class="input-group-text bg-light text-muted" style="font-size: 0.7em; width: 65px;" title="Fecha Instalación">F. Inst.</span>
+                            <input type="date" id="fechaInstal_${id}" class="form-control" value="${data.fechaInstal || ''}">
+                        </div>
+                        
+                        <div class="text-center">
                             ${btnFacturado}
                         </div>
                     </td>
                     <td>
                         <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text fw-bold text-muted" style="width: 50px;">COT</span>
+                            <span class="input-group-text fw-bold text-muted" style="width: 70px;">COT</span>
                             <input type="text" id="numCot_${id}" class="form-control" value="${data.numCot || ''}" placeholder="N°">
                         </div>
                         <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text fw-bold text-muted" style="width: 50px;">OC</span>
-                            <input type="text" id="numOC_${id}" class="form-control" value="${data.numOC || ''}" placeholder="N° Cliente">
+                            <span class="input-group-text fw-bold text-muted" style="width: 70px;">OC</span>
+                            <input type="text" id="numOC_${id}" class="form-control" value="${data.numOC || ''}" placeholder="N°">
                         </div>
                         <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text fw-bold text-muted" style="width: 50px;">NV</span>
-                            <input type="text" id="numNV_${id}" class="form-control" value="${data.numNV || ''}" placeholder="N°">
+                            <span class="input-group-text fw-bold text-info" style="width: 70px;" title="Nota de Venta Servicio Técnico">NV ST</span>
+                            <input type="text" id="numNV_ST_${id}" class="form-control border-info" value="${data.numNV_ST || ''}" placeholder="(Opcional)">
+                        </div>
+                        <div class="input-group input-group-sm mb-1">
+                            <span class="input-group-text fw-bold text-info" style="width: 70px;">NV COM</span>
+                            <input type="text" id="numNV_Comer_${id}" class="form-control border-info" value="${data.numNV_Comer || ''}" placeholder="N°">
                         </div>
                         <div class="input-group input-group-sm border-top border-opacity-25 pt-2 mt-2">
-                            <span class="input-group-text bg-warning bg-opacity-10 text-dark fw-bold" style="width: 50px;" title="REQ de Instalación">R.I.</span>
-                            <input type="text" id="reqInst_${id}" class="form-control border-warning" value="${data.reqInstalacion || ''}" placeholder="REQ Instalación">
+                            <span class="input-group-text bg-warning bg-opacity-10 text-dark fw-bold" style="width: 70px;" title="REQ de Instalación">R.I.</span>
+                            <input type="text" id="reqInst_${id}" class="form-control border-warning" value="${data.reqInstalacion || ''}" placeholder="REQ Inst">
                         </div>
                     </td>
                     <td class="text-center align-middle">
                         <button class="btn btn-primary btn-sm w-100 rounded-pill shadow-sm fw-bold" onclick="actualizarEjecutiva('${id}')">
                             <i class="fas fa-save me-1"></i> Guardar
                         </button>
+                        ${btnEnviarPlanificador}
                         ${botonesSupervisor}
                     </td>
                 `;
                 tabla.appendChild(tr);
             });
+            
             aplicarFiltros(); 
+            renderizarTablaExcel();
         });
     }
 
-    // NUEVA FUNCIÓN PARA LA PESTAÑA HISTORIAL
+    // ==========================================
+    // RENDERIZAR VISTA EXCEL HORIZONTAL CON FILTROS
+    // ==========================================
+    function renderizarTablaExcel() {
+        const tbody = document.getElementById('cuerpoTablaExcel');
+        tbody.innerHTML = '';
+        
+        const textoBusqueda = document.getElementById('busquedaExcel').value.toLowerCase().trim();
+        const selectEstado = document.getElementById('filtroEstadoExcel').value;
+        const filtroEjecutivaGlobal = document.getElementById('filtroEjecutivas').value.toLowerCase();
+        
+        datosTablaActual.forEach(data => {
+            
+            // 1. Filtrar por Ejecutiva
+            const ejecData = (data.ejecutiva || "").toLowerCase();
+            let mostrarPorEjecutiva = false;
+
+            if (filtroEjecutivaGlobal === "todas") { 
+                mostrarPorEjecutiva = true; 
+            } else if (filtroEjecutivaGlobal === "otra") {
+                const esPrincipal = ["keillyn", "kcuellar", "katherine", "kcarrasco", "johanna", "jdiazb"].some(val => ejecData.includes(val));
+                mostrarPorEjecutiva = !esPrincipal;
+            } else {
+                if (filtroEjecutivaGlobal === "keillyn" && (ejecData.includes("keillyn") || ejecData.includes("kcuellar"))) mostrarPorEjecutiva = true;
+                if (filtroEjecutivaGlobal === "katherine" && (ejecData.includes("katherine") || ejecData.includes("kcarrasco"))) mostrarPorEjecutiva = true;
+                if (filtroEjecutivaGlobal === "johanna" && (ejecData.includes("johanna") || ejecData.includes("jdiazb"))) mostrarPorEjecutiva = true;
+            }
+            if (!mostrarPorEjecutiva) return;
+
+            // 2. Determinar Estado y Filtrar
+            let estadoCod = "PENDIENTE_COTIZAR";
+            let estadoStr = "⏱️ Pendiente de Cotizar";
+            let colorTexto = "text-warning";
+            
+            if (data.enviadoFacturar) { estadoStr = "✅ Facturado / Terminado"; colorTexto = "text-secondary"; estadoCod = "FACTURADO"; }
+            else if (data.servicioRealizado) { estadoStr = "💰 Pendiente Facturar"; colorTexto = "text-success"; estadoCod = "PENDIENTE_FACTURAR"; }
+            else if (data.ocRecibida) { estadoStr = "🛠️ OC Recibida (Aprobado)"; colorTexto = "text-info"; estadoCod = "OC_RECIBIDA"; }
+            else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ Cotizado (Esp. OC)"; colorTexto = "text-primary"; estadoCod = "COTIZADO"; }
+
+            if (selectEstado !== "TODOS" && selectEstado !== estadoCod) return;
+
+            // 3. Filtrar por Buscador Texto Libre
+            if (textoBusqueda !== '') {
+                const strFila = `${data.reqNumber || ''} ${data.local || ''} ${data.tecnico || ''} ${data.idAplica || ''} ${data.numCot || ''} ${data.numOC || ''}`.toLowerCase();
+                if (!strFila.includes(textoBusqueda)) return;
+            }
+
+            const repuestosTexto = data.repuestos ? data.repuestos.map(r => `${r.cantidad}x ${r.nombre}`).join(" | ") : "Sin repuestos";
+            let obsEjecRecortada = data.obsEjecutiva || '';
+            if (obsEjecRecortada.length > 25) obsEjecRecortada = obsEjecRecortada.substring(0, 25) + '...';
+
+            // Lógica de colores mediante clases nativas de Bootstrap para Estado Walmart
+            let claseFilaExcel = "";
+            if (data.estadoWalmart === "Revision pendiente de supervisor") claseFilaExcel = "table-danger";
+            else if (data.estadoWalmart === "Activo") claseFilaExcel = "table-success";
+            else if (data.estadoWalmart === "Sostener por partes") claseFilaExcel = "table-warning";
+
+            tbody.innerHTML += `
+                <tr class="${claseFilaExcel}">
+                    <td>${data.fecha || ''}</td>
+                    <td class="fw-bold text-primary">${data.reqNumber || ''}</td>
+                    <td class="fw-medium">${data.local || ''}</td>
+                    <td class="text-capitalize">${data.ejecutiva || ''}</td>
+                    <td>${data.equipo || ''}</td>
+                    <td>${data.idAplica || ''}</td>
+                    <td>${data.serie || ''}</td>
+                    <td>${data.prioridad === 'Urgente' ? '<span class="badge bg-danger">Urgente</span>' : (data.prioridad === 'Baja' ? 'Baja' : 'Normal')}</td>
+                    <td class="text-success fw-medium">${data.tecnico || ''}</td>
+                    <td class="fw-bold ${colorTexto}">${estadoStr}</td>
+                    
+                    <td>
+                        <select class="form-select form-select-sm fw-bold border-secondary shadow-sm" style="font-size: 0.75rem; width: 170px; cursor: pointer;" onchange="actualizarEstadoWalmart('${data.id}', this.value, this)">
+                            <option value="">-- No definido --</option>
+                            <option value="Revision pendiente de supervisor" ${data.estadoWalmart === 'Revision pendiente de supervisor' ? 'selected' : ''}>Revision pendiente de supervisor</option>
+                            <option value="Activo" ${data.estadoWalmart === 'Activo' ? 'selected' : ''}>Activo</option>
+                            <option value="Sostener por partes" ${data.estadoWalmart === 'Sostener por partes' ? 'selected' : ''}>Sostener por partes</option>
+                            <option value="Fallo en la verificación" ${data.estadoWalmart === 'Fallo en la verificación' ? 'selected' : ''}>Fallo en la verificación</option>
+                            <option value="Rehusar" ${data.estadoWalmart === 'Rehusar' ? 'selected' : ''}>Rehusar</option>
+                            <option value="Validación de tienda pendiente" ${data.estadoWalmart === 'Validación de tienda pendiente' ? 'selected' : ''}>Validación de tienda pendiente</option>
+                            <option value="Cotizar" ${data.estadoWalmart === 'Cotizar' ? 'selected' : ''}>Cotizar</option>
+                        </select>
+                    </td>
+
+                    <td class="fw-bold text-dark">${data.valorCot || ''}</td>
+                    <td>${data.numCot || ''}</td>
+                    <td>${data.numOC || ''}</td>
+                    <td>${data.numNV_ST || ''}</td>
+                    <td>${data.numNV_Comer || ''}</td>
+                    <td>${data.fechaAprob || ''}</td>
+                    <td>${data.fechaInstal || ''}</td>
+                    <td>${data.reqInstalacion || ''}</td>
+                    <td><small class="text-muted" style="max-width: 200px; display: inline-block; overflow: hidden; text-overflow: ellipsis;">${repuestosTexto}</small></td>
+                    
+                    <td class="border-start border-warning align-middle" style="min-width: 220px;">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+                            <span class="text-start small text-dark fw-medium fst-italic" style="flex-grow: 1;">${obsEjecRecortada || '<span class="text-muted">Sin notas...</span>'}</span>
+                            <button class="btn btn-sm btn-outline-warning text-dark shadow-sm rounded-circle flex-shrink-0 bg-white" onclick="abrirModalObsEjecutiva('${data.id}')" title="Ver / Editar Nota">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                    
+                    <td><small class="text-muted" style="max-width: 200px; display: inline-block; overflow: hidden; text-overflow: ellipsis;">${data.observaciones === 'N/A' ? '' : data.observaciones}</small></td>
+                </tr>
+            `;
+        });
+    }
+
+    // Función para actualizar automáticamente el Estado Walmart y cambiar el color al instante
+    window.actualizarEstadoWalmart = function(id, valor, elementoSelect) {
+        const fila = elementoSelect.closest('tr');
+        
+        fila.classList.remove("table-danger", "table-success", "table-warning");
+        
+        if (valor === "Revision pendiente de supervisor") {
+            fila.classList.add("table-danger");
+        } else if (valor === "Activo") {
+            fila.classList.add("table-success");
+        } else if (valor === "Sostener por partes") {
+            fila.classList.add("table-warning");
+        }
+
+        db.collection("cotizaciones").doc(id).update({
+            estadoWalmart: valor
+        }).catch(error => console.error("Error al actualizar Estado Walmart:", error));
+    };
+
+    // ==========================================
+    // NOTA DE EJECUTIVA
+    // ==========================================
+    window.abrirModalObsEjecutiva = function(id) {
+        const doc = datosTablaActual.find(d => d.id === id);
+        if(!doc) return;
+        
+        document.getElementById('modObsEjecId').value = id;
+        document.getElementById('modObsEjecTexto').value = doc.obsEjecutiva || '';
+        new bootstrap.Modal(document.getElementById('modalObsEjecutiva')).show();
+    };
+
+    window.guardarObsEjecutivaModal = function() {
+        const id = document.getElementById('modObsEjecId').value;
+        const texto = document.getElementById('modObsEjecTexto').value;
+
+        db.collection("cotizaciones").doc(id).update({
+            obsEjecutiva: texto
+        }).then(() => {
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalObsEjecutiva'));
+            if(modalInstance) modalInstance.hide();
+        }).catch(error => console.error("Error al guardar nota:", error));
+    };
+
     function cargarHistorialLocal(nombreLocal) {
         const tbody = document.getElementById('cuerpoTablaHistorial');
         tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5"><i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i><br><span class="text-muted fw-bold">Buscando historial en la base de datos...</span></td></tr>';
@@ -1161,7 +1535,6 @@
                 resultados.push({ id: doc.id, ...doc.data() });
             });
             
-            // Ordenar por fechaCreacion descendente (lo más nuevo arriba)
             resultados.sort((a, b) => {
                 let d1 = a.fechaCreacion ? a.fechaCreacion.toMillis() : 0;
                 let d2 = b.fechaCreacion ? b.fechaCreacion.toMillis() : 0;
@@ -1175,7 +1548,6 @@
 
             tbody.innerHTML = '';
             resultados.forEach(data => {
-                // Determinar estado
                 let estadoStr = "⏱️ PENDIENTE";
                 let badgeColor = "bg-warning text-dark";
                 if (data.enviadoFacturar) { estadoStr = "✅ FACTURADO / TERMINADO"; badgeColor = "bg-secondary"; }
@@ -1183,12 +1555,10 @@
                 else if (data.ocRecibida) { estadoStr = "🛠️ OC RECIBIDA (Aprobado)"; badgeColor = "bg-info text-dark"; }
                 else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ COTIZADO (Esperando OC)"; badgeColor = "bg-primary"; }
 
-                // Asegurar que exista en datosTablaActual para que el modal Detalles funcione
                 if (!datosTablaActual.find(d => d.id === data.id)) {
                     datosTablaActual.push(data);
                 }
 
-                // Extraer info de links para mostrar un resumen
                 let numDocs = 0;
                 if (data.linkFotos && Array.isArray(data.linkFotos)) numDocs += data.linkFotos.length;
                 else if (data.linkFotos && typeof data.linkFotos === 'string' && data.linkFotos.trim() !== '') numDocs += 1;
@@ -1236,7 +1606,10 @@
             valorCot: document.getElementById(`valor_${id}`).value,
             numCot: document.getElementById(`numCot_${id}`).value,
             numOC: document.getElementById(`numOC_${id}`).value,
-            numNV: document.getElementById(`numNV_${id}`).value,
+            numNV_ST: document.getElementById(`numNV_ST_${id}`).value,
+            numNV_Comer: document.getElementById(`numNV_Comer_${id}`).value,
+            fechaAprob: document.getElementById(`fechaAprob_${id}`).value,
+            fechaInstal: document.getElementById(`fechaInstal_${id}`).value,
             reqInstalacion: document.getElementById(`reqInst_${id}`).value,
             ocRecibida: document.getElementById(`check_${id}`).checked
         }).then(() => alert("¡Datos actualizados correctamente!")).catch(error => console.error(error));
@@ -1342,7 +1715,6 @@
         const filas = document.querySelectorAll('.fila-registro');
 
         filas.forEach(fila => {
-            // Lógica de Ejecutiva
             const ejecFila = fila.dataset.ejecutiva.toLowerCase(); 
             let mostrarPorEjecutiva = false;
 
@@ -1357,57 +1729,47 @@
                 if (selectEjecutiva === "johanna" && (ejecFila.includes("johanna") || ejecFila.includes("jdiazb"))) mostrarPorEjecutiva = true;
             }
 
-            // Lógica de Estado
             let mostrarPorEstado = false;
             const tieneCot = fila.dataset.tieneCot === "si";
             const tieneOc = fila.dataset.tieneOc === "si";
             const servicioListo = fila.dataset.servicioListo === "si";
             const facturado = fila.dataset.facturado === "si";
 
-            if (selectEstado === "TODOS") {
-    mostrarPorEstado = true;
-} else if (selectEstado === "PENDIENTE_COTIZAR") {
-    mostrarPorEstado = !tieneCot; 
-} else if (selectEstado === "COTIZADO") {
-    mostrarPorEstado = tieneCot && !tieneOc; 
-} else if (selectEstado === "OC_RECIBIDA") {
-    // NUEVA CONDICIÓN AQUÍ
-    mostrarPorEstado = tieneOc && !servicioListo; 
-} else if (selectEstado === "PENDIENTE_FACTURAR") {
-    mostrarPorEstado = servicioListo && !facturado; 
-} else if (selectEstado === "FACTURADO") {
-    mostrarPorEstado = facturado; 
-}
+            if (selectEstado === "TODOS") mostrarPorEstado = true;
+            else if (selectEstado === "PENDIENTE_COTIZAR") mostrarPorEstado = !tieneCot; 
+            else if (selectEstado === "COTIZADO") mostrarPorEstado = tieneCot && !tieneOc; 
+            else if (selectEstado === "OC_RECIBIDA") mostrarPorEstado = tieneOc && !servicioListo; 
+            else if (selectEstado === "PENDIENTE_FACTURAR") mostrarPorEstado = servicioListo && !facturado; 
+            else if (selectEstado === "FACTURADO") mostrarPorEstado = facturado; 
 
-            // Lógica del BUSCADOR GENERAL
             let pasaBusqueda = true;
             if (textoBusqueda !== '') {
                 const docId = fila.dataset.id;
-                // Rescatamos los valores de los inputs en vivo
                 const valCot = (document.getElementById(`numCot_${docId}`)?.value || '').toLowerCase();
                 const valOc = (document.getElementById(`numOC_${docId}`)?.value || '').toLowerCase();
-                const valNv = (document.getElementById(`numNV_${docId}`)?.value || '').toLowerCase();
+                const valNvST = (document.getElementById(`numNV_ST_${docId}`)?.value || '').toLowerCase();
+                const valNvComer = (document.getElementById(`numNV_Comer_${docId}`)?.value || '').toLowerCase();
                 
-                // Buscamos en la data base los que no son inputs
                 const dataDoc = datosTablaActual.find(d => d.id === docId) || {};
                 const valIdAplica = (dataDoc.idAplica || '').toLowerCase();
                 const valReq = fila.dataset.reqNumber || ''; 
 
-                // Si el texto está en AL MENOS UNO de los campos, pasa el filtro
                 pasaBusqueda = valReq.includes(textoBusqueda) || 
                                valIdAplica.includes(textoBusqueda) || 
                                valCot.includes(textoBusqueda) || 
                                valOc.includes(textoBusqueda) || 
-                               valNv.includes(textoBusqueda);
+                               valNvST.includes(textoBusqueda) || 
+                               valNvComer.includes(textoBusqueda);
             }
 
-            // Aplicar TODOS los filtros en conjunto
             if (mostrarPorEjecutiva && mostrarPorEstado && pasaBusqueda) {
                 fila.style.display = "";
             } else {
                 fila.style.display = "none";
             }
         });
+        
+        renderizarTablaExcel();
     }
 
     function exportarExcel() {
@@ -1423,16 +1785,42 @@
                 }).join(" | ") 
                 : (doc.linkFotos || "N/A");
             
+            let mesCalculado = "N/A";
+            if (doc.fecha) {
+                const [year, month, day] = doc.fecha.split('-');
+                if (year && month) {
+                    const dateObj = new Date(year, month - 1, day || 1);
+                    mesCalculado = dateObj.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+                }
+            }
+
             return {
-                "Fecha Solicitud": doc.fecha, "Requerimiento (Cotización)": doc.reqNumber, "Local / Cliente": doc.local,
-                "Ejecutiva Asignada": doc.ejecutiva, "Equipo": doc.equipo || "N/A", "ID Equipo": doc.idAplica, "N° Serie": doc.serie,
-                "Repuestos": repuestosTexto, "Observaciones": doc.observaciones, 
+                "MES": mesCalculado,
+                "Fecha Solicitud": doc.fecha, 
+                "Requerimiento (Cotización)": doc.reqNumber, 
+                "Local / Cliente": doc.local,
+                "Ejecutiva Asignada": doc.ejecutiva, 
+                "Prioridad": doc.prioridad || "Normal",
+                "Técnico Asignado": doc.tecnico || "N/A",
+                "Equipo": doc.equipo || "N/A", 
+                "ID Equipo": doc.idAplica, 
+                "N° Serie": doc.serie,
+                "Repuestos": repuestosTexto, 
+                "Observaciones Supervisor": doc.observaciones,
+                "Notas Ejecutiva": doc.obsEjecutiva || "", 
+                "Estado Walmart": doc.estadoWalmart || "N/A",
                 "Servicio Realizado": doc.servicioRealizado ? "SÍ" : "NO",
                 "Link de Documentos": linksExtraidos,
                 "Enviado a Facturar": doc.enviadoFacturar ? "SÍ" : "NO",
                 "Valor Cotizado": doc.valorCot,
-                "N° Cotización": doc.numCot, "N° OC Cliente": doc.numOC, "OC Recibida": doc.ocRecibida ? "SÍ" : "NO",
-                "N° Nota Venta": doc.numNV, "REQ Instalación": doc.reqInstalacion || "N/A"
+                "N° Cotización": doc.numCot, 
+                "N° OC Cliente": doc.numOC, 
+                "OC Recibida": doc.ocRecibida ? "SÍ" : "NO",
+                "NV ST": doc.numNV_ST || "N/A", 
+                "NV Comercial": doc.numNV_Comer || "N/A",
+                "Fecha Aprobación": doc.fechaAprob || "N/A",
+                "Fecha Instalación": doc.fechaInstal || "N/A",
+                "REQ Instalación": doc.reqInstalacion || "N/A"
             };
         });
         const hoja = XLSX.utils.json_to_sheet(dataExcel);
@@ -1442,7 +1830,6 @@
         XLSX.writeFile(libro, `Reporte_Cotizaciones_Maquipan_${fechaHoy}.xlsx`);
     }
 
-    // Funciones Masivas
     async function eliminarTodosLosLocales() {
         if(confirm("ATENCIÓN: ¿Deseas eliminar TODOS los locales de la base de datos?")) {
             try {
@@ -1510,21 +1897,20 @@
         const doc = datosTablaActual.find(d => d.id === id);
         if(!doc) return;
 
-        // Subir suavemente hacia el formulario
         document.getElementById('seccionFormulario').scrollIntoView({ behavior: 'smooth' });
 
-        // Rellenar campos de texto
         document.getElementById('editandoId').value = id;
         document.getElementById('reqNumber').value = doc.reqNumber || '';
         document.getElementById('inputBuscarLocal').value = doc.local || '';
-        document.getElementById('cuentaInfo').value = doc.cuenta || '';
+        document.getElementById('cuentaInfo').value = `Ejecutiva: ${doc.ejecutiva || 'N/A'}`;
         document.getElementById('fechaSolicitud').value = doc.fecha || '';
         document.getElementById('equipoAplica').value = doc.equipo || '';
         document.getElementById('idAplica').value = doc.idAplica === 'N/A' ? '' : doc.idAplica;
         document.getElementById('serieAplica').value = doc.serie === 'N/A' ? '' : doc.serie;
+        document.getElementById('prioridadAplica').value = doc.prioridad || 'Normal';
+        document.getElementById('tecnicoAplica').value = doc.tecnico || '';
         document.getElementById('observaciones').value = doc.observaciones === 'N/A' ? '' : doc.observaciones;
 
-        // Rellenar Repuestos
         const contenedorRepuestos = document.getElementById('contenedorRepuestos');
         contenedorRepuestos.innerHTML = '';
         if (doc.repuestos && doc.repuestos.length > 0) {
@@ -1539,7 +1925,6 @@
             agregarRepuesto(); 
         }
 
-        // Rellenar Enlaces
         const contenedorEnlaces = document.getElementById('contenedorEnlaces');
         contenedorEnlaces.innerHTML = '';
         if (doc.enlaces && doc.enlaces.length > 0) {
@@ -1552,7 +1937,6 @@
             agregarEnlace();
         }
 
-        // Cambiar estado visual de los botones
         const btnSubmit = document.getElementById('btnSubmitForm');
         btnSubmit.innerHTML = '<i class="fas fa-save me-2"></i> Actualizar Solicitud';
         btnSubmit.classList.remove('btn-primary', 'btn-success');
@@ -1573,35 +1957,30 @@
         const btnSubmit = document.getElementById('btnSubmitForm');
         btnSubmit.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Generar Solicitud';
         
-        // Limpiamos colores de edición (amarillo) y duplicación (verde)
         btnSubmit.classList.remove('btn-warning', 'btn-success', 'text-dark');
         btnSubmit.classList.add('btn-primary');
         
         document.getElementById('btnCancelarEdicion').classList.add('hidden');
     }
 
-    // ==========================================
-    // LÓGICA PARA CLONAR/DUPLICAR SOLICITUDES
-    // ==========================================
     function duplicarSolicitud(id) {
         const doc = datosTablaActual.find(d => d.id === id);
         if(!doc) return;
 
-        // Subir suavemente hacia el formulario
         document.getElementById('seccionFormulario').scrollIntoView({ behavior: 'smooth' });
 
-        // Rellenar campos de texto (¡El editandoId queda vacío para que sea un registro nuevo!)
         document.getElementById('editandoId').value = ''; 
         document.getElementById('reqNumber').value = doc.reqNumber || '';
         document.getElementById('inputBuscarLocal').value = doc.local || '';
-        document.getElementById('cuentaInfo').value = doc.cuenta || '';
+        document.getElementById('cuentaInfo').value = `Ejecutiva: ${doc.ejecutiva || 'N/A'}`;
         document.getElementById('fechaSolicitud').value = doc.fecha || '';
         document.getElementById('equipoAplica').value = doc.equipo || '';
         document.getElementById('idAplica').value = doc.idAplica === 'N/A' ? '' : doc.idAplica;
         document.getElementById('serieAplica').value = doc.serie === 'N/A' ? '' : doc.serie;
+        document.getElementById('prioridadAplica').value = doc.prioridad || 'Normal';
+        document.getElementById('tecnicoAplica').value = doc.tecnico || '';
         document.getElementById('observaciones').value = doc.observaciones === 'N/A' ? '' : doc.observaciones;
 
-        // Rellenar Repuestos
         const contenedorRepuestos = document.getElementById('contenedorRepuestos');
         contenedorRepuestos.innerHTML = '';
         if (doc.repuestos && doc.repuestos.length > 0) {
@@ -1616,7 +1995,6 @@
             agregarRepuesto(); 
         }
 
-        // Rellenar Enlaces
         const contenedorEnlaces = document.getElementById('contenedorEnlaces');
         contenedorEnlaces.innerHTML = '';
         if (doc.enlaces && doc.enlaces.length > 0) {
@@ -1629,7 +2007,6 @@
             agregarEnlace();
         }
 
-        // Cambiar estado visual del botón para indicar que es una copia
         const btnSubmit = document.getElementById('btnSubmitForm');
         btnSubmit.innerHTML = '<i class="fas fa-copy me-2"></i> Guardar como Nueva Solicitud';
         btnSubmit.classList.remove('btn-primary', 'btn-warning', 'text-dark');
@@ -1644,13 +2021,11 @@
         const doc = datosTablaActual.find(d => d.id === id);
         if(!doc) return;
 
-        // 1. Textos Generales
         document.getElementById('detReqNum').innerText = `(${doc.reqNumber})`;
         document.getElementById('detLocal').innerText = doc.local || 'N/A';
         document.getElementById('detEjecutiva').innerText = doc.ejecutiva || 'N/A';
         document.getElementById('detFecha').innerText = doc.fecha || 'N/A';
         
-        // 2. Determinar Estado Actual
         let estadoStr = "⏱️ Pendiente de Cotizar";
         let badgeColor = "bg-warning text-dark";
         
@@ -1663,13 +2038,20 @@
         badgeEstado.className = `badge ${badgeColor} fs-6`;
         badgeEstado.innerText = estadoStr;
 
-        // 3. Info Equipo
+        document.getElementById('detCOT').innerText = doc.numCot || 'N/A';
+        document.getElementById('detOC').innerText = doc.numOC || 'N/A';
+        document.getElementById('detNVST').innerText = doc.numNV_ST || 'N/A';
+        document.getElementById('detNVComer').innerText = doc.numNV_Comer || 'N/A';
+
         document.getElementById('detEquipo').innerText = doc.equipo || 'N/A';
         document.getElementById('detId').innerText = doc.idAplica || 'N/A';
         document.getElementById('detSerie').innerText = doc.serie || 'N/A';
+        document.getElementById('detPrioridad').innerText = doc.prioridad || 'Normal';
+        document.getElementById('detTecnico').innerText = doc.tecnico || 'Sin asignar';
+        document.getElementById('detFAprob').innerText = doc.fechaAprob || 'N/A';
+        document.getElementById('detFInstal').innerText = doc.fechaInstal || 'N/A';
         document.getElementById('detReqInst').innerText = doc.reqInstalacion || 'N/A';
 
-        // 4. Tabla de Repuestos
         const repTable = document.getElementById('detListaRepuestos');
         repTable.innerHTML = '';
         if (doc.repuestos && doc.repuestos.length > 0) {
@@ -1685,10 +2067,8 @@
             repTable.innerHTML = `<tr><td colspan="3" class="text-center text-muted fst-italic py-3">Sin repuestos registrados</td></tr>`;
         }
 
-        // 5. Observaciones
         document.getElementById('detObservaciones').innerText = (doc.observaciones && doc.observaciones !== 'N/A') ? doc.observaciones : 'Sin observaciones adicionales.';
 
-        // 6. Enlaces y Documentos
         const contEnlaces = document.getElementById('detEnlaces');
         contEnlaces.innerHTML = '';
         let hasLinks = false;
@@ -1721,7 +2101,6 @@
         
         if(!hasLinks) contEnlaces.innerHTML = '<span class="text-muted small fst-italic p-2">No hay documentos adjuntos en este requerimiento.</span>';
 
-        // 7. Lanzar Modal
         new bootstrap.Modal(document.getElementById('modalDetallesReq')).show();
     }
 </script>
