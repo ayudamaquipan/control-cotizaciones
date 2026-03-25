@@ -152,7 +152,7 @@
 
         <div class="container">
             
-            <ul class="nav nav-pills mb-4 d-flex justify-content-center bg-white p-2 rounded-pill shadow-sm border mx-auto" id="pills-tab" role="tablist" style="max-width: 800px;">
+<ul class="nav nav-pills mb-4 d-flex justify-content-center bg-white p-2 rounded-pill shadow-sm border mx-auto" id="pills-tab" role="tablist" style="max-width: 1000px;">
                 <li class="nav-item flex-fill" role="presentation">
                     <button class="nav-link active rounded-pill fw-bold w-100 text-center" id="pills-main-tab" data-bs-toggle="pill" data-bs-target="#pills-main" type="button" role="tab" aria-selected="true">
                         <i class="fas fa-home me-1"></i> Panel General
@@ -164,8 +164,13 @@
                     </button>
                 </li>
                 <li class="nav-item flex-fill" role="presentation">
-                    <button class="nav-link rounded-pill fw-bold w-100 text-center text-success" id="pills-excel-tab" data-bs-toggle="pill" data-bs-target="#pills-excel" type="button" role="tab" aria-selected="false">
+                    <button class="nav-link rounded-pill fw-bold w-100 text-center" id="pills-excel-tab" data-bs-toggle="pill" data-bs-target="#pills-excel" type="button" role="tab" aria-selected="false">
                         <i class="fas fa-table me-1"></i> Vista Excel
+                    </button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link rounded-pill fw-bold w-100 text-center text-secondary" id="pills-facturados-tab" data-bs-toggle="pill" data-bs-target="#pills-facturados" type="button" role="tab" aria-selected="false">
+                        <i class="fas fa-archive me-1"></i> Facturados
                     </button>
                 </li>
             </ul>
@@ -181,35 +186,44 @@
                                 <i class="fas fa-sync-alt me-1"></i> Sincronizar Caché
                             </button>
                         </div>
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
-                                    <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
-                                        Catálogo de Repuestos
-                                        <a href="#" class="text-primary small text-decoration-none" onclick="abrirModalRepuestos()"><i class="fas fa-edit"></i> Gestionar Individual</a>
-                                    </label>
-                                    <div class="input-group mb-2">
-                                        <input type="file" class="form-control" id="archivoJSON" accept=".json">
-                                        <button class="btn btn-warning text-dark fw-bold" type="button" onclick="cargarRepuestosMasivos()">Subir JSON</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
-                                    <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
-                                        Base de Locales / Clientes
-                                        <span>
-                                            <a href="#" class="text-primary small text-decoration-none me-3" onclick="abrirModalLocales()"><i class="fas fa-edit"></i> Gestionar Individual</a>
-                                            <a href="#" class="text-danger small text-decoration-none" onclick="eliminarTodosLosLocales()"><i class="fas fa-trash"></i> Vaciar BD</a>
-                                        </span>
-                                    </label>
-                                    <div class="input-group mb-2">
-                                        <input type="file" class="form-control" id="archivoExcelLocales" accept=".xlsx, .xls">
-                                        <button class="btn btn-success fw-bold" type="button" onclick="cargarLocalesExcel()">Subir Excel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="row g-3">
+    <div class="col-md-4">
+        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
+            <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
+                Catálogo de Repuestos
+                <a href="#" class="text-primary small text-decoration-none" onclick="abrirModalRepuestos()"><i class="fas fa-edit"></i></a>
+            </label>
+            <div class="input-group mb-2">
+                <input type="file" class="form-control form-control-sm" id="archivoJSON" accept=".json">
+                <button class="btn btn-warning btn-sm text-dark fw-bold" type="button" onclick="cargarRepuestosMasivos()">Subir</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
+            <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
+                Base de Locales
+                <span>
+                    <a href="#" class="text-primary small text-decoration-none me-2" onclick="abrirModalLocales()"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="text-danger small text-decoration-none" onclick="eliminarTodosLosLocales()"><i class="fas fa-trash"></i></a>
+                </span>
+            </label>
+            <div class="input-group mb-2">
+                <input type="file" class="form-control form-control-sm" id="archivoExcelLocales" accept=".xlsx, .xls">
+                <button class="btn btn-success btn-sm fw-bold" type="button" onclick="cargarLocalesExcel()">Subir</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column border-primary">
+            <label class="fw-bold text-primary small mb-2"><i class="fas fa-file-upload me-1"></i> Carga Masiva de Servicios</label>
+            <div class="input-group mb-2">
+                <input type="file" class="form-control form-control-sm border-primary" id="archivoMasivoReq" accept=".xlsx, .xls">
+                <button class="btn btn-primary btn-sm fw-bold" type="button" onclick="cargarRequerimientosExcel()"><i class="fas fa-upload"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
                     </div>
 
                     <div id="seccionFormulario" class="glass p-4 mb-4 animate__animated animate__fadeInUp">
@@ -364,6 +378,9 @@
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <div id="paginacionContenedor" class="d-flex justify-content-center mt-3 mb-2 gap-2"></div>
+                        
                     </div>
                 </div>
 
@@ -427,10 +444,9 @@
                                         <option value="COTIZADO">⏳ Cotizado</option>
                                         <option value="OC_RECIBIDA">🛠️ OC Recibida</option>
                                         <option value="PENDIENTE_FACTURAR">💰 Pte. Facturar</option>
-                                        <option value="FACTURADO">✅ Facturado</option>
-                                    </select>
+                                        </select>
                                 </div>
-                                <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm ms-2" onclick="exportarExcel()">
+                                <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm ms-2" onclick="exportarExcel(false)">
                                     <i class="fas fa-file-excel me-1"></i> Exportar
                                 </button>
                             </div>
@@ -471,8 +487,39 @@
                     </div>
                 </div>
 
-            </div> 
-        </div>
+            </div>
+<div class="tab-pane fade" id="pills-facturados" role="tabpanel" aria-labelledby="pills-facturados-tab">
+                    <div class="glass p-4 mb-4 animate__animated animate__fadeIn">
+                        
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 border-bottom pb-3 gap-3">
+                            <h5 class="fw-bold text-secondary mb-0"><i class="fas fa-archive me-2"></i>Historial de Servicios Facturados</h5>
+                            
+                            <div class="d-flex flex-wrap gap-2 align-items-center bg-white p-2 rounded-pill shadow-sm border">
+                                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="exportarExcel(true)">
+                                    <i class="fas fa-file-excel me-1"></i> Exportar Facturados
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-3 shadow-sm border tabla-excel-wrapper">
+                            <table class="table table-hover table-sm mb-0 tabla-excel" style="font-size: 0.85rem;">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Ingreso</th><th>N° REQ</th><th>Local / Cliente</th><th>Ejecutiva</th><th>Equipo</th>
+                                        <th>ID Equipo</th><th>N° Serie</th><th>Prioridad</th><th>Técnico Asignado</th><th>Estado Actual</th>
+                                        <th class="text-primary bg-light">Estado Walmart</th><th>Valor Cotizado</th><th>N° COT</th><th>N° OC</th>
+                                        <th>NV ST</th><th>NV Comercial</th><th>F. Aprobación</th><th>F. Instalación</th><th>REQ Instalación</th>
+                                        <th>Repuestos</th><th class="border-start border-warning align-middle text-center"><i class="fas fa-edit"></i> Mi Nota</th><th>Observaciones (Sup)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTablaFacturados">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> 
+                
+            </div> </div>
     </div>
 
     <div class="modal fade" id="modalLocales" tabindex="-1">
@@ -752,9 +799,9 @@
         document.getElementById('mainApp').classList.remove('hidden');
 
         if (rolActual === 'ejecutiva') {
-            document.getElementById('seccionAdmin').classList.add('hidden');
-            document.getElementById('seccionFormulario').classList.add('hidden');
-            document.getElementById('contenedorFiltroEjecutivas').classList.add('hidden');
+    document.getElementById('seccionAdmin').classList.add('hidden');
+    // document.getElementById('seccionFormulario').classList.add('hidden'); // <-- Línea eliminada
+    document.getElementById('contenedorFiltroEjecutivas').classList.add('hidden');
             
             document.getElementById('filtroEjecutivas').value = usuarioActual;
             
@@ -794,7 +841,12 @@
     const appPlanificador = firebase.initializeApp(firebasePlanificadorConfig, "PlanificadorApp");
     const dbPlanificador = appPlanificador.firestore();
 
-    let datosTablaActual = [];
+let datosTablaActual = [];
+
+    // --- VARIABLES DE PAGINACIÓN ---
+    let paginaActual = 1;
+    const registrosPorPagina = 10;
+    let filasFiltradasGlobal = [];
 
     // ==========================================
     // 3. SISTEMA DE CACHÉ
@@ -803,8 +855,8 @@
     let catalogoLocales = [];
     
     function inicializarCatalogos() {
-        if(rolActual !== 'admin') return; 
-        const cacheRepuestos = localStorage.getItem('maquipan_repuestos');
+    // if(rolActual !== 'admin') return; // <-- Línea eliminada para dar acceso a las ejecutivas
+    const cacheRepuestos = localStorage.getItem('maquipan_repuestos');
         const cacheLocales = localStorage.getItem('maquipan_locales');
 
         if (cacheRepuestos && cacheLocales) {
@@ -1195,8 +1247,9 @@ const payloadPlanificador = {
     // ==========================================
     // 6. TABLAS Y LÓGICA DE DATOS
     // ==========================================
-    function cargarTablaFirebase() {
-        db.collection("cotizaciones").orderBy("fechaCreacion", "desc").limit(50).onSnapshot((querySnapshot) => {
+	function cargarTablaFirebase() {
+        // Te sugiero dejar un límite generoso (ej. 300) para que siempre encuentre todo lo reciente
+        db.collection("cotizaciones").orderBy("fechaCreacion", "desc").limit(300).onSnapshot((querySnapshot) => {
             const tabla = document.getElementById('cuerpoTabla');
             tabla.innerHTML = '';
             datosTablaActual = []; 
@@ -1204,8 +1257,16 @@ const payloadPlanificador = {
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 const id = doc.id;
+                
+                // 1. Guardamos TODO en la memoria para que el Excel y el Historial funcionen
                 datosTablaActual.push({ id, ...data });
 
+                // 👇 2. AGREGAR ESTA LÍNEA AQUÍ 👇
+                // Si ya está facturado, detenemos la creación visual para el Panel General
+                if (data.enviadoFacturar === true) return; 
+                // 👆 ------------------------- 👆
+
+                // 3. A partir de aquí sigue tu código normal construyendo el HTML...
                 const repuestosHtml = data.repuestos ? data.repuestos.map(r => 
                     `<div class="mb-1"><span class="badge bg-secondary rounded-pill me-1">${r.cantidad || '1'}</span> <span class="opacity-75 small">[${r.sku || 'N/A'}]</span> <span class="fw-medium">${(r.nombre && r.nombre !== 'undefined') ? r.nombre : 'Repuesto manual'}</span></div>`
                 ).join('') : '<span class="text-muted fst-italic">Sin repuestos</span>';
@@ -1377,9 +1438,12 @@ const payloadPlanificador = {
     // ==========================================
     // RENDERIZAR VISTA EXCEL HORIZONTAL CON FILTROS
     // ==========================================
-    function renderizarTablaExcel() {
-        const tbody = document.getElementById('cuerpoTablaExcel');
-        tbody.innerHTML = '';
+function renderizarTablaExcel() {
+        const tbodyExcel = document.getElementById('cuerpoTablaExcel');
+        const tbodyFacturados = document.getElementById('cuerpoTablaFacturados');
+        
+        if(tbodyExcel) tbodyExcel.innerHTML = '';
+        if(tbodyFacturados) tbodyFacturados.innerHTML = '';
         
         const textoBusqueda = document.getElementById('busquedaExcel').value.toLowerCase().trim();
         const selectEstado = document.getElementById('filtroEstadoExcel').value;
@@ -1387,13 +1451,11 @@ const payloadPlanificador = {
         
         datosTablaActual.forEach(data => {
             
-            // 1. Filtrar por Ejecutiva
+            // 1. Filtro Global Ejecutiva
             const ejecData = (data.ejecutiva || "").toLowerCase();
             let mostrarPorEjecutiva = false;
-
-            if (filtroEjecutivaGlobal === "todas") { 
-                mostrarPorEjecutiva = true; 
-            } else if (filtroEjecutivaGlobal === "otra") {
+            if (filtroEjecutivaGlobal === "todas") { mostrarPorEjecutiva = true; } 
+            else if (filtroEjecutivaGlobal === "otra") {
                 const esPrincipal = ["keillyn", "kcuellar", "katherine", "kcarrasco", "johanna", "jdiazb"].some(val => ejecData.includes(val));
                 mostrarPorEjecutiva = !esPrincipal;
             } else {
@@ -1403,35 +1465,27 @@ const payloadPlanificador = {
             }
             if (!mostrarPorEjecutiva) return;
 
-            // 2. Determinar Estado y Filtrar
+            // 2. Determinar Estado
             let estadoCod = "PENDIENTE_COTIZAR";
-            let estadoStr = "⏱️ Pendiente de Cotizar";
+            let estadoStr = "⏱️ Ptes. Cotizar";
             let colorTexto = "text-warning";
             
             if (data.enviadoFacturar) { estadoStr = "✅ Facturado / Terminado"; colorTexto = "text-secondary"; estadoCod = "FACTURADO"; }
-            else if (data.servicioRealizado) { estadoStr = "💰 Pendiente Facturar"; colorTexto = "text-success"; estadoCod = "PENDIENTE_FACTURAR"; }
-            else if (data.ocRecibida) { estadoStr = "🛠️ OC Recibida (Aprobado)"; colorTexto = "text-info"; estadoCod = "OC_RECIBIDA"; }
-            else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ Cotizado (Esp. OC)"; colorTexto = "text-primary"; estadoCod = "COTIZADO"; }
+            else if (data.servicioRealizado) { estadoStr = "💰 Pte. Facturar"; colorTexto = "text-success"; estadoCod = "PENDIENTE_FACTURAR"; }
+            else if (data.ocRecibida) { estadoStr = "🛠️ OC Recibida"; colorTexto = "text-info"; estadoCod = "OC_RECIBIDA"; }
+            else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ Cotizado"; colorTexto = "text-primary"; estadoCod = "COTIZADO"; }
 
-            if (selectEstado !== "TODOS" && selectEstado !== estadoCod) return;
-
-            // 3. Filtrar por Buscador Texto Libre
-            if (textoBusqueda !== '') {
-                const strFila = `${data.reqNumber || ''} ${data.local || ''} ${data.tecnico || ''} ${data.idAplica || ''} ${data.numCot || ''} ${data.numOC || ''}`.toLowerCase();
-                if (!strFila.includes(textoBusqueda)) return;
-            }
-
-            const repuestosTexto = data.repuestos ? data.repuestos.map(r => `${r.cantidad}x ${r.nombre}`).join(" | ") : "Sin repuestos";
-            let obsEjecRecortada = data.obsEjecutiva || '';
-            if (obsEjecRecortada.length > 25) obsEjecRecortada = obsEjecRecortada.substring(0, 25) + '...';
-
-            // Lógica de colores mediante clases nativas de Bootstrap para Estado Walmart
             let claseFilaExcel = "";
             if (data.estadoWalmart === "Revision pendiente de supervisor") claseFilaExcel = "table-danger";
             else if (data.estadoWalmart === "Activo") claseFilaExcel = "table-success";
             else if (data.estadoWalmart === "Sostener por partes") claseFilaExcel = "table-warning";
 
-            tbody.innerHTML += `
+            const repuestosTexto = data.repuestos ? data.repuestos.map(r => `${r.cantidad}x ${r.nombre}`).join(" | ") : "Sin repuestos";
+            let obsEjecRecortada = data.obsEjecutiva || '';
+            if (obsEjecRecortada.length > 25) obsEjecRecortada = obsEjecRecortada.substring(0, 25) + '...';
+
+            // Armamos el HTML de la fila
+            const htmlFila = `
                 <tr class="${claseFilaExcel}">
                     <td>${data.fecha || ''}</td>
                     <td class="fw-bold text-primary">${data.reqNumber || ''}</td>
@@ -1443,7 +1497,6 @@ const payloadPlanificador = {
                     <td>${data.prioridad === 'Urgente' ? '<span class="badge bg-danger">Urgente</span>' : (data.prioridad === 'Baja' ? 'Baja' : 'Normal')}</td>
                     <td class="text-success fw-medium">${data.tecnico || ''}</td>
                     <td class="fw-bold ${colorTexto}">${estadoStr}</td>
-                    
                     <td>
                         <select class="form-select form-select-sm fw-bold border-secondary shadow-sm" style="font-size: 0.75rem; width: 170px; cursor: pointer;" onchange="actualizarEstadoWalmart('${data.id}', this.value, this)">
                             <option value="">-- No definido --</option>
@@ -1456,29 +1509,31 @@ const payloadPlanificador = {
                             <option value="Cotizar" ${data.estadoWalmart === 'Cotizar' ? 'selected' : ''}>Cotizar</option>
                         </select>
                     </td>
-
                     <td class="fw-bold text-dark">${data.valorCot || ''}</td>
-                    <td>${data.numCot || ''}</td>
-                    <td>${data.numOC || ''}</td>
-                    <td>${data.numNV_ST || ''}</td>
-                    <td>${data.numNV_Comer || ''}</td>
-                    <td>${data.fechaAprob || ''}</td>
-                    <td>${data.fechaInstal || ''}</td>
-                    <td>${data.reqInstalacion || ''}</td>
+                    <td>${data.numCot || ''}</td><td>${data.numOC || ''}</td><td>${data.numNV_ST || ''}</td><td>${data.numNV_Comer || ''}</td>
+                    <td>${data.fechaAprob || ''}</td><td>${data.fechaInstal || ''}</td><td>${data.reqInstalacion || ''}</td>
                     <td><small class="text-muted" style="max-width: 200px; display: inline-block; overflow: hidden; text-overflow: ellipsis;">${repuestosTexto}</small></td>
-                    
                     <td class="border-start border-warning align-middle" style="min-width: 220px;">
                         <div class="d-flex align-items-center justify-content-between gap-2">
                             <span class="text-start small text-dark fw-medium fst-italic" style="flex-grow: 1;">${obsEjecRecortada || '<span class="text-muted">Sin notas...</span>'}</span>
-                            <button class="btn btn-sm btn-outline-warning text-dark shadow-sm rounded-circle flex-shrink-0 bg-white" onclick="abrirModalObsEjecutiva('${data.id}')" title="Ver / Editar Nota">
-                                <i class="fas fa-edit"></i>
-                            </button>
+                            <button class="btn btn-sm btn-outline-warning text-dark shadow-sm rounded-circle flex-shrink-0 bg-white" onclick="abrirModalObsEjecutiva('${data.id}')"><i class="fas fa-edit"></i></button>
                         </div>
                     </td>
-                    
                     <td><small class="text-muted" style="max-width: 200px; display: inline-block; overflow: hidden; text-overflow: ellipsis;">${data.observaciones === 'N/A' ? '' : data.observaciones}</small></td>
                 </tr>
             `;
+
+            // 3. SEPARADOR DE TABLAS
+            if (estadoCod === "FACTURADO") {
+                if (tbodyFacturados) tbodyFacturados.innerHTML += htmlFila;
+            } else {
+                if (selectEstado !== "TODOS" && selectEstado !== estadoCod) return;
+                if (textoBusqueda !== '') {
+                    const strFila = `${data.reqNumber || ''} ${data.local || ''} ${data.tecnico || ''} ${data.idAplica || ''} ${data.numCot || ''} ${data.numOC || ''}`.toLowerCase();
+                    if (!strFila.includes(textoBusqueda)) return;
+                }
+                if (tbodyExcel) tbodyExcel.innerHTML += htmlFila;
+            }
         });
     }
 
@@ -1706,13 +1761,16 @@ const payloadPlanificador = {
     // ==========================================
     // 8. FILTROS Y EXPORTACIÓN
     // ==========================================
-    function aplicarFiltros() {
+function aplicarFiltros() {
         const selectEjecutiva = document.getElementById('filtroEjecutivas').value.toLowerCase();
         const selectEstado = document.getElementById('filtroEstados').value;
         const inputBusqueda = document.getElementById('busquedaGeneral');
         const textoBusqueda = inputBusqueda ? inputBusqueda.value.toLowerCase().trim() : '';
 
         const filas = document.querySelectorAll('.fila-registro');
+        
+        // Vaciamos el array global en cada nuevo filtro
+        filasFiltradasGlobal = []; 
 
         filas.forEach(fila => {
             const ejecFila = fila.dataset.ejecutiva.toLowerCase(); 
@@ -1763,18 +1821,96 @@ const payloadPlanificador = {
             }
 
             if (mostrarPorEjecutiva && mostrarPorEstado && pasaBusqueda) {
-                fila.style.display = "";
+                // En lugar de mostrarla directamente, la guardamos en el array de filtradas
+                filasFiltradasGlobal.push(fila);
             } else {
+                // Ocultamos las que no cumplen
                 fila.style.display = "none";
             }
         });
         
+        // Ajuste de seguridad: si al filtrar, la página actual es mayor a las páginas disponibles, volvemos a la 1
+        const totalPaginas = Math.ceil(filasFiltradasGlobal.length / registrosPorPagina);
+        if (paginaActual > totalPaginas && totalPaginas > 0) paginaActual = 1;
+
+        // Renderizamos los botones y mostramos la página correspondiente
+        renderizarPaginacion();
+        mostrarPagina(paginaActual);
+        
         renderizarTablaExcel();
     }
+function mostrarPagina(pagina) {
+        if (filasFiltradasGlobal.length === 0) return;
+        
+        paginaActual = pagina;
+        const inicio = (pagina - 1) * registrosPorPagina;
+        const fin = inicio + registrosPorPagina;
 
-    function exportarExcel() {
+        // Ocultar todas las filas que SÍ pasaron el filtro primero
+        filasFiltradasGlobal.forEach(fila => fila.style.display = "none");
+
+        // Mostrar solo el bloque de 10 correspondiente a esta página
+        for (let i = inicio; i < fin && i < filasFiltradasGlobal.length; i++) {
+            filasFiltradasGlobal[i].style.display = "";
+        }
+        
+        // Actualizar el color (estilo) del botón activo
+        document.querySelectorAll('.btn-pagina').forEach(btn => {
+            if(parseInt(btn.dataset.pag) === paginaActual) {
+                btn.classList.replace('btn-outline-primary', 'btn-primary');
+            } else {
+                btn.classList.replace('btn-primary', 'btn-outline-primary');
+            }
+        });
+    }
+
+    function renderizarPaginacion() {
+        const contenedor = document.getElementById('paginacionContenedor');
+        if(!contenedor) return;
+        contenedor.innerHTML = '';
+        
+        const totalPaginas = Math.ceil(filasFiltradasGlobal.length / registrosPorPagina);
+        if (totalPaginas <= 1) return; // Si hay 10 o menos resultados, no mostramos botones
+
+        // Botón Anterior
+        const btnPrev = document.createElement('button');
+        btnPrev.className = 'btn btn-sm btn-outline-primary fw-bold shadow-sm';
+        btnPrev.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        btnPrev.disabled = paginaActual === 1;
+        btnPrev.onclick = () => { if(paginaActual > 1) mostrarPagina(paginaActual - 1); };
+        contenedor.appendChild(btnPrev);
+
+        // Botones de Número (1, 2, 3...)
+        for (let i = 1; i <= totalPaginas; i++) {
+            const btn = document.createElement('button');
+            btn.className = `btn btn-sm btn-pagina fw-bold shadow-sm ${i === paginaActual ? 'btn-primary' : 'btn-outline-primary'}`;
+            btn.dataset.pag = i;
+            btn.innerText = i;
+            btn.onclick = () => mostrarPagina(i);
+            contenedor.appendChild(btn);
+        }
+
+        // Botón Siguiente
+        const btnNext = document.createElement('button');
+        btnNext.className = 'btn btn-sm btn-outline-primary fw-bold shadow-sm';
+        btnNext.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        btnNext.disabled = paginaActual === totalPaginas;
+        btnNext.onclick = () => { if(paginaActual < totalPaginas) mostrarPagina(paginaActual + 1); };
+        contenedor.appendChild(btnNext);
+    }
+
+function exportarExcel(soloFacturados = false) {
         if (datosTablaActual.length === 0) { alert("No hay datos para exportar."); return; }
-        const dataExcel = datosTablaActual.map(doc => {
+        
+        // Filtramos para exportar solo lo que corresponde a la vista actual
+        const datosAExportar = datosTablaActual.filter(doc => {
+            const esFacturado = doc.enviadoFacturar === true;
+            return soloFacturados ? esFacturado : !esFacturado;
+        });
+
+        if (datosAExportar.length === 0) { alert("No hay datos en esta categoría para exportar."); return; }
+
+        const dataExcel = datosAExportar.map(doc => {
             const repuestosTexto = doc.repuestos ? doc.repuestos.map(r => `${r.cantidad}x ${r.sku} - ${r.nombre}`).join(" | ") : "";
             
             const linksExtraidos = Array.isArray(doc.linkFotos) 
@@ -1796,38 +1932,25 @@ const payloadPlanificador = {
 
             return {
                 "MES": mesCalculado,
-                "Fecha Solicitud": doc.fecha, 
-                "Requerimiento (Cotización)": doc.reqNumber, 
-                "Local / Cliente": doc.local,
-                "Ejecutiva Asignada": doc.ejecutiva, 
-                "Prioridad": doc.prioridad || "Normal",
-                "Técnico Asignado": doc.tecnico || "N/A",
-                "Equipo": doc.equipo || "N/A", 
-                "ID Equipo": doc.idAplica, 
-                "N° Serie": doc.serie,
-                "Repuestos": repuestosTexto, 
-                "Observaciones Supervisor": doc.observaciones,
-                "Notas Ejecutiva": doc.obsEjecutiva || "", 
-                "Estado Walmart": doc.estadoWalmart || "N/A",
-                "Servicio Realizado": doc.servicioRealizado ? "SÍ" : "NO",
-                "Link de Documentos": linksExtraidos,
-                "Enviado a Facturar": doc.enviadoFacturar ? "SÍ" : "NO",
-                "Valor Cotizado": doc.valorCot,
-                "N° Cotización": doc.numCot, 
-                "N° OC Cliente": doc.numOC, 
-                "OC Recibida": doc.ocRecibida ? "SÍ" : "NO",
-                "NV ST": doc.numNV_ST || "N/A", 
-                "NV Comercial": doc.numNV_Comer || "N/A",
-                "Fecha Aprobación": doc.fechaAprob || "N/A",
-                "Fecha Instalación": doc.fechaInstal || "N/A",
-                "REQ Instalación": doc.reqInstalacion || "N/A"
+                "Fecha Solicitud": doc.fecha, "Requerimiento": doc.reqNumber, "Local / Cliente": doc.local,
+                "Ejecutiva Asignada": doc.ejecutiva, "Prioridad": doc.prioridad || "Normal", "Técnico": doc.tecnico || "N/A",
+                "Equipo": doc.equipo || "N/A", "ID Equipo": doc.idAplica, "N° Serie": doc.serie, "Repuestos": repuestosTexto, 
+                "Observaciones Sup": doc.observaciones, "Notas Ejecutiva": doc.obsEjecutiva || "", "Estado Walmart": doc.estadoWalmart || "N/A",
+                "Servicio Realizado": doc.servicioRealizado ? "SÍ" : "NO", "Link Docs": linksExtraidos,
+                "Enviado a Facturar": doc.enviadoFacturar ? "SÍ" : "NO", "Valor Cotizado": doc.valorCot, "N° Cotización": doc.numCot, 
+                "N° OC": doc.numOC, "OC Recibida": doc.ocRecibida ? "SÍ" : "NO", "NV ST": doc.numNV_ST || "N/A", 
+                "NV Comercial": doc.numNV_Comer || "N/A", "Fecha Aprobación": doc.fechaAprob || "N/A",
+                "Fecha Instalación": doc.fechaInstal || "N/A", "REQ Instalación": doc.reqInstalacion || "N/A"
             };
         });
+        
         const hoja = XLSX.utils.json_to_sheet(dataExcel);
         const libro = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(libro, hoja, "Cotizaciones");
         const fechaHoy = new Date().toISOString().split('T')[0];
-        XLSX.writeFile(libro, `Reporte_Cotizaciones_Maquipan_${fechaHoy}.xlsx`);
+        
+        const sufijo = soloFacturados ? "Facturados" : "Abiertos";
+        XLSX.writeFile(libro, `Reporte_${sufijo}_Maquipan_${fechaHoy}.xlsx`);
     }
 
     async function eliminarTodosLosLocales() {
@@ -2103,6 +2226,144 @@ const payloadPlanificador = {
 
         new bootstrap.Modal(document.getElementById('modalDetallesReq')).show();
     }
+// ==========================================
+// CARGA MASIVA DE REQUERIMIENTOS VIA EXCEL
+// ==========================================
+function cargarRequerimientosExcel() {
+    const archivo = document.getElementById('archivoMasivoReq').files[0];
+    if (!archivo) {
+        alert("Por favor, selecciona un archivo Excel con los requerimientos.");
+        return;
+    }
+
+    if(!confirm("¿Estás seguro de cargar estos registros a la base de datos de Firebase?")) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        // Convertimos a JSON usando la primera fila como cabecera
+        const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {defval: ""});
+        
+        if(json.length === 0) {
+            alert("El archivo Excel parece estar vacío.");
+            return;
+        }
+
+        let procesados = 0;
+        let ignorados = 0;
+        const totalRegistros = json.length;
+
+        json.forEach((fila) => {
+            // Función interna para buscar columnas sin importar mayúsculas/minúsculas o espacios extra
+            const buscarColumna = (palabraClave) => {
+                const claveReal = Object.keys(fila).find(k => k.toLowerCase().includes(palabraClave.toLowerCase()));
+                return claveReal ? String(fila[claveReal]).trim() : '';
+            };
+
+            const req = buscarColumna('req');
+            if (!req) {
+                ignorados++;
+                verificarProgreso();
+                return; // Saltamos filas vacías
+            }
+
+            // Mapeo de columnas a variables
+const nv_st = buscarColumna('nv st');
+            const nv_comer = buscarColumna('nv comer');
+            const numLocal = buscarColumna('local');
+            const cadena = buscarColumna('cadena');
+            const nombreLocal = buscarColumna('nombre local');
+            const idAplica = buscarColumna('id');
+            const estadoActual = buscarColumna('estado actual') || buscarColumna('estado'); // Busca cualquiera de los dos nombres
+            const estadoWalmart = buscarColumna('estado walmart') || buscarColumna('walmart'); // Busca la nueva columna
+            const tecnico = buscarColumna('tecnico');
+            const prioridad = buscarColumna('prioridad');
+            const monto = buscarColumna('monto');
+            const fechaAprob = buscarColumna('fecha aprob');
+            const fechaInstal = buscarColumna('fecha instal');
+            const observacion = buscarColumna('observacion');
+
+            // Construir nombre del local combinando los datos
+            let nombreCompletoLocal = nombreLocal;
+            if (numLocal) nombreCompletoLocal = `${numLocal} - ${nombreLocal}`;
+            if (cadena && !nombreCompletoLocal.toLowerCase().includes(cadena.toLowerCase())) {
+                nombreCompletoLocal = `${cadena} ${nombreCompletoLocal}`;
+            }
+
+            // Lógica para interpretar el ESTADO ACTUAL (Sistema Maquipan)
+            let ocRecibida = false;
+            let servicioRealizado = false;
+            let enviadoFacturar = false;
+            const estadoActualMin = estadoActual.toLowerCase();
+
+            if (estadoActualMin.includes('facturad') || estadoActualMin.includes('terminad')) {
+                ocRecibida = true; servicioRealizado = true; enviadoFacturar = true;
+            } else if (estadoActualMin.includes('realizad') || estadoActualMin.includes('pte. facturar') || estadoActualMin.includes('pendiente facturar')) {
+                ocRecibida = true; servicioRealizado = true;
+            } else if (estadoActualMin.includes('oc') || estadoActualMin.includes('aprobado')) {
+                ocRecibida = true;
+            }
+
+            // Formatear moneda
+            let valorCotizado = monto;
+            if (monto && !monto.includes('$')) {
+                let numerico = monto.replace(/\D/g, "");
+                if (numerico) valorCotizado = "$" + new Intl.NumberFormat("es-CL").format(numerico);
+            }
+
+            // Crear el objeto para Firebase
+            const payload = {
+                reqNumber: req,
+                local: nombreCompletoLocal || 'N/A',
+                ejecutiva: 'Carga Histórica',
+                fecha: new Date().toISOString().split('T')[0], 
+                equipo: 'N/A', 
+                idAplica: idAplica || 'N/A',
+                serie: 'N/A',
+                prioridad: prioridad || 'Normal',
+                tecnico: tecnico || 'Sin asignar',
+                repuestos: [],
+                enlaces: [],
+                observaciones: observacion || 'N/A',
+                valorCot: valorCotizado || '',
+                numCot: '',
+                numOC: '',
+                numNV_ST: nv_st,
+                numNV_Comer: nv_comer,
+                fechaAprob: fechaAprob,
+                fechaInstal: fechaInstal,
+                reqInstalacion: '',
+                ocRecibida: ocRecibida,
+                servicioRealizado: servicioRealizado,
+                linkFotos: [],
+                enviadoFacturar: enviadoFacturar,
+                obsEjecutiva: `Estado importado: ${estadoActual}`,
+                estadoWalmart: estadoWalmart, // <--- AQUÍ GUARDAMOS EL ESTADO DE WALMART EXACTO DEL EXCEL
+                enviadoPlanificador: false,
+                fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            // Guardar en la base de datos
+            db.collection("cotizaciones").add(payload).then(() => {
+                procesados++;
+                verificarProgreso();
+            }).catch(err => {
+                console.error("Error al subir el REQ: " + req, err);
+                ignorados++;
+                verificarProgreso();
+            });
+        });
+
+        function verificarProgreso() {
+            if ((procesados + ignorados) === totalRegistros) {
+                alert(`¡Carga masiva completada!\n\nRegistros subidos: ${procesados}\nFilas vacías/ignoradas: ${ignorados}`);
+                document.getElementById('archivoMasivoReq').value = ''; // Limpiar el input
+            }
+        }
+    };
+    reader.readAsArrayBuffer(archivo);
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
