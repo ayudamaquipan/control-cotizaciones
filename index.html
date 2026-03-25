@@ -1469,6 +1469,21 @@ function renderizarTablaExcel() {
             let estadoCod = "PENDIENTE_COTIZAR";
             let estadoStr = "⏱️ Ptes. Cotizar";
             let colorTexto = "text-warning";
+            let btnRevertir = ""; // <--- NUEVA VARIABLE PARA EL BOTÓN
+
+            if (data.enviadoFacturar) { 
+                estadoStr = "✅ Facturado / Terminado"; 
+                colorTexto = "text-secondary"; 
+                estadoCod = "FACTURADO"; 
+                
+                // Si está facturado Y el usuario eres tú (admin), armamos el botón
+                if (rolActual === 'admin') {
+                    btnRevertir = `<div class="mt-2"><button type="button" class="btn btn-sm btn-outline-danger shadow-sm rounded-pill fw-bold" style="font-size: 0.7rem;" onclick="toggleFacturado('${data.id}', false)"><i class="fas fa-undo me-1"></i> Revertir al Panel</button></div>`;
+                }
+            }
+            else if (data.servicioRealizado) { estadoStr = "💰 Pte. Facturar"; colorTexto = "text-success"; estadoCod = "PENDIENTE_FACTURAR"; }
+            else if (data.ocRecibida) { estadoStr = "🛠️ OC Recibida"; colorTexto = "text-info"; estadoCod = "OC_RECIBIDA"; }
+            else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ Cotizado"; colorTexto = "text-primary"; estadoCod = "COTIZADO"; }
             
             if (data.enviadoFacturar) { estadoStr = "✅ Facturado / Terminado"; colorTexto = "text-secondary"; estadoCod = "FACTURADO"; }
             else if (data.servicioRealizado) { estadoStr = "💰 Pte. Facturar"; colorTexto = "text-success"; estadoCod = "PENDIENTE_FACTURAR"; }
@@ -1496,8 +1511,7 @@ function renderizarTablaExcel() {
                     <td>${data.serie || ''}</td>
                     <td>${data.prioridad === 'Urgente' ? '<span class="badge bg-danger">Urgente</span>' : (data.prioridad === 'Baja' ? 'Baja' : 'Normal')}</td>
                     <td class="text-success fw-medium">${data.tecnico || ''}</td>
-                    <td class="fw-bold ${colorTexto}">${estadoStr}</td>
-                    <td>
+		    <td class="fw-bold ${colorTexto}">${estadoStr} ${btnRevertir}</td>                    <td>
                         <select class="form-select form-select-sm fw-bold border-secondary shadow-sm" style="font-size: 0.75rem; width: 170px; cursor: pointer;" onchange="actualizarEstadoWalmart('${data.id}', this.value, this)">
                             <option value="">-- No definido --</option>
                             <option value="Revision pendiente de supervisor" ${data.estadoWalmart === 'Revision pendiente de supervisor' ? 'selected' : ''}>Revision pendiente de supervisor</option>
@@ -1651,8 +1665,29 @@ function renderizarTablaExcel() {
     }
 
     window.toggleFacturado = function(id, estado) {
+        if (estado === true) {
+            // Modal de confirmación para pasar a facturado
+            if (!confirm("¿Estás seguro que quieres marcar este servicio como FACTURADO?\n\nDesaparecerá del panel general.")) {
+                return; // Si el usuario cancela, detenemos la acción
+            }
+        } else {
+            // Modal y bloqueo de seguridad para revertir a pendiente
+            if (rolActual !== 'admin') {
+                alert("⚠️ Acción bloqueada: Solo el Supervisor puede devolver un servicio facturado al panel general.");
+                return;
+            }
+            if (!confirm("¿Deseas REVERTIR este servicio y devolverlo a la bandeja principal?")) {
+                return;
+            }
+        }
+
+        // Si pasa las confirmaciones, actualiza en Firebase
         db.collection("cotizaciones").doc(id).update({
             enviadoFacturar: estado
+        }).then(() => {
+            if (estado === false) {
+                alert("Servicio revertido. Ya puedes verlo y editarlo en el Panel General.");
+            }
         }).catch(error => console.error("Error al actualizar estado de facturación:", error));
     };
 
@@ -2268,15 +2303,20 @@ function cargarRequerimientosExcel() {
                 return; // Saltamos filas vacías
             }
 
-            // Mapeo de columnas a variables
-const nv_st = buscarColumna('nv st');
+	    // Mapeo de columnas a variables
+            const nv_st = buscarColumna('nv st');
             const nv_comer = buscarColumna('nv comer');
             const numLocal = buscarColumna('local');
             const cadena = buscarColumna('cadena');
             const nombreLocal = buscarColumna('nombre local');
             const idAplica = buscarColumna('id');
-            const estadoActual = buscarColumna('estado actual') || buscarColumna('estado'); // Busca cualquiera de los dos nombres
-            const estadoWalmart = buscarColumna('estado walmart') || buscarColumna('walmart'); // Busca la nueva columna
+            const estadoActual = buscarColumna('estado actual') || buscarColumna('estado');
+            const estadoWalmart = buscarColumna('estado walmart') || buscarColumna('walmart');
+            
+            // 👇 AGREGA ESTA LÍNEA 👇
+            const ejecutivaExcel = buscarColumna('ejecutiva');
+            // 👆 ------------------ 👆
+
             const tecnico = buscarColumna('tecnico');
             const prioridad = buscarColumna('prioridad');
             const monto = buscarColumna('monto');
@@ -2316,7 +2356,7 @@ const nv_st = buscarColumna('nv st');
             const payload = {
                 reqNumber: req,
                 local: nombreCompletoLocal || 'N/A',
-                ejecutiva: 'Carga Histórica',
+                ejecutiva: ejecutivaExcel || 'Carga Histórica',
                 fecha: new Date().toISOString().split('T')[0], 
                 equipo: 'N/A', 
                 idAplica: idAplica || 'N/A',
