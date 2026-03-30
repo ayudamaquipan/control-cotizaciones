@@ -78,7 +78,6 @@
         .table-custom td { vertical-align: middle; }
         .repuesto-item-box { background: rgba(128,128,128,0.05); padding: 15px; border-radius: 12px; border: 1px dashed var(--border-color); margin-bottom: 10px; }
 
-        /* Estilos para la tabla Excel */
         .tabla-excel-wrapper { max-height: 70vh; overflow-y: auto; overflow-x: auto; }
         .tabla-excel th { white-space: nowrap; background-color: var(--surface); position: sticky; top: 0; z-index: 10; border-bottom: 2px solid var(--border-color); }
         .tabla-excel td { white-space: nowrap; padding: 0.5rem 1rem; vertical-align: middle; }
@@ -151,8 +150,7 @@
         </nav>
 
         <div class="container">
-            
-<ul class="nav nav-pills mb-4 d-flex justify-content-center bg-white p-2 rounded-pill shadow-sm border mx-auto" id="pills-tab" role="tablist" style="max-width: 1000px;">
+            <ul class="nav nav-pills mb-4 d-flex justify-content-center bg-white p-2 rounded-pill shadow-sm border mx-auto" id="pills-tab" role="tablist" style="max-width: 1000px;">
                 <li class="nav-item flex-fill" role="presentation">
                     <button class="nav-link active rounded-pill fw-bold w-100 text-center" id="pills-main-tab" data-bs-toggle="pill" data-bs-target="#pills-main" type="button" role="tab" aria-selected="true">
                         <i class="fas fa-home me-1"></i> Panel General
@@ -187,43 +185,43 @@
                             </button>
                         </div>
                         <div class="row g-3">
-    <div class="col-md-4">
-        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
-            <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
-                Catálogo de Repuestos
-                <a href="#" class="text-primary small text-decoration-none" onclick="abrirModalRepuestos()"><i class="fas fa-edit"></i></a>
-            </label>
-            <div class="input-group mb-2">
-                <input type="file" class="form-control form-control-sm" id="archivoJSON" accept=".json">
-                <button class="btn btn-warning btn-sm text-dark fw-bold" type="button" onclick="cargarRepuestosMasivos()">Subir</button>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
-            <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
-                Base de Locales
-                <span>
-                    <a href="#" class="text-primary small text-decoration-none me-2" onclick="abrirModalLocales()"><i class="fas fa-edit"></i></a>
-                    <a href="#" class="text-danger small text-decoration-none" onclick="eliminarTodosLosLocales()"><i class="fas fa-trash"></i></a>
-                </span>
-            </label>
-            <div class="input-group mb-2">
-                <input type="file" class="form-control form-control-sm" id="archivoExcelLocales" accept=".xlsx, .xls">
-                <button class="btn btn-success btn-sm fw-bold" type="button" onclick="cargarLocalesExcel()">Subir</button>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column border-primary">
-            <label class="fw-bold text-primary small mb-2"><i class="fas fa-file-upload me-1"></i> Carga Masiva de Servicios</label>
-            <div class="input-group mb-2">
-                <input type="file" class="form-control form-control-sm border-primary" id="archivoMasivoReq" accept=".xlsx, .xls">
-                <button class="btn btn-primary btn-sm fw-bold" type="button" onclick="cargarRequerimientosExcel()"><i class="fas fa-upload"></i></button>
-            </div>
-        </div>
-    </div>
-</div>
+                            <div class="col-md-4">
+                                <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
+                                    <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
+                                        Catálogo de Repuestos
+                                        <a href="#" class="text-primary small text-decoration-none" onclick="abrirModalRepuestos()"><i class="fas fa-edit"></i></a>
+                                    </label>
+                                    <div class="input-group mb-2">
+                                        <input type="file" class="form-control form-control-sm" id="archivoJSON" accept=".json">
+                                        <button class="btn btn-warning btn-sm text-dark fw-bold" type="button" onclick="cargarRepuestosMasivos()">Subir</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column">
+                                    <label class="fw-bold text-muted small mb-2 d-flex justify-content-between">
+                                        Base de Locales
+                                        <span>
+                                            <a href="#" class="text-primary small text-decoration-none me-2" onclick="abrirModalLocales()"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-danger small text-decoration-none" onclick="eliminarTodosLosLocales()"><i class="fas fa-trash"></i></a>
+                                        </span>
+                                    </label>
+                                    <div class="input-group mb-2">
+                                        <input type="file" class="form-control form-control-sm" id="archivoExcelLocales" accept=".xlsx, .xls">
+                                        <button class="btn btn-success btn-sm fw-bold" type="button" onclick="cargarLocalesExcel()">Subir</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-white p-3 rounded-4 shadow-sm border h-100 d-flex flex-column border-primary">
+                                    <label class="fw-bold text-primary small mb-2"><i class="fas fa-file-upload me-1"></i> Carga Masiva de Servicios</label>
+                                    <div class="input-group mb-2">
+                                        <input type="file" class="form-control form-control-sm border-primary" id="archivoMasivoReq" accept=".xlsx, .xls">
+                                        <button class="btn btn-primary btn-sm fw-bold" type="button" onclick="cargarRequerimientosExcel()"><i class="fas fa-upload"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="seccionFormulario" class="glass p-4 mb-4 animate__animated animate__fadeInUp">
@@ -335,7 +333,7 @@
                                 
                                 <div class="d-flex align-items-center px-3 border-end">
                                     <i class="fas fa-search text-muted me-2"></i>
-                                    <input type="text" id="busquedaGeneral" class="form-control form-control-sm border-0 bg-transparent fw-bold text-secondary shadow-none" placeholder="Buscar NV, OC, COT, ID, REQ..." onkeyup="aplicarFiltros()" style="width: 200px; outline: none;">
+                                    <input type="text" id="busquedaGeneral" class="form-control form-control-sm border-0 bg-transparent fw-bold text-secondary shadow-none" placeholder="Buscar Local, Repuesto, REQ, ID..." onkeyup="aplicarFiltrosConRetraso()" style="width: 200px; outline: none;">
                                 </div>
 
                                 <div class="d-flex align-items-center px-3 border-end" id="contenedorFiltroEstados">
@@ -434,7 +432,7 @@
                             <div class="d-flex flex-wrap gap-2 align-items-center bg-white p-2 rounded-pill shadow-sm border">
                                 <div class="d-flex align-items-center px-2 border-end">
                                     <i class="fas fa-search text-muted me-2"></i>
-                                    <input type="text" id="busquedaExcel" class="form-control form-control-sm border-0 bg-transparent fw-bold text-secondary shadow-none" placeholder="Buscar en Excel..." onkeyup="renderizarTablaExcel()" style="width: 160px; outline: none;">
+                                    <input type="text" id="busquedaExcel" class="form-control form-control-sm border-0 bg-transparent fw-bold text-secondary shadow-none" placeholder="Buscar Local, REQ..." onkeyup="renderizarTablaExcelConRetraso()" style="width: 160px; outline: none;">
                                 </div>
                                 <div class="d-flex align-items-center px-2 border-end">
                                     <i class="fas fa-layer-group text-muted me-2"></i>
@@ -444,7 +442,7 @@
                                         <option value="COTIZADO">⏳ Cotizado</option>
                                         <option value="OC_RECIBIDA">🛠️ OC Recibida</option>
                                         <option value="PENDIENTE_FACTURAR">💰 Pte. Facturar</option>
-                                        </select>
+                                    </select>
                                 </div>
                                 <button type="button" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm ms-2" onclick="exportarExcel(false)">
                                     <i class="fas fa-file-excel me-1"></i> Exportar
@@ -481,14 +479,13 @@
                                     </tr>
                                 </thead>
                                 <tbody id="cuerpoTablaExcel">
-                                    </tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-            </div>
-<div class="tab-pane fade" id="pills-facturados" role="tabpanel" aria-labelledby="pills-facturados-tab">
+                <div class="tab-pane fade" id="pills-facturados" role="tabpanel" aria-labelledby="pills-facturados-tab">
                     <div class="glass p-4 mb-4 animate__animated animate__fadeIn">
                         
                         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 border-bottom pb-3 gap-3">
@@ -519,7 +516,8 @@
                     </div>
                 </div> 
                 
-            </div> </div>
+            </div> 
+        </div>
     </div>
 
     <div class="modal fade" id="modalLocales" tabindex="-1">
@@ -576,10 +574,8 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="modServId">
-                    
                     <div class="bg-light p-3 rounded-3 mb-3 border">
                         <h6 class="fw-bold text-dark small mb-3 border-bottom pb-2"><i class="fas fa-folder-open me-1"></i> Documentos Principales</h6>
-                        
                         <div class="mb-3">
                             <label class="small fw-bold text-primary mb-1">1. Ficha del Servicio</label>
                             <div class="input-group input-group-sm">
@@ -587,7 +583,6 @@
                                 <input type="text" id="linkFicha" class="form-control border-primary" placeholder="Pega link o código de imagen aquí...">
                             </div>
                         </div>
-                        
                         <div class="mb-3">
                             <label class="small fw-bold text-warning text-dark mb-1">2. Guía de Despacho</label>
                             <div class="input-group input-group-sm">
@@ -595,13 +590,10 @@
                                 <input type="text" id="linkGuia" class="form-control border-warning" placeholder="Pega link o código de imagen aquí...">
                             </div>
                         </div>
-
                         <h6 class="fw-bold text-dark small mb-2 border-bottom pb-2 mt-4"><i class="fas fa-images me-1"></i> Imágenes/Documentos Adicionales</h6>
-                        <div id="contenedorLinksExtra">
-                            </div>
+                        <div id="contenedorLinksExtra"></div>
                         <button class="btn btn-sm btn-outline-info rounded-pill fw-bold mt-2" type="button" onclick="agregarLinkExtraServicio()"><i class="fas fa-plus"></i> Añadir otra imagen</button>
                     </div>
-
                     <div class="form-check form-switch d-flex align-items-center bg-light p-3 rounded-3 border">
                         <input class="form-check-input mt-0 me-3 border-success" type="checkbox" role="switch" id="modServCheck" style="transform: scale(1.5); cursor: pointer;">
                         <label class="form-check-label fw-bold mt-1" for="modServCheck" style="cursor: pointer;">
@@ -689,8 +681,7 @@
                                     <th style="width: 20%;" class="text-center">Cantidad</th>
                                 </tr>
                             </thead>
-                            <tbody id="detListaRepuestos">
-                            </tbody>
+                            <tbody id="detListaRepuestos"></tbody>
                         </table>
                     </div>
 
@@ -698,8 +689,7 @@
                     <div class="p-3 bg-light border rounded-3 mb-4 small text-dark shadow-sm" id="detObservaciones" style="white-space: pre-wrap;"></div>
 
                     <h6 class="fw-bold text-secondary mb-2 border-bottom pb-2"><i class="fas fa-paperclip me-2"></i>Documentos y Enlaces Adjuntos</h6>
-                    <div id="detEnlaces" class="d-flex flex-wrap gap-2 mb-2 p-2 bg-light rounded-3 border">
-                    </div>
+                    <div id="detEnlaces" class="d-flex flex-wrap gap-2 mb-2 p-2 bg-light rounded-3 border"></div>
                 </div>
                 <div class="modal-footer border-top-0 bg-light rounded-bottom-4">
                     <button type="button" class="btn btn-secondary rounded-pill fw-bold px-5 shadow-sm" data-bs-dismiss="modal">Cerrar</button>
@@ -799,10 +789,8 @@
         document.getElementById('mainApp').classList.remove('hidden');
 
         if (rolActual === 'ejecutiva') {
-    document.getElementById('seccionAdmin').classList.add('hidden');
-    // document.getElementById('seccionFormulario').classList.add('hidden'); // <-- Línea eliminada
-    document.getElementById('contenedorFiltroEjecutivas').classList.add('hidden');
-            
+            document.getElementById('seccionAdmin').classList.add('hidden');
+            document.getElementById('contenedorFiltroEjecutivas').classList.add('hidden');
             document.getElementById('filtroEjecutivas').value = usuarioActual;
             
             const nombreMuestra = usuarioActual.charAt(0).toUpperCase() + usuarioActual.slice(1);
@@ -817,9 +805,8 @@
     }
 
     // ==========================================
-    // 2. CONFIGURACIÓN DE FIREBASE (AMBAS BD)
+    // 2. CONFIGURACIÓN DE FIREBASE
     // ==========================================
-    // BD PRINCIPAL: Cotizaciones
     const firebaseConfig = {
       apiKey: "AIzaSyDfk1H8_uKIe2sZxf0Bo1wWZPsWDYZy7xk",
       authDomain: "control-cotizaciones.firebaseapp.com",
@@ -831,22 +818,20 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // BD SECUNDARIA: Planificador (PUENTE)
     const firebasePlanificadorConfig = {
       apiKey: "AIzaSyA9tUGGmMqk85Hljw8H1XoTfX2U5iQu85c",
       authDomain: "control-de-servicios-b8e34.firebaseapp.com",
       projectId: "control-de-servicios-b8e34"
     };
-    // Se inicializa como una app secundaria llamada "PlanificadorApp"
     const appPlanificador = firebase.initializeApp(firebasePlanificadorConfig, "PlanificadorApp");
     const dbPlanificador = appPlanificador.firestore();
 
-let datosTablaActual = [];
+    let datosTablaActual = [];
 
-    // --- VARIABLES DE PAGINACIÓN ---
+    // --- VARIABLES DE PAGINACIÓN Y FILTRO GLOBAL ---
     let paginaActual = 1;
     const registrosPorPagina = 10;
-    let filasFiltradasGlobal = [];
+    let datosFiltradosGlobal = []; // <--- MEJORA: Ahora guardamos los datos, no el HTML
 
     // ==========================================
     // 3. SISTEMA DE CACHÉ
@@ -855,8 +840,7 @@ let datosTablaActual = [];
     let catalogoLocales = [];
     
     function inicializarCatalogos() {
-    // if(rolActual !== 'admin') return; // <-- Línea eliminada para dar acceso a las ejecutivas
-    const cacheRepuestos = localStorage.getItem('maquipan_repuestos');
+        const cacheRepuestos = localStorage.getItem('maquipan_repuestos');
         const cacheLocales = localStorage.getItem('maquipan_locales');
 
         if (cacheRepuestos && cacheLocales) {
@@ -964,7 +948,7 @@ let datosTablaActual = [];
     }
 
     // ==========================================
-    // 5. BUSCADORES Y FORMULARIO (Creación y Edición)
+    // 5. BUSCADORES Y FORMULARIO
     // ==========================================
     function filtrarLocales(inputElement) {
         const texto = inputElement.value.toLowerCase().trim();
@@ -1166,7 +1150,7 @@ let datosTablaActual = [];
             payloadSolicitud.enviadoFacturar = false;
             payloadSolicitud.obsEjecutiva = ''; 
             payloadSolicitud.estadoWalmart = ''; 
-            payloadSolicitud.enviadoPlanificador = false; // Estado de envío al puente
+            payloadSolicitud.enviadoPlanificador = false;
             payloadSolicitud.fechaCreacion = firebase.firestore.FieldValue.serverTimestamp();
 
             db.collection("cotizaciones").add(payloadSolicitud).then(() => {
@@ -1183,7 +1167,7 @@ let datosTablaActual = [];
     }
 
     // ==========================================
-    // NUEVA FUNCIÓN: PUENTE HACIA EL PLANIFICADOR
+    // PUENTE HACIA EL PLANIFICADOR
     // ==========================================
     window.enviarAlPlanificador = async function(id) {
         const doc = datosTablaActual.find(d => d.id === id);
@@ -1191,14 +1175,12 @@ let datosTablaActual = [];
 
         if(!confirm(`¿Confirmas que los repuestos están DESPACHADOS y deseas cargar el REQ ${doc.reqNumber} al portal de Planificación?`)) return;
 
-        // Formatear repuestos para que sean legibles en el otro portal
         const repuestosTexto = doc.repuestos && doc.repuestos.length > 0 
             ? doc.repuestos.map(r => `${r.cantidad}x ${r.nombre}`).join(" | ") 
             : "Sin repuestos";
 
-        // Mapear los datos al esquema exacto que usa index (15).html
-const payloadPlanificador = {
-	    idCotizacion: id, // <--- NUEVA LÍNEA CLAVE: Envía su propio ID
+        const payloadPlanificador = {
+            idCotizacion: id,
             numRequerimiento: doc.reqNumber || '',
             numNV: doc.numNV_Comer || '',
             cliente: doc.local || '',
@@ -1211,11 +1193,8 @@ const payloadPlanificador = {
             nomContacto: '',
             numContacto: '',
             infoServicio: `Equipo: ${doc.equipo || 'N/A'} | ID: ${doc.idAplica || 'N/A'}\nRepuestos: ${repuestosTexto}\nObs Sup: ${doc.observaciones || ''}`,
-            
-            // LA LÓGICA CLAVE: Si tiene repuestos, decimos directamente que SÍ están despachados
             tieneRepuestos: (doc.repuestos && doc.repuestos.length > 0) ? 'Sí' : 'No',
             repuestosDespachados: (doc.repuestos && doc.repuestos.length > 0) ? 'Sí' : 'N/A', 
-            
             fechaAsignada: '',
             horaTraslado: '',
             horaInicio: '',
@@ -1223,20 +1202,13 @@ const payloadPlanificador = {
             tecnicos: doc.tecnico && doc.tecnico !== 'Sin asignar' ? [doc.tecnico] : [],
             observacionesPlanificacion: doc.obsEjecutiva || '',
             estado: 'Pendiente',
-            // CORRECCIÓN: Usar el objeto global firebase.firestore
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             fechaEdicion: firebase.firestore.FieldValue.serverTimestamp()
         };
 
         try {
-            // 1. Enviar a la base de datos del Planificador
             await dbPlanificador.collection('servicios').add(payloadPlanificador);
-            
-            // 2. Actualizar la cotización actual para marcarla como enviada y bloquear el botón
-            await db.collection("cotizaciones").doc(id).update({
-                enviadoPlanificador: true
-            });
-
+            await db.collection("cotizaciones").doc(id).update({ enviadoPlanificador: true });
             alert("¡Requerimiento cargado exitosamente en Planificación!");
         } catch (error) {
             console.error("Error al enviar al planificador:", error);
@@ -1245,213 +1217,331 @@ const payloadPlanificador = {
     };
 
     // ==========================================
-    // 6. TABLAS Y LÓGICA DE DATOS
+    // 6. TABLAS Y LÓGICA DE DATOS (MEJORADO RENDIMIENTO)
     // ==========================================
-	function cargarTablaFirebase() {
-        // Te sugiero dejar un límite generoso (ej. 300) para que siempre encuentre todo lo reciente
+    function cargarTablaFirebase() {
+        // Mantenemos la carga en memoria para que el buscador excel y facturados funcionen.
+        // La mejora radica en que YA NO dibujamos el HTML aquí, ahorrando 95% de carga del procesador.
         db.collection("cotizaciones").orderBy("fechaCreacion", "desc").limit(300).onSnapshot((querySnapshot) => {
-            const tabla = document.getElementById('cuerpoTabla');
-            tabla.innerHTML = '';
             datosTablaActual = []; 
-
             querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const id = doc.id;
-                
-                // 1. Guardamos TODO en la memoria para que el Excel y el Historial funcionen
-                datosTablaActual.push({ id, ...data });
-
-                // 👇 2. AGREGAR ESTA LÍNEA AQUÍ 👇
-                // Si ya está facturado, detenemos la creación visual para el Panel General
-                if (data.enviadoFacturar === true) return; 
-                // 👆 ------------------------- 👆
-
-                // 3. A partir de aquí sigue tu código normal construyendo el HTML...
-                const repuestosHtml = data.repuestos ? data.repuestos.map(r => 
-                    `<div class="mb-1"><span class="badge bg-secondary rounded-pill me-1">${r.cantidad || '1'}</span> <span class="opacity-75 small">[${r.sku || 'N/A'}]</span> <span class="fw-medium">${(r.nombre && r.nombre !== 'undefined') ? r.nombre : 'Repuesto manual'}</span></div>`
-                ).join('') : '<span class="text-muted fst-italic">Sin repuestos</span>';
-
-                const enlacesHtml = (data.enlaces && data.enlaces.length > 0) ? 
-                    `<div class="mt-2 pt-2 border-top border-opacity-25"><i class="fas fa-paperclip opacity-50"></i> ` + 
-                    data.enlaces.map((link, i) => {
-                        let isBase64 = link.trim().startsWith('data:image');
-                        let actionAttr = isBase64 ? `download="Documento_${i+1}.jpg"` : `target="_blank"`;
-                        return `<a href="${link}" ${actionAttr} class="text-decoration-none mx-1 text-primary fw-bold" style="display:inline-block; max-width:80px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:bottom;">Link ${i+1}</a>`;
-                    }).join('') + `</div>` 
-                    : '';
-
-                let servicioHtml = "";
-                if (data.servicioRealizado) {
-                    servicioHtml += `<div class="mt-2 p-2 bg-success bg-opacity-10 border border-success rounded-3 text-success fw-bold small text-center shadow-sm"><i class="fas fa-check-circle me-1"></i> SERVICIO REALIZADO <br> <span class="fw-normal" style="font-size:0.8em">Listo para facturar</span></div>`;
-                }
-                
-                if (data.linkFotos) {
-                    let linksArray = Array.isArray(data.linkFotos) ? data.linkFotos : (data.linkFotos.trim() !== '' ? [{nombre: 'Documento/Foto', url: data.linkFotos}] : []);
-                    if (linksArray.length > 0) {
-                        servicioHtml += `<div class="mt-2 d-flex flex-column gap-1">`;
-                        linksArray.forEach((link, idx) => {
-                            let nombreLink = (typeof link === 'object') ? link.nombre : `Foto/Doc #${idx+1}`;
-                            let urlLink = (typeof link === 'object') ? link.url : link;
-                            
-                            if (!urlLink || urlLink.trim() === '') return;
-
-                            let btnClasses = "btn-info text-white";
-                            let iconClass = "fa-image";
-                            
-                            if (nombreLink === 'Ficha del servicio') { 
-                                btnClasses = 'btn-primary text-white'; 
-                                iconClass = 'fa-file-signature'; 
-                            } else if (nombreLink === 'Guía de despacho') { 
-                                btnClasses = 'btn-warning text-dark'; 
-                                iconClass = 'fa-truck'; 
-                            }
-
-                            let isBase64 = urlLink.trim().startsWith('data:image');
-                            let actionAttr = isBase64 ? `download="${nombreLink.replace(/\s+/g, '_')}.jpg"` : `target="_blank"`;
-                            let extraIcon = isBase64 ? ' <i class="fas fa-download"></i>' : '';
-                            
-                            servicioHtml += `<a href="${urlLink}" ${actionAttr} class="btn btn-sm ${btnClasses} rounded-pill fw-bold shadow-sm" style="font-size: 0.75rem; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${nombreLink}"><i class="fas ${iconClass} me-1"></i> ${nombreLink}${extraIcon}</a>`;
-                        });
-                        servicioHtml += `</div>`;
-                    }
-                }
-
-                let btnFacturado = "";
-                if (data.enviadoFacturar) {
-                    btnFacturado = `<button class="btn btn-success btn-sm w-100 rounded-pill shadow-sm fw-bold mt-3 border-2" onclick="toggleFacturado('${id}', false)"><i class="fas fa-check-double me-1"></i> ✅ ENVIADO A FACTURADO</button>`;
-                } else {
-                    btnFacturado = `<button class="btn btn-outline-primary btn-sm w-100 rounded-pill shadow-sm fw-bold mt-3 border-2" onclick="toggleFacturado('${id}', true)"><i class="fas fa-file-invoice-dollar me-1"></i> Marcar Facturado</button>`;
-                }
-
-                let claseEstado = "estado-nuevo";
-                if (data.ocRecibida) claseEstado = "estado-completado"; 
-                else if (data.numCot && data.numCot.trim() !== "") claseEstado = "estado-cotizado"; 
-
-                let labelPrioridad = "";
-                if(data.prioridad === "Urgente") labelPrioridad = `<span class="badge bg-danger ms-1" style="font-size:0.65em">URGENTE 🔥</span>`;
-                else if(data.prioridad === "Baja") labelPrioridad = `<span class="badge bg-secondary ms-1" style="font-size:0.65em">BAJA</span>`;
-
-                // NUEVO BOTÓN: Enviar a Planificador (Visible para Ejecutivas)
-                let btnEnviarPlanificador = "";
-                if (data.enviadoPlanificador) {
-                    btnEnviarPlanificador = `<button class="btn btn-success btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" disabled><i class="fas fa-check-double me-1"></i> En Planificación</button>`;
-                } else {
-                    btnEnviarPlanificador = `<button class="btn btn-dark btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" onclick="enviarAlPlanificador('${id}')"><i class="fas fa-paper-plane me-1"></i> Cargar a Planificación</button>`;
-                }
-
-                const tr = document.createElement('tr');
-                tr.className = `fila-registro ${claseEstado}`;
-                
-                tr.dataset.id = id;
-                tr.dataset.reqNumber = data.reqNumber ? data.reqNumber.toLowerCase() : "";
-                tr.dataset.ejecutiva = data.ejecutiva ? data.ejecutiva.toLowerCase() : "n/a"; 
-                tr.dataset.tieneCot = (data.numCot && data.numCot.trim() !== "") ? "si" : "no";
-                tr.dataset.tieneOc = data.ocRecibida ? "si" : "no";
-                tr.dataset.servicioListo = data.servicioRealizado ? "si" : "no";
-                tr.dataset.facturado = data.enviadoFacturar ? "si" : "no";
-
-                let botonesSupervisor = "";
-                if (rolActual === 'admin') {
-                    botonesSupervisor += `<button class="btn btn-outline-success btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" onclick="duplicarSolicitud('${id}')"><i class="fas fa-copy me-1"></i> Duplicar</button>`;
-                    botonesSupervisor += `<button class="btn btn-outline-warning btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="cargarEdicion('${id}')"><i class="fas fa-edit me-1"></i> Editar Solicitud</button>`;
-                    botonesSupervisor += `<button class="btn btn-outline-info btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="abrirModalServicio('${id}')"><i class="fas fa-camera me-1"></i> Reporte Técnico</button>`;
-                    botonesSupervisor += `<button class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill shadow-sm" onclick="eliminarSolicitud('${id}')"><i class="fas fa-trash me-1"></i> Eliminar Fila</button>`;
-                }
-
-                tr.innerHTML = `
-                    <td>
-                        <div class="fw-bold fs-6 text-primary mb-1">${data.reqNumber} ${labelPrioridad}</div>
-                        <div class="fw-bold small mb-1">${data.local}</div>
-                        <div class="opacity-75" style="font-size: 0.75rem;"><i class="fas fa-calendar-alt me-1"></i>${data.fecha}</div>
-                        <div class="opacity-75 mb-2" style="font-size: 0.75rem;">Eq: ${data.equipo || 'N/A'} | ID: ${data.idAplica}</div>
-                        <div class="opacity-75 mb-2 fw-medium text-success" style="font-size: 0.75rem;"><i class="fas fa-user-cog me-1"></i>Téc: ${data.tecnico || 'N/A'}</div>
-                        <button class="btn btn-outline-primary btn-sm w-100 rounded-pill shadow-sm fw-bold border-2" onclick="verDetallesReq('${id}')">
-                            <i class="fas fa-expand-arrows-alt me-1"></i> Ver Detalles
-                        </button>
-                    </td>
-                    <td>
-                        ${repuestosHtml}
-                        ${data.observaciones && data.observaciones !== 'N/A' ? `<div class="mt-2 pt-2 border-top border-opacity-25 fst-italic opacity-75 small"><i class="fas fa-comment-dots me-1"></i>${data.observaciones}</div>` : ''}
-                        ${data.obsEjecutiva && data.obsEjecutiva !== '' ? `<div class="mt-2 p-2 bg-warning bg-opacity-10 rounded text-dark small border border-warning"><i class="fas fa-sticky-note me-1"></i><strong>Mi Nota:</strong> ${data.obsEjecutiva}</div>` : ''}
-                        ${enlacesHtml}
-                        ${servicioHtml}
-                    </td>
-                    <td>
-                        <input type="text" id="valor_${id}" class="form-control form-control-sm border-primary fw-bold text-success mb-2 text-center" value="${data.valorCot || ''}" placeholder="$ Valor Total" onkeyup="formatearMoneda(this)">
-                        
-                        <div class="form-check form-switch mt-2 ps-5 border-bottom pb-2">
-                            <input class="form-check-input" type="checkbox" role="switch" id="check_${id}" ${data.ocRecibida ? 'checked' : ''} style="cursor:pointer; transform: scale(1.3);">
-                            <label class="form-check-label ms-1 fw-bold small mt-1" for="check_${id}" style="cursor:pointer;">OC Recibida</label>
-                        </div>
-                        
-                        <div class="input-group input-group-sm mt-2">
-                            <span class="input-group-text bg-light text-muted" style="font-size: 0.7em; width: 65px;" title="Fecha Aprobación">F. Apr.</span>
-                            <input type="date" id="fechaAprob_${id}" class="form-control" value="${data.fechaAprob || ''}">
-                        </div>
-                        <div class="input-group input-group-sm mt-1 mb-2">
-                            <span class="input-group-text bg-light text-muted" style="font-size: 0.7em; width: 65px;" title="Fecha Instalación">F. Inst.</span>
-                            <input type="date" id="fechaInstal_${id}" class="form-control" value="${data.fechaInstal || ''}">
-                        </div>
-                        
-                        <div class="text-center">
-                            ${btnFacturado}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text fw-bold text-muted" style="width: 70px;">COT</span>
-                            <input type="text" id="numCot_${id}" class="form-control" value="${data.numCot || ''}" placeholder="N°">
-                        </div>
-                        <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text fw-bold text-muted" style="width: 70px;">OC</span>
-                            <input type="text" id="numOC_${id}" class="form-control" value="${data.numOC || ''}" placeholder="N°">
-                        </div>
-                        <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text fw-bold text-info" style="width: 70px;" title="Nota de Venta Servicio Técnico">NV ST</span>
-                            <input type="text" id="numNV_ST_${id}" class="form-control border-info" value="${data.numNV_ST || ''}" placeholder="(Opcional)">
-                        </div>
-                        <div class="input-group input-group-sm mb-1">
-                            <span class="input-group-text fw-bold text-info" style="width: 70px;">NV COM</span>
-                            <input type="text" id="numNV_Comer_${id}" class="form-control border-info" value="${data.numNV_Comer || ''}" placeholder="N°">
-                        </div>
-                        <div class="input-group input-group-sm border-top border-opacity-25 pt-2 mt-2">
-                            <span class="input-group-text bg-warning bg-opacity-10 text-dark fw-bold" style="width: 70px;" title="REQ de Instalación">R.I.</span>
-                            <input type="text" id="reqInst_${id}" class="form-control border-warning" value="${data.reqInstalacion || ''}" placeholder="REQ Inst">
-                        </div>
-                    </td>
-                    <td class="text-center align-middle">
-                        <button class="btn btn-primary btn-sm w-100 rounded-pill shadow-sm fw-bold" onclick="actualizarEjecutiva('${id}')">
-                            <i class="fas fa-save me-1"></i> Guardar
-                        </button>
-                        ${btnEnviarPlanificador}
-                        ${botonesSupervisor}
-                    </td>
-                `;
-                tabla.appendChild(tr);
+                datosTablaActual.push({ id: doc.id, ...doc.data() });
             });
             
+            // Enviamos todo a los filtros. El filtro se encargará de dibujar solo 10 filas.
             aplicarFiltros(); 
             renderizarTablaExcel();
         });
     }
 
     // ==========================================
-    // RENDERIZAR VISTA EXCEL HORIZONTAL CON FILTROS
+    // DEBOUNCE GLOBAL (MEJORA DE VELOCIDAD DE BÚSQUEDA)
     // ==========================================
-function renderizarTablaExcel() {
+    let timeoutBusquedaGeneral;
+    function aplicarFiltrosConRetraso() {
+        clearTimeout(timeoutBusquedaGeneral);
+        timeoutBusquedaGeneral = setTimeout(() => {
+            aplicarFiltros(); 
+        }, 300); // Espera 300ms después de teclear
+    }
+
+    let timeoutBusquedaExcel;
+    function renderizarTablaExcelConRetraso() {
+        clearTimeout(timeoutBusquedaExcel);
+        timeoutBusquedaExcel = setTimeout(() => {
+            renderizarTablaExcel();
+        }, 300);
+    }
+
+    // ==========================================
+    // FILTROS Y EXPORTACIÓN MEJORADOS
+    // ==========================================
+    function aplicarFiltros() {
+        const selectEjecutiva = document.getElementById('filtroEjecutivas').value.toLowerCase();
+        const selectEstado = document.getElementById('filtroEstados').value;
+        const inputBusqueda = document.getElementById('busquedaGeneral');
+        const textoBusqueda = inputBusqueda ? inputBusqueda.value.toLowerCase().trim() : '';
+
+        // Filtramos sobre la MEMORIA (datosTablaActual), no sobre el HTML (super rápido)
+        datosFiltradosGlobal = datosTablaActual.filter(data => {
+            // Excluimos los facturados de la vista general
+            if (data.enviadoFacturar === true) return false;
+
+            const ejecFila = (data.ejecutiva || "n/a").toLowerCase(); 
+            let mostrarPorEjecutiva = false;
+
+            if (selectEjecutiva === "todas") { 
+                mostrarPorEjecutiva = true; 
+            } else if (selectEjecutiva === "otra") {
+                const esPrincipal = ["keillyn", "kcuellar", "katherine", "kcarrasco", "johanna", "jdiazb"].some(val => ejecFila.includes(val));
+                mostrarPorEjecutiva = !esPrincipal;
+            } else {
+                if (selectEjecutiva === "keillyn" && (ejecFila.includes("keillyn") || ejecFila.includes("kcuellar"))) mostrarPorEjecutiva = true;
+                if (selectEjecutiva === "katherine" && (ejecFila.includes("katherine") || ejecFila.includes("kcarrasco"))) mostrarPorEjecutiva = true;
+                if (selectEjecutiva === "johanna" && (ejecFila.includes("johanna") || ejecFila.includes("jdiazb"))) mostrarPorEjecutiva = true;
+            }
+
+            let mostrarPorEstado = false;
+            const tieneCot = (data.numCot && data.numCot.trim() !== "");
+            const tieneOc = data.ocRecibida;
+            const servicioListo = data.servicioRealizado;
+            const facturado = data.enviadoFacturar;
+
+            if (selectEstado === "TODOS") mostrarPorEstado = true;
+            else if (selectEstado === "PENDIENTE_COTIZAR") mostrarPorEstado = !tieneCot; 
+            else if (selectEstado === "COTIZADO") mostrarPorEstado = tieneCot && !tieneOc; 
+            else if (selectEstado === "OC_RECIBIDA") mostrarPorEstado = tieneOc && !servicioListo; 
+            else if (selectEstado === "PENDIENTE_FACTURAR") mostrarPorEstado = servicioListo && !facturado; 
+            else if (selectEstado === "FACTURADO") mostrarPorEstado = facturado; 
+
+            // MEJORA: Búsqueda Avanzada (Local y Repuestos)
+            let pasaBusqueda = true;
+            if (textoBusqueda !== '') {
+                const valCot = (data.numCot || '').toLowerCase();
+                const valOc = (data.numOC || '').toLowerCase();
+                const valNvST = (data.numNV_ST || '').toLowerCase();
+                const valNvComer = (data.numNV_Comer || '').toLowerCase();
+                const valIdAplica = (data.idAplica || '').toLowerCase();
+                const valReq = (data.reqNumber || '').toLowerCase();
+                const valLocal = (data.local || '').toLowerCase();
+                
+                let valRepuestos = '';
+                if (data.repuestos && Array.isArray(data.repuestos)) {
+                    valRepuestos = data.repuestos.map(r => `${r.sku || ''} ${r.nombre || ''}`).join(' ').toLowerCase();
+                }
+
+                pasaBusqueda = valReq.includes(textoBusqueda) || 
+                               valIdAplica.includes(textoBusqueda) || 
+                               valCot.includes(textoBusqueda) || 
+                               valOc.includes(textoBusqueda) || 
+                               valNvST.includes(textoBusqueda) || 
+                               valNvComer.includes(textoBusqueda) ||
+                               valLocal.includes(textoBusqueda) ||
+                               valRepuestos.includes(textoBusqueda);
+            }
+
+            return mostrarPorEjecutiva && mostrarPorEstado && pasaBusqueda;
+        });
+        
+        const totalPaginas = Math.ceil(datosFiltradosGlobal.length / registrosPorPagina);
+        if (paginaActual > totalPaginas && totalPaginas > 0) paginaActual = 1;
+
+        renderizarPaginacion();
+        mostrarPagina(paginaActual); // Llamamos a dibujar
+    }
+
+    // ==========================================
+    // PAGINACIÓN REAL (CREACIÓN EXCLUSIVA DE 10 NODOS)
+    // ==========================================
+    function mostrarPagina(pagina) {
+        const tabla = document.getElementById('cuerpoTabla');
+        tabla.innerHTML = ''; // Limpiamos la tabla
+        
+        if (datosFiltradosGlobal.length === 0) {
+            tabla.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-muted fst-italic">No hay solicitudes que coincidan con la búsqueda.</td></tr>';
+            return;
+        }
+
+        paginaActual = pagina;
+        const inicio = (pagina - 1) * registrosPorPagina;
+        const fin = inicio + registrosPorPagina;
+
+        // MEJORA: Usamos un Fragment para insertar las 10 filas de un solo golpe
+        const fragmento = document.createDocumentFragment();
+
+        for (let i = inicio; i < fin && i < datosFiltradosGlobal.length; i++) {
+            const data = datosFiltradosGlobal[i];
+            const id = data.id;
+
+            const repuestosHtml = data.repuestos ? data.repuestos.map(r => 
+                `<div class="mb-1"><span class="badge bg-secondary rounded-pill me-1">${r.cantidad || '1'}</span> <span class="opacity-75 small">[${r.sku || 'N/A'}]</span> <span class="fw-medium">${(r.nombre && r.nombre !== 'undefined') ? r.nombre : 'Repuesto manual'}</span></div>`
+            ).join('') : '<span class="text-muted fst-italic">Sin repuestos</span>';
+
+            const enlacesHtml = (data.enlaces && data.enlaces.length > 0) ? 
+                `<div class="mt-2 pt-2 border-top border-opacity-25"><i class="fas fa-paperclip opacity-50"></i> ` + 
+                data.enlaces.map((link, idx) => {
+                    let isBase64 = link.trim().startsWith('data:image');
+                    let actionAttr = isBase64 ? `download="Documento_${idx+1}.jpg"` : `target="_blank"`;
+                    return `<a href="${link}" ${actionAttr} class="text-decoration-none mx-1 text-primary fw-bold" style="display:inline-block; max-width:80px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:bottom;">Link ${idx+1}</a>`;
+                }).join('') + `</div>` : '';
+
+            let servicioHtml = "";
+            if (data.servicioRealizado) {
+                servicioHtml += `<div class="mt-2 p-2 bg-success bg-opacity-10 border border-success rounded-3 text-success fw-bold small text-center shadow-sm"><i class="fas fa-check-circle me-1"></i> SERVICIO REALIZADO <br> <span class="fw-normal" style="font-size:0.8em">Listo para facturar</span></div>`;
+            }
+            
+            if (data.linkFotos) {
+                let linksArray = Array.isArray(data.linkFotos) ? data.linkFotos : (data.linkFotos.trim() !== '' ? [{nombre: 'Documento/Foto', url: data.linkFotos}] : []);
+                if (linksArray.length > 0) {
+                    servicioHtml += `<div class="mt-2 d-flex flex-column gap-1">`;
+                    linksArray.forEach((link, idx) => {
+                        let nombreLink = (typeof link === 'object') ? link.nombre : `Foto/Doc #${idx+1}`;
+                        let urlLink = (typeof link === 'object') ? link.url : link;
+                        if (!urlLink || urlLink.trim() === '') return;
+                        let btnClasses = "btn-info text-white";
+                        let iconClass = "fa-image";
+                        if (nombreLink === 'Ficha del servicio') { btnClasses = 'btn-primary text-white'; iconClass = 'fa-file-signature'; } 
+                        else if (nombreLink === 'Guía de despacho') { btnClasses = 'btn-warning text-dark'; iconClass = 'fa-truck'; }
+                        let isBase64 = urlLink.trim().startsWith('data:image');
+                        let actionAttr = isBase64 ? `download="${nombreLink.replace(/\s+/g, '_')}.jpg"` : `target="_blank"`;
+                        let extraIcon = isBase64 ? ' <i class="fas fa-download"></i>' : '';
+                        servicioHtml += `<a href="${urlLink}" ${actionAttr} class="btn btn-sm ${btnClasses} rounded-pill fw-bold shadow-sm" style="font-size: 0.75rem; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${nombreLink}"><i class="fas ${iconClass} me-1"></i> ${nombreLink}${extraIcon}</a>`;
+                    });
+                    servicioHtml += `</div>`;
+                }
+            }
+
+            let btnFacturado = `<button class="btn btn-outline-primary btn-sm w-100 rounded-pill shadow-sm fw-bold mt-3 border-2" onclick="toggleFacturado('${id}', true)"><i class="fas fa-file-invoice-dollar me-1"></i> Marcar Facturado</button>`;
+
+            let claseEstado = "estado-nuevo";
+            if (data.ocRecibida) claseEstado = "estado-completado"; 
+            else if (data.numCot && data.numCot.trim() !== "") claseEstado = "estado-cotizado"; 
+
+            let labelPrioridad = "";
+            if(data.prioridad === "Urgente") labelPrioridad = `<span class="badge bg-danger ms-1" style="font-size:0.65em">URGENTE 🔥</span>`;
+            else if(data.prioridad === "Baja") labelPrioridad = `<span class="badge bg-secondary ms-1" style="font-size:0.65em">BAJA</span>`;
+
+            let btnEnviarPlanificador = "";
+            if (data.enviadoPlanificador) {
+                btnEnviarPlanificador = `<button class="btn btn-success btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" disabled><i class="fas fa-check-double me-1"></i> En Planificación</button>`;
+            } else {
+                btnEnviarPlanificador = `<button class="btn btn-dark btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" onclick="enviarAlPlanificador('${id}')"><i class="fas fa-paper-plane me-1"></i> Cargar a Planificación</button>`;
+            }
+
+            const tr = document.createElement('tr');
+            tr.className = `fila-registro ${claseEstado}`;
+
+            let botonesSupervisor = "";
+            if (rolActual === 'admin') {
+                botonesSupervisor += `<button class="btn btn-outline-success btn-sm w-100 mt-2 rounded-pill shadow-sm fw-bold" onclick="duplicarSolicitud('${id}')"><i class="fas fa-copy me-1"></i> Duplicar</button>`;
+                botonesSupervisor += `<button class="btn btn-outline-warning btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="cargarEdicion('${id}')"><i class="fas fa-edit me-1"></i> Editar Solicitud</button>`;
+                botonesSupervisor += `<button class="btn btn-outline-info btn-sm w-100 mt-2 rounded-pill shadow-sm text-dark fw-bold" onclick="abrirModalServicio('${id}')"><i class="fas fa-camera me-1"></i> Reporte Técnico</button>`;
+                botonesSupervisor += `<button class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill shadow-sm" onclick="eliminarSolicitud('${id}')"><i class="fas fa-trash me-1"></i> Eliminar Fila</button>`;
+            }
+
+            tr.innerHTML = `
+                <td>
+                    <div class="fw-bold fs-6 text-primary mb-1">${data.reqNumber} ${labelPrioridad}</div>
+                    <div class="fw-bold small mb-1">${data.local}</div>
+                    <div class="opacity-75" style="font-size: 0.75rem;"><i class="fas fa-calendar-alt me-1"></i>${data.fecha}</div>
+                    <div class="opacity-75 mb-2" style="font-size: 0.75rem;">Eq: ${data.equipo || 'N/A'} | ID: ${data.idAplica}</div>
+                    <div class="opacity-75 mb-2 fw-medium text-success" style="font-size: 0.75rem;"><i class="fas fa-user-cog me-1"></i>Téc: ${data.tecnico || 'N/A'}</div>
+                    <button class="btn btn-outline-primary btn-sm w-100 rounded-pill shadow-sm fw-bold border-2" onclick="verDetallesReq('${id}')"><i class="fas fa-expand-arrows-alt me-1"></i> Ver Detalles</button>
+                </td>
+                <td>
+                    ${repuestosHtml}
+                    ${data.observaciones && data.observaciones !== 'N/A' ? `<div class="mt-2 pt-2 border-top border-opacity-25 fst-italic opacity-75 small"><i class="fas fa-comment-dots me-1"></i>${data.observaciones}</div>` : ''}
+                    ${data.obsEjecutiva && data.obsEjecutiva !== '' ? `<div class="mt-2 p-2 bg-warning bg-opacity-10 rounded text-dark small border border-warning"><i class="fas fa-sticky-note me-1"></i><strong>Mi Nota:</strong> ${data.obsEjecutiva}</div>` : ''}
+                    ${enlacesHtml}
+                    ${servicioHtml}
+                </td>
+                <td>
+                    <input type="text" id="valor_${id}" class="form-control form-control-sm border-primary fw-bold text-success mb-2 text-center" value="${data.valorCot || ''}" placeholder="$ Valor Total" onkeyup="formatearMoneda(this)">
+                    <div class="form-check form-switch mt-2 ps-5 border-bottom pb-2">
+                        <input class="form-check-input" type="checkbox" role="switch" id="check_${id}" ${data.ocRecibida ? 'checked' : ''} style="cursor:pointer; transform: scale(1.3);">
+                        <label class="form-check-label ms-1 fw-bold small mt-1" for="check_${id}" style="cursor:pointer;">OC Recibida</label>
+                    </div>
+                    <div class="input-group input-group-sm mt-2">
+                        <span class="input-group-text bg-light text-muted" style="font-size: 0.7em; width: 65px;" title="Fecha Aprobación">F. Apr.</span>
+                        <input type="date" id="fechaAprob_${id}" class="form-control" value="${data.fechaAprob || ''}">
+                    </div>
+                    <div class="input-group input-group-sm mt-1 mb-2">
+                        <span class="input-group-text bg-light text-muted" style="font-size: 0.7em; width: 65px;" title="Fecha Instalación">F. Inst.</span>
+                        <input type="date" id="fechaInstal_${id}" class="form-control" value="${data.fechaInstal || ''}">
+                    </div>
+                    <div class="text-center">${btnFacturado}</div>
+                </td>
+                <td>
+                    <div class="input-group input-group-sm mb-1">
+                        <span class="input-group-text fw-bold text-muted" style="width: 70px;">COT</span>
+                        <input type="text" id="numCot_${id}" class="form-control" value="${data.numCot || ''}" placeholder="N°">
+                    </div>
+                    <div class="input-group input-group-sm mb-1">
+                        <span class="input-group-text fw-bold text-muted" style="width: 70px;">OC</span>
+                        <input type="text" id="numOC_${id}" class="form-control" value="${data.numOC || ''}" placeholder="N°">
+                    </div>
+                    <div class="input-group input-group-sm mb-1">
+                        <span class="input-group-text fw-bold text-info" style="width: 70px;" title="Nota de Venta Servicio Técnico">NV ST</span>
+                        <input type="text" id="numNV_ST_${id}" class="form-control border-info" value="${data.numNV_ST || ''}" placeholder="(Opcional)">
+                    </div>
+                    <div class="input-group input-group-sm mb-1">
+                        <span class="input-group-text fw-bold text-info" style="width: 70px;">NV COM</span>
+                        <input type="text" id="numNV_Comer_${id}" class="form-control border-info" value="${data.numNV_Comer || ''}" placeholder="N°">
+                    </div>
+                    <div class="input-group input-group-sm border-top border-opacity-25 pt-2 mt-2">
+                        <span class="input-group-text bg-warning bg-opacity-10 text-dark fw-bold" style="width: 70px;" title="REQ de Instalación">R.I.</span>
+                        <input type="text" id="reqInst_${id}" class="form-control border-warning" value="${data.reqInstalacion || ''}" placeholder="REQ Inst">
+                    </div>
+                </td>
+                <td class="text-center align-middle">
+                    <button class="btn btn-primary btn-sm w-100 rounded-pill shadow-sm fw-bold" onclick="actualizarEjecutiva('${id}')"><i class="fas fa-save me-1"></i> Guardar</button>
+                    ${btnEnviarPlanificador}
+                    ${botonesSupervisor}
+                </td>
+            `;
+            fragmento.appendChild(tr);
+        }
+        
+        tabla.appendChild(fragmento); // 1 sola inyección al DOM
+
+        // Refrescar estado visual de los botones de paginación
+        document.querySelectorAll('.btn-pagina').forEach(btn => {
+            if(parseInt(btn.dataset.pag) === paginaActual) {
+                btn.classList.replace('btn-outline-primary', 'btn-primary');
+            } else {
+                btn.classList.replace('btn-primary', 'btn-outline-primary');
+            }
+        });
+    }
+
+    function renderizarPaginacion() {
+        const contenedor = document.getElementById('paginacionContenedor');
+        if(!contenedor) return;
+        contenedor.innerHTML = '';
+        
+        const totalPaginas = Math.ceil(datosFiltradosGlobal.length / registrosPorPagina);
+        if (totalPaginas <= 1) return;
+
+        const btnPrev = document.createElement('button');
+        btnPrev.className = 'btn btn-sm btn-outline-primary fw-bold shadow-sm';
+        btnPrev.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        btnPrev.disabled = paginaActual === 1;
+        btnPrev.onclick = () => { if(paginaActual > 1) mostrarPagina(paginaActual - 1); };
+        contenedor.appendChild(btnPrev);
+
+        for (let i = 1; i <= totalPaginas; i++) {
+            const btn = document.createElement('button');
+            btn.className = `btn btn-sm btn-pagina fw-bold shadow-sm ${i === paginaActual ? 'btn-primary' : 'btn-outline-primary'}`;
+            btn.dataset.pag = i;
+            btn.innerText = i;
+            btn.onclick = () => mostrarPagina(i);
+            contenedor.appendChild(btn);
+        }
+
+        const btnNext = document.createElement('button');
+        btnNext.className = 'btn btn-sm btn-outline-primary fw-bold shadow-sm';
+        btnNext.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        btnNext.disabled = paginaActual === totalPaginas;
+        btnNext.onclick = () => { if(paginaActual < totalPaginas) mostrarPagina(paginaActual + 1); };
+        contenedor.appendChild(btnNext);
+    }
+
+    // ==========================================
+    // RENDERIZAR VISTA EXCEL HORIZONTAL (MEJORADA)
+    // ==========================================
+    function renderizarTablaExcel() {
         const tbodyExcel = document.getElementById('cuerpoTablaExcel');
         const tbodyFacturados = document.getElementById('cuerpoTablaFacturados');
-        
-        if(tbodyExcel) tbodyExcel.innerHTML = '';
-        if(tbodyFacturados) tbodyFacturados.innerHTML = '';
         
         const textoBusqueda = document.getElementById('busquedaExcel').value.toLowerCase().trim();
         const selectEstado = document.getElementById('filtroEstadoExcel').value;
         const filtroEjecutivaGlobal = document.getElementById('filtroEjecutivas').value.toLowerCase();
         
+        // MEJORA: Construimos todo el HTML en texto y lo inyectamos 1 sola vez
+        let htmlExcel = '';
+        let htmlFacturados = '';
+
         datosTablaActual.forEach(data => {
-            
-            // 1. Filtro Global Ejecutiva
             const ejecData = (data.ejecutiva || "").toLowerCase();
             let mostrarPorEjecutiva = false;
             if (filtroEjecutivaGlobal === "todas") { mostrarPorEjecutiva = true; } 
@@ -1465,27 +1555,19 @@ function renderizarTablaExcel() {
             }
             if (!mostrarPorEjecutiva) return;
 
-            // 2. Determinar Estado
             let estadoCod = "PENDIENTE_COTIZAR";
             let estadoStr = "⏱️ Ptes. Cotizar";
             let colorTexto = "text-warning";
-            let btnRevertir = ""; // <--- NUEVA VARIABLE PARA EL BOTÓN
+            let btnRevertir = ""; 
 
             if (data.enviadoFacturar) { 
                 estadoStr = "✅ Facturado / Terminado"; 
                 colorTexto = "text-secondary"; 
                 estadoCod = "FACTURADO"; 
-                
-                // Si está facturado Y el usuario eres tú (admin), armamos el botón
                 if (rolActual === 'admin') {
                     btnRevertir = `<div class="mt-2"><button type="button" class="btn btn-sm btn-outline-danger shadow-sm rounded-pill fw-bold" style="font-size: 0.7rem;" onclick="toggleFacturado('${data.id}', false)"><i class="fas fa-undo me-1"></i> Revertir al Panel</button></div>`;
                 }
             }
-            else if (data.servicioRealizado) { estadoStr = "💰 Pte. Facturar"; colorTexto = "text-success"; estadoCod = "PENDIENTE_FACTURAR"; }
-            else if (data.ocRecibida) { estadoStr = "🛠️ OC Recibida"; colorTexto = "text-info"; estadoCod = "OC_RECIBIDA"; }
-            else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ Cotizado"; colorTexto = "text-primary"; estadoCod = "COTIZADO"; }
-            
-            if (data.enviadoFacturar) { estadoStr = "✅ Facturado / Terminado"; colorTexto = "text-secondary"; estadoCod = "FACTURADO"; }
             else if (data.servicioRealizado) { estadoStr = "💰 Pte. Facturar"; colorTexto = "text-success"; estadoCod = "PENDIENTE_FACTURAR"; }
             else if (data.ocRecibida) { estadoStr = "🛠️ OC Recibida"; colorTexto = "text-info"; estadoCod = "OC_RECIBIDA"; }
             else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ Cotizado"; colorTexto = "text-primary"; estadoCod = "COTIZADO"; }
@@ -1499,7 +1581,6 @@ function renderizarTablaExcel() {
             let obsEjecRecortada = data.obsEjecutiva || '';
             if (obsEjecRecortada.length > 25) obsEjecRecortada = obsEjecRecortada.substring(0, 25) + '...';
 
-            // Armamos el HTML de la fila
             const htmlFila = `
                 <tr class="${claseFilaExcel}">
                     <td>${data.fecha || ''}</td>
@@ -1511,7 +1592,8 @@ function renderizarTablaExcel() {
                     <td>${data.serie || ''}</td>
                     <td>${data.prioridad === 'Urgente' ? '<span class="badge bg-danger">Urgente</span>' : (data.prioridad === 'Baja' ? 'Baja' : 'Normal')}</td>
                     <td class="text-success fw-medium">${data.tecnico || ''}</td>
-		    <td class="fw-bold ${colorTexto}">${estadoStr} ${btnRevertir}</td>                    <td>
+                    <td class="fw-bold ${colorTexto}">${estadoStr} ${btnRevertir}</td>
+                    <td>
                         <select class="form-select form-select-sm fw-bold border-secondary shadow-sm" style="font-size: 0.75rem; width: 170px; cursor: pointer;" onchange="actualizarEstadoWalmart('${data.id}', this.value, this)">
                             <option value="">-- No definido --</option>
                             <option value="Revision pendiente de supervisor" ${data.estadoWalmart === 'Revision pendiente de supervisor' ? 'selected' : ''}>Revision pendiente de supervisor</option>
@@ -1537,37 +1619,31 @@ function renderizarTablaExcel() {
                 </tr>
             `;
 
-            // 3. SEPARADOR DE TABLAS
             if (estadoCod === "FACTURADO") {
-                if (tbodyFacturados) tbodyFacturados.innerHTML += htmlFila;
+                htmlFacturados += htmlFila;
             } else {
                 if (selectEstado !== "TODOS" && selectEstado !== estadoCod) return;
                 if (textoBusqueda !== '') {
-                    const strFila = `${data.reqNumber || ''} ${data.local || ''} ${data.tecnico || ''} ${data.idAplica || ''} ${data.numCot || ''} ${data.numOC || ''}`.toLowerCase();
+                    // MEJORA: Buscar también en excel por Local y Repuesto
+                    const strFila = `${data.reqNumber || ''} ${data.local || ''} ${data.tecnico || ''} ${data.idAplica || ''} ${data.numCot || ''} ${data.numOC || ''} ${repuestosTexto}`.toLowerCase();
                     if (!strFila.includes(textoBusqueda)) return;
                 }
-                if (tbodyExcel) tbodyExcel.innerHTML += htmlFila;
+                htmlExcel += htmlFila;
             }
         });
+
+        if(tbodyExcel) tbodyExcel.innerHTML = htmlExcel;
+        if(tbodyFacturados) tbodyFacturados.innerHTML = htmlFacturados;
     }
 
-    // Función para actualizar automáticamente el Estado Walmart y cambiar el color al instante
     window.actualizarEstadoWalmart = function(id, valor, elementoSelect) {
         const fila = elementoSelect.closest('tr');
-        
         fila.classList.remove("table-danger", "table-success", "table-warning");
-        
-        if (valor === "Revision pendiente de supervisor") {
-            fila.classList.add("table-danger");
-        } else if (valor === "Activo") {
-            fila.classList.add("table-success");
-        } else if (valor === "Sostener por partes") {
-            fila.classList.add("table-warning");
-        }
+        if (valor === "Revision pendiente de supervisor") fila.classList.add("table-danger");
+        else if (valor === "Activo") fila.classList.add("table-success");
+        else if (valor === "Sostener por partes") fila.classList.add("table-warning");
 
-        db.collection("cotizaciones").doc(id).update({
-            estadoWalmart: valor
-        }).catch(error => console.error("Error al actualizar Estado Walmart:", error));
+        db.collection("cotizaciones").doc(id).update({ estadoWalmart: valor }).catch(error => console.error(error));
     };
 
     // ==========================================
@@ -1576,7 +1652,6 @@ function renderizarTablaExcel() {
     window.abrirModalObsEjecutiva = function(id) {
         const doc = datosTablaActual.find(d => d.id === id);
         if(!doc) return;
-        
         document.getElementById('modObsEjecId').value = id;
         document.getElementById('modObsEjecTexto').value = doc.obsEjecutiva || '';
         new bootstrap.Modal(document.getElementById('modalObsEjecutiva')).show();
@@ -1585,13 +1660,10 @@ function renderizarTablaExcel() {
     window.guardarObsEjecutivaModal = function() {
         const id = document.getElementById('modObsEjecId').value;
         const texto = document.getElementById('modObsEjecTexto').value;
-
-        db.collection("cotizaciones").doc(id).update({
-            obsEjecutiva: texto
-        }).then(() => {
+        db.collection("cotizaciones").doc(id).update({ obsEjecutiva: texto }).then(() => {
             const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalObsEjecutiva'));
             if(modalInstance) modalInstance.hide();
-        }).catch(error => console.error("Error al guardar nota:", error));
+        }).catch(error => console.error(error));
     };
 
     function cargarHistorialLocal(nombreLocal) {
@@ -1600,10 +1672,7 @@ function renderizarTablaExcel() {
         
         db.collection("cotizaciones").where("local", "==", nombreLocal).get().then(snapshot => {
             const resultados = [];
-            snapshot.forEach(doc => {
-                resultados.push({ id: doc.id, ...doc.data() });
-            });
-            
+            snapshot.forEach(doc => { resultados.push({ id: doc.id, ...doc.data() }); });
             resultados.sort((a, b) => {
                 let d1 = a.fechaCreacion ? a.fechaCreacion.toMillis() : 0;
                 let d2 = b.fechaCreacion ? b.fechaCreacion.toMillis() : 0;
@@ -1624,38 +1693,21 @@ function renderizarTablaExcel() {
                 else if (data.ocRecibida) { estadoStr = "🛠️ OC RECIBIDA (Aprobado)"; badgeColor = "bg-info text-dark"; }
                 else if (data.numCot && data.numCot.trim() !== "") { estadoStr = "⏳ COTIZADO (Esperando OC)"; badgeColor = "bg-primary"; }
 
-                if (!datosTablaActual.find(d => d.id === data.id)) {
-                    datosTablaActual.push(data);
-                }
+                if (!datosTablaActual.find(d => d.id === data.id)) { datosTablaActual.push(data); }
 
                 let numDocs = 0;
                 if (data.linkFotos && Array.isArray(data.linkFotos)) numDocs += data.linkFotos.length;
                 else if (data.linkFotos && typeof data.linkFotos === 'string' && data.linkFotos.trim() !== '') numDocs += 1;
-                
                 let docResumen = numDocs > 0 ? `<div class="mt-1 small text-info"><i class="fas fa-paperclip me-1"></i> ${numDocs} Docs. Técnicos</div>` : '';
 
                 tbody.innerHTML += `
                     <tr>
                         <td class="align-middle fw-medium">${data.fecha}</td>
-                        <td class="align-middle">
-                            <span class="fw-bold fs-6 text-primary">${data.reqNumber}</span><br>
-                            <span class="small text-muted">COT: ${data.numCot || 'N/A'}</span>
-                        </td>
-                        <td class="align-middle">
-                            <span class="fw-medium">${data.equipo || 'N/A'}</span><br>
-                            <span class="small text-muted">ID: ${data.idAplica}</span>
-                        </td>
-                        <td class="align-middle">
-                            <span class="badge ${badgeColor} w-100 py-2 mb-1">${estadoStr}</span><br>
-                            <span class="fw-bold text-success d-block text-center">${data.valorCot || ''}</span>
-                            ${docResumen}
-                        </td>
+                        <td class="align-middle"><span class="fw-bold fs-6 text-primary">${data.reqNumber}</span><br><span class="small text-muted">COT: ${data.numCot || 'N/A'}</span></td>
+                        <td class="align-middle"><span class="fw-medium">${data.equipo || 'N/A'}</span><br><span class="small text-muted">ID: ${data.idAplica}</span></td>
+                        <td class="align-middle"><span class="badge ${badgeColor} w-100 py-2 mb-1">${estadoStr}</span><br><span class="fw-bold text-success d-block text-center">${data.valorCot || ''}</span>${docResumen}</td>
                         <td class="align-middle text-capitalize">${data.ejecutiva}</td>
-                        <td class="align-middle text-center">
-                            <button class="btn btn-sm btn-outline-primary rounded-pill shadow-sm fw-bold w-100" onclick="verDetallesReq('${data.id}')">
-                                <i class="fas fa-expand-arrows-alt me-1"></i> Ver Detalles
-                            </button>
-                        </td>
+                        <td class="align-middle text-center"><button class="btn btn-sm btn-outline-primary rounded-pill shadow-sm fw-bold w-100" onclick="verDetallesReq('${data.id}')"><i class="fas fa-expand-arrows-alt me-1"></i> Ver Detalles</button></td>
                     </tr>
                 `;
             });
@@ -1666,29 +1718,18 @@ function renderizarTablaExcel() {
 
     window.toggleFacturado = function(id, estado) {
         if (estado === true) {
-            // Modal de confirmación para pasar a facturado
-            if (!confirm("¿Estás seguro que quieres marcar este servicio como FACTURADO?\n\nDesaparecerá del panel general.")) {
-                return; // Si el usuario cancela, detenemos la acción
-            }
+            if (!confirm("¿Estás seguro que quieres marcar este servicio como FACTURADO?\n\nDesaparecerá del panel general.")) return;
         } else {
-            // Modal y bloqueo de seguridad para revertir a pendiente
             if (rolActual !== 'admin') {
                 alert("⚠️ Acción bloqueada: Solo el Supervisor puede devolver un servicio facturado al panel general.");
                 return;
             }
-            if (!confirm("¿Deseas REVERTIR este servicio y devolverlo a la bandeja principal?")) {
-                return;
-            }
+            if (!confirm("¿Deseas REVERTIR este servicio y devolverlo a la bandeja principal?")) return;
         }
 
-        // Si pasa las confirmaciones, actualiza en Firebase
-        db.collection("cotizaciones").doc(id).update({
-            enviadoFacturar: estado
-        }).then(() => {
-            if (estado === false) {
-                alert("Servicio revertido. Ya puedes verlo y editarlo en el Panel General.");
-            }
-        }).catch(error => console.error("Error al actualizar estado de facturación:", error));
+        db.collection("cotizaciones").doc(id).update({ enviadoFacturar: estado }).then(() => {
+            if (estado === false) alert("Servicio revertido. Ya puedes verlo y editarlo en el Panel General.");
+        }).catch(error => console.error(error));
     };
 
     function actualizarEjecutiva(id) {
@@ -1722,7 +1763,6 @@ function renderizarTablaExcel() {
         
         document.getElementById('modServId').value = id;
         document.getElementById('modServCheck').checked = doc.servicioRealizado || false;
-        
         document.getElementById('linkFicha').value = '';
         document.getElementById('linkGuia').value = '';
         const contenedorExtra = document.getElementById('contenedorLinksExtra');
@@ -1730,15 +1770,10 @@ function renderizarTablaExcel() {
 
         if (doc.linkFotos && Array.isArray(doc.linkFotos)) {
             doc.linkFotos.forEach(item => {
-                if (typeof item === 'string') {
-                    agregarLinkExtraServicio('Foto/Documento antiguo', item);
-                } else if (item.nombre === 'Ficha del servicio') {
-                    document.getElementById('linkFicha').value = item.url;
-                } else if (item.nombre === 'Guía de despacho') {
-                    document.getElementById('linkGuia').value = item.url;
-                } else {
-                    agregarLinkExtraServicio(item.nombre, item.url);
-                }
+                if (typeof item === 'string') { agregarLinkExtraServicio('Foto/Documento antiguo', item); } 
+                else if (item.nombre === 'Ficha del servicio') { document.getElementById('linkFicha').value = item.url; } 
+                else if (item.nombre === 'Guía de despacho') { document.getElementById('linkGuia').value = item.url; } 
+                else { agregarLinkExtraServicio(item.nombre, item.url); }
             });
         } else if (doc.linkFotos && typeof doc.linkFotos === 'string' && doc.linkFotos.trim() !== '') {
             agregarLinkExtraServicio('Documento Respaldo', doc.linkFotos);
@@ -1752,15 +1787,9 @@ function renderizarTablaExcel() {
         const div = document.createElement('div');
         div.className = 'row g-1 mb-2 align-items-center link-extra-item';
         div.innerHTML = `
-            <div class="col-4">
-                <input type="text" class="form-control form-control-sm nombre-extra border-info" placeholder="Nombre (Ej: Tablero)" value="${nombre}">
-            </div>
-            <div class="col-7">
-                <input type="text" class="form-control form-control-sm url-extra" placeholder="Pega link o imagen base64..." value="${url}">
-            </div>
-            <div class="col-1 text-end">
-                <button class="btn btn-sm btn-outline-danger w-100" type="button" onclick="this.parentElement.parentElement.remove()" title="Eliminar"><i class="fas fa-times"></i></button>
-            </div>
+            <div class="col-4"><input type="text" class="form-control form-control-sm nombre-extra border-info" placeholder="Nombre (Ej: Tablero)" value="${nombre}"></div>
+            <div class="col-7"><input type="text" class="form-control form-control-sm url-extra" placeholder="Pega link o imagen base64..." value="${url}"></div>
+            <div class="col-1 text-end"><button class="btn btn-sm btn-outline-danger w-100" type="button" onclick="this.parentElement.parentElement.remove()" title="Eliminar"><i class="fas fa-times"></i></button></div>
         `;
         cont.appendChild(div);
     }
@@ -1768,7 +1797,6 @@ function renderizarTablaExcel() {
     function guardarModalServicio() {
         const id = document.getElementById('modServId').value;
         const realizado = document.getElementById('modServCheck').checked;
-
         const linksFinales = [];
         
         const ficha = document.getElementById('linkFicha').value.trim();
@@ -1784,177 +1812,24 @@ function renderizarTablaExcel() {
             if (url) linksFinales.push({ nombre: nom, url: url });
         });
 
-        db.collection("cotizaciones").doc(id).update({
-            linkFotos: linksFinales,
-            servicioRealizado: realizado
-        }).then(() => {
+        db.collection("cotizaciones").doc(id).update({ linkFotos: linksFinales, servicioRealizado: realizado }).then(() => {
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalServicio'));
             if(modal) modal.hide();
         }).catch(e => alert("Error al guardar: " + e));
     }
 
-    // ==========================================
-    // 8. FILTROS Y EXPORTACIÓN
-    // ==========================================
-function aplicarFiltros() {
-        const selectEjecutiva = document.getElementById('filtroEjecutivas').value.toLowerCase();
-        const selectEstado = document.getElementById('filtroEstados').value;
-        const inputBusqueda = document.getElementById('busquedaGeneral');
-        const textoBusqueda = inputBusqueda ? inputBusqueda.value.toLowerCase().trim() : '';
-
-        const filas = document.querySelectorAll('.fila-registro');
-        
-        // Vaciamos el array global en cada nuevo filtro
-        filasFiltradasGlobal = []; 
-
-        filas.forEach(fila => {
-            const ejecFila = fila.dataset.ejecutiva.toLowerCase(); 
-            let mostrarPorEjecutiva = false;
-
-            if (selectEjecutiva === "todas") { 
-                mostrarPorEjecutiva = true; 
-            } else if (selectEjecutiva === "otra") {
-                const esPrincipal = ["keillyn", "kcuellar", "katherine", "kcarrasco", "johanna", "jdiazb"].some(val => ejecFila.includes(val));
-                mostrarPorEjecutiva = !esPrincipal;
-            } else {
-                if (selectEjecutiva === "keillyn" && (ejecFila.includes("keillyn") || ejecFila.includes("kcuellar"))) mostrarPorEjecutiva = true;
-                if (selectEjecutiva === "katherine" && (ejecFila.includes("katherine") || ejecFila.includes("kcarrasco"))) mostrarPorEjecutiva = true;
-                if (selectEjecutiva === "johanna" && (ejecFila.includes("johanna") || ejecFila.includes("jdiazb"))) mostrarPorEjecutiva = true;
-            }
-
-            let mostrarPorEstado = false;
-            const tieneCot = fila.dataset.tieneCot === "si";
-            const tieneOc = fila.dataset.tieneOc === "si";
-            const servicioListo = fila.dataset.servicioListo === "si";
-            const facturado = fila.dataset.facturado === "si";
-
-            if (selectEstado === "TODOS") mostrarPorEstado = true;
-            else if (selectEstado === "PENDIENTE_COTIZAR") mostrarPorEstado = !tieneCot; 
-            else if (selectEstado === "COTIZADO") mostrarPorEstado = tieneCot && !tieneOc; 
-            else if (selectEstado === "OC_RECIBIDA") mostrarPorEstado = tieneOc && !servicioListo; 
-            else if (selectEstado === "PENDIENTE_FACTURAR") mostrarPorEstado = servicioListo && !facturado; 
-            else if (selectEstado === "FACTURADO") mostrarPorEstado = facturado; 
-
-            let pasaBusqueda = true;
-            if (textoBusqueda !== '') {
-                const docId = fila.dataset.id;
-                const valCot = (document.getElementById(`numCot_${docId}`)?.value || '').toLowerCase();
-                const valOc = (document.getElementById(`numOC_${docId}`)?.value || '').toLowerCase();
-                const valNvST = (document.getElementById(`numNV_ST_${docId}`)?.value || '').toLowerCase();
-                const valNvComer = (document.getElementById(`numNV_Comer_${docId}`)?.value || '').toLowerCase();
-                
-                const dataDoc = datosTablaActual.find(d => d.id === docId) || {};
-                const valIdAplica = (dataDoc.idAplica || '').toLowerCase();
-                const valReq = fila.dataset.reqNumber || ''; 
-
-                pasaBusqueda = valReq.includes(textoBusqueda) || 
-                               valIdAplica.includes(textoBusqueda) || 
-                               valCot.includes(textoBusqueda) || 
-                               valOc.includes(textoBusqueda) || 
-                               valNvST.includes(textoBusqueda) || 
-                               valNvComer.includes(textoBusqueda);
-            }
-
-            if (mostrarPorEjecutiva && mostrarPorEstado && pasaBusqueda) {
-                // En lugar de mostrarla directamente, la guardamos en el array de filtradas
-                filasFiltradasGlobal.push(fila);
-            } else {
-                // Ocultamos las que no cumplen
-                fila.style.display = "none";
-            }
-        });
-        
-        // Ajuste de seguridad: si al filtrar, la página actual es mayor a las páginas disponibles, volvemos a la 1
-        const totalPaginas = Math.ceil(filasFiltradasGlobal.length / registrosPorPagina);
-        if (paginaActual > totalPaginas && totalPaginas > 0) paginaActual = 1;
-
-        // Renderizamos los botones y mostramos la página correspondiente
-        renderizarPaginacion();
-        mostrarPagina(paginaActual);
-        
-        renderizarTablaExcel();
-    }
-function mostrarPagina(pagina) {
-        if (filasFiltradasGlobal.length === 0) return;
-        
-        paginaActual = pagina;
-        const inicio = (pagina - 1) * registrosPorPagina;
-        const fin = inicio + registrosPorPagina;
-
-        // Ocultar todas las filas que SÍ pasaron el filtro primero
-        filasFiltradasGlobal.forEach(fila => fila.style.display = "none");
-
-        // Mostrar solo el bloque de 10 correspondiente a esta página
-        for (let i = inicio; i < fin && i < filasFiltradasGlobal.length; i++) {
-            filasFiltradasGlobal[i].style.display = "";
-        }
-        
-        // Actualizar el color (estilo) del botón activo
-        document.querySelectorAll('.btn-pagina').forEach(btn => {
-            if(parseInt(btn.dataset.pag) === paginaActual) {
-                btn.classList.replace('btn-outline-primary', 'btn-primary');
-            } else {
-                btn.classList.replace('btn-primary', 'btn-outline-primary');
-            }
-        });
-    }
-
-    function renderizarPaginacion() {
-        const contenedor = document.getElementById('paginacionContenedor');
-        if(!contenedor) return;
-        contenedor.innerHTML = '';
-        
-        const totalPaginas = Math.ceil(filasFiltradasGlobal.length / registrosPorPagina);
-        if (totalPaginas <= 1) return; // Si hay 10 o menos resultados, no mostramos botones
-
-        // Botón Anterior
-        const btnPrev = document.createElement('button');
-        btnPrev.className = 'btn btn-sm btn-outline-primary fw-bold shadow-sm';
-        btnPrev.innerHTML = '<i class="fas fa-chevron-left"></i>';
-        btnPrev.disabled = paginaActual === 1;
-        btnPrev.onclick = () => { if(paginaActual > 1) mostrarPagina(paginaActual - 1); };
-        contenedor.appendChild(btnPrev);
-
-        // Botones de Número (1, 2, 3...)
-        for (let i = 1; i <= totalPaginas; i++) {
-            const btn = document.createElement('button');
-            btn.className = `btn btn-sm btn-pagina fw-bold shadow-sm ${i === paginaActual ? 'btn-primary' : 'btn-outline-primary'}`;
-            btn.dataset.pag = i;
-            btn.innerText = i;
-            btn.onclick = () => mostrarPagina(i);
-            contenedor.appendChild(btn);
-        }
-
-        // Botón Siguiente
-        const btnNext = document.createElement('button');
-        btnNext.className = 'btn btn-sm btn-outline-primary fw-bold shadow-sm';
-        btnNext.innerHTML = '<i class="fas fa-chevron-right"></i>';
-        btnNext.disabled = paginaActual === totalPaginas;
-        btnNext.onclick = () => { if(paginaActual < totalPaginas) mostrarPagina(paginaActual + 1); };
-        contenedor.appendChild(btnNext);
-    }
-
-function exportarExcel(soloFacturados = false) {
+    function exportarExcel(soloFacturados = false) {
         if (datosTablaActual.length === 0) { alert("No hay datos para exportar."); return; }
-        
-        // Filtramos para exportar solo lo que corresponde a la vista actual
-        const datosAExportar = datosTablaActual.filter(doc => {
-            const esFacturado = doc.enviadoFacturar === true;
-            return soloFacturados ? esFacturado : !esFacturado;
-        });
-
+        const datosAExportar = datosTablaActual.filter(doc => { return soloFacturados ? doc.enviadoFacturar === true : !doc.enviadoFacturar; });
         if (datosAExportar.length === 0) { alert("No hay datos en esta categoría para exportar."); return; }
 
         const dataExcel = datosAExportar.map(doc => {
             const repuestosTexto = doc.repuestos ? doc.repuestos.map(r => `${r.cantidad}x ${r.sku} - ${r.nombre}`).join(" | ") : "";
-            
-            const linksExtraidos = Array.isArray(doc.linkFotos) 
-                ? doc.linkFotos.map(l => {
-                    let urlLimpia = typeof l === 'object' ? l.url : l;
-                    if(urlLimpia.startsWith('data:image')) urlLimpia = "[Imagen Adjunta en Sistema]";
-                    return typeof l === 'object' ? `${l.nombre}: ${urlLimpia}` : urlLimpia;
-                }).join(" | ") 
-                : (doc.linkFotos || "N/A");
+            const linksExtraidos = Array.isArray(doc.linkFotos) ? doc.linkFotos.map(l => {
+                let urlLimpia = typeof l === 'object' ? l.url : l;
+                if(urlLimpia.startsWith('data:image')) urlLimpia = "[Imagen Adjunta en Sistema]";
+                return typeof l === 'object' ? `${l.nombre}: ${urlLimpia}` : urlLimpia;
+            }).join(" | ") : (doc.linkFotos || "N/A");
             
             let mesCalculado = "N/A";
             if (doc.fecha) {
@@ -1966,8 +1841,7 @@ function exportarExcel(soloFacturados = false) {
             }
 
             return {
-                "MES": mesCalculado,
-                "Fecha Solicitud": doc.fecha, "Requerimiento": doc.reqNumber, "Local / Cliente": doc.local,
+                "MES": mesCalculado, "Fecha Solicitud": doc.fecha, "Requerimiento": doc.reqNumber, "Local / Cliente": doc.local,
                 "Ejecutiva Asignada": doc.ejecutiva, "Prioridad": doc.prioridad || "Normal", "Técnico": doc.tecnico || "N/A",
                 "Equipo": doc.equipo || "N/A", "ID Equipo": doc.idAplica, "N° Serie": doc.serie, "Repuestos": repuestosTexto, 
                 "Observaciones Sup": doc.observaciones, "Notas Ejecutiva": doc.obsEjecutiva || "", "Estado Walmart": doc.estadoWalmart || "N/A",
@@ -1983,7 +1857,6 @@ function exportarExcel(soloFacturados = false) {
         const libro = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(libro, hoja, "Cotizaciones");
         const fechaHoy = new Date().toISOString().split('T')[0];
-        
         const sufijo = soloFacturados ? "Facturados" : "Abiertos";
         XLSX.writeFile(libro, `Reporte_${sufijo}_Maquipan_${fechaHoy}.xlsx`);
     }
@@ -2004,7 +1877,6 @@ function exportarExcel(soloFacturados = false) {
     function cargarLocalesExcel() {
         const archivo = document.getElementById('archivoExcelLocales').files[0];
         if (!archivo) return;
-        
         const reader = new FileReader();
         reader.onload = function(e) {
             const data = new Uint8Array(e.target.result);
@@ -2012,12 +1884,10 @@ function exportarExcel(soloFacturados = false) {
             const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
             const filasDatos = json.slice(1).filter(fila => fila.length >= 2);
             let procesados = 0;
-
             filasDatos.forEach((columna) => {
                 const numLocal = String(columna[0] || '').trim();
                 const cliente = String(columna[1] || '').trim();
                 const ejecutiva = String(columna[2] || '').trim();
-
                 if (cliente !== '') {
                     db.collection("locales").add({ numLocal, nombre: cliente, ejecutiva }).then(() => {
                         procesados++;
@@ -2048,15 +1918,10 @@ function exportarExcel(soloFacturados = false) {
         reader.readAsText(archivo);
     }
 
-    // ==========================================
-    // 9. LÓGICA DE EDICIÓN DE SUPERVISOR
-    // ==========================================
     function cargarEdicion(id) {
         const doc = datosTablaActual.find(d => d.id === id);
         if(!doc) return;
-
         document.getElementById('seccionFormulario').scrollIntoView({ behavior: 'smooth' });
-
         document.getElementById('editandoId').value = id;
         document.getElementById('reqNumber').value = doc.reqNumber || '';
         document.getElementById('inputBuscarLocal').value = doc.local || '';
@@ -2068,7 +1933,6 @@ function exportarExcel(soloFacturados = false) {
         document.getElementById('prioridadAplica').value = doc.prioridad || 'Normal';
         document.getElementById('tecnicoAplica').value = doc.tecnico || '';
         document.getElementById('observaciones').value = doc.observaciones === 'N/A' ? '' : doc.observaciones;
-
         const contenedorRepuestos = document.getElementById('contenedorRepuestos');
         contenedorRepuestos.innerHTML = '';
         if (doc.repuestos && doc.repuestos.length > 0) {
@@ -2079,10 +1943,7 @@ function exportarExcel(soloFacturados = false) {
                 lastRow.querySelector('.rep-nombre').value = rep.nombre;
                 lastRow.querySelector('.rep-cantidad').value = rep.cantidad;
             });
-        } else {
-            agregarRepuesto(); 
-        }
-
+        } else { agregarRepuesto(); }
         const contenedorEnlaces = document.getElementById('contenedorEnlaces');
         contenedorEnlaces.innerHTML = '';
         if (doc.enlaces && doc.enlaces.length > 0) {
@@ -2091,10 +1952,7 @@ function exportarExcel(soloFacturados = false) {
                 div.innerHTML = `<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí..." value="${link}">`;
                 contenedorEnlaces.appendChild(div);
             });
-        } else {
-            agregarEnlace();
-        }
-
+        } else { agregarEnlace(); }
         const btnSubmit = document.getElementById('btnSubmitForm');
         btnSubmit.innerHTML = '<i class="fas fa-save me-2"></i> Actualizar Solicitud';
         btnSubmit.classList.remove('btn-primary', 'btn-success');
@@ -2106,27 +1964,20 @@ function exportarExcel(soloFacturados = false) {
         document.getElementById('editandoId').value = '';
         document.getElementById('formSupervisor').reset();
         document.getElementById('cuentaInfo').value = '';
-        
         document.getElementById('contenedorRepuestos').innerHTML = '';
         agregarRepuesto();
-        
         document.getElementById('contenedorEnlaces').innerHTML = '<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí...">';
-        
         const btnSubmit = document.getElementById('btnSubmitForm');
         btnSubmit.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Generar Solicitud';
-        
         btnSubmit.classList.remove('btn-warning', 'btn-success', 'text-dark');
         btnSubmit.classList.add('btn-primary');
-        
         document.getElementById('btnCancelarEdicion').classList.add('hidden');
     }
 
     function duplicarSolicitud(id) {
         const doc = datosTablaActual.find(d => d.id === id);
         if(!doc) return;
-
         document.getElementById('seccionFormulario').scrollIntoView({ behavior: 'smooth' });
-
         document.getElementById('editandoId').value = ''; 
         document.getElementById('reqNumber').value = doc.reqNumber || '';
         document.getElementById('inputBuscarLocal').value = doc.local || '';
@@ -2138,7 +1989,6 @@ function exportarExcel(soloFacturados = false) {
         document.getElementById('prioridadAplica').value = doc.prioridad || 'Normal';
         document.getElementById('tecnicoAplica').value = doc.tecnico || '';
         document.getElementById('observaciones').value = doc.observaciones === 'N/A' ? '' : doc.observaciones;
-
         const contenedorRepuestos = document.getElementById('contenedorRepuestos');
         contenedorRepuestos.innerHTML = '';
         if (doc.repuestos && doc.repuestos.length > 0) {
@@ -2149,10 +1999,7 @@ function exportarExcel(soloFacturados = false) {
                 lastRow.querySelector('.rep-nombre').value = rep.nombre;
                 lastRow.querySelector('.rep-cantidad').value = rep.cantidad;
             });
-        } else {
-            agregarRepuesto(); 
-        }
-
+        } else { agregarRepuesto(); }
         const contenedorEnlaces = document.getElementById('contenedorEnlaces');
         contenedorEnlaces.innerHTML = '';
         if (doc.enlaces && doc.enlaces.length > 0) {
@@ -2161,10 +2008,7 @@ function exportarExcel(soloFacturados = false) {
                 div.innerHTML = `<input type="text" class="form-control rounded-3 mb-2 enlace-input" placeholder="https:// o pegar imagen base64 aquí..." value="${link}">`;
                 contenedorEnlaces.appendChild(div);
             });
-        } else {
-            agregarEnlace();
-        }
-
+        } else { agregarEnlace(); }
         const btnSubmit = document.getElementById('btnSubmitForm');
         btnSubmit.innerHTML = '<i class="fas fa-copy me-2"></i> Guardar como Nueva Solicitud';
         btnSubmit.classList.remove('btn-primary', 'btn-warning', 'text-dark');
@@ -2172,21 +2016,15 @@ function exportarExcel(soloFacturados = false) {
         document.getElementById('btnCancelarEdicion').classList.remove('hidden');
     }
 
-    // ==========================================
-    // 10. MODAL DE VISTA DETALLADA (EJECUTIVAS)
-    // ==========================================
     function verDetallesReq(id) {
         const doc = datosTablaActual.find(d => d.id === id);
         if(!doc) return;
-
         document.getElementById('detReqNum').innerText = `(${doc.reqNumber})`;
         document.getElementById('detLocal').innerText = doc.local || 'N/A';
         document.getElementById('detEjecutiva').innerText = doc.ejecutiva || 'N/A';
         document.getElementById('detFecha').innerText = doc.fecha || 'N/A';
         
-        let estadoStr = "⏱️ Pendiente de Cotizar";
-        let badgeColor = "bg-warning text-dark";
-        
+        let estadoStr = "⏱️ Pendiente de Cotizar"; let badgeColor = "bg-warning text-dark";
         if (doc.enviadoFacturar) { estadoStr = "✅ Facturado / Terminado"; badgeColor = "bg-secondary"; }
         else if (doc.servicioRealizado) { estadoStr = "💰 Pendiente Facturar (Servicio Listo)"; badgeColor = "bg-success"; }
         else if (doc.ocRecibida) { estadoStr = "🛠️ OC Recibida (Aprobado)"; badgeColor = "bg-info text-dark"; }
@@ -2200,7 +2038,6 @@ function exportarExcel(soloFacturados = false) {
         document.getElementById('detOC').innerText = doc.numOC || 'N/A';
         document.getElementById('detNVST').innerText = doc.numNV_ST || 'N/A';
         document.getElementById('detNVComer').innerText = doc.numNV_Comer || 'N/A';
-
         document.getElementById('detEquipo').innerText = doc.equipo || 'N/A';
         document.getElementById('detId').innerText = doc.idAplica || 'N/A';
         document.getElementById('detSerie').innerText = doc.serie || 'N/A';
@@ -2214,23 +2051,14 @@ function exportarExcel(soloFacturados = false) {
         repTable.innerHTML = '';
         if (doc.repuestos && doc.repuestos.length > 0) {
             doc.repuestos.forEach(rep => {
-                repTable.innerHTML += `
-                <tr>
-                    <td class="align-middle"><span class="badge bg-secondary border">${rep.sku || 'N/A'}</span></td>
-                    <td class="align-middle fw-medium">${rep.nombre}</td>
-                    <td class="text-center align-middle fw-bold fs-6">${rep.cantidad}</td>
-                </tr>`;
+                repTable.innerHTML += `<tr><td class="align-middle"><span class="badge bg-secondary border">${rep.sku || 'N/A'}</span></td><td class="align-middle fw-medium">${rep.nombre}</td><td class="text-center align-middle fw-bold fs-6">${rep.cantidad}</td></tr>`;
             });
-        } else {
-            repTable.innerHTML = `<tr><td colspan="3" class="text-center text-muted fst-italic py-3">Sin repuestos registrados</td></tr>`;
-        }
+        } else { repTable.innerHTML = `<tr><td colspan="3" class="text-center text-muted fst-italic py-3">Sin repuestos registrados</td></tr>`; }
 
         document.getElementById('detObservaciones').innerText = (doc.observaciones && doc.observaciones !== 'N/A') ? doc.observaciones : 'Sin observaciones adicionales.';
 
         const contEnlaces = document.getElementById('detEnlaces');
-        contEnlaces.innerHTML = '';
-        let hasLinks = false;
-        
+        contEnlaces.innerHTML = ''; let hasLinks = false;
         if (doc.enlaces && doc.enlaces.length > 0) {
             doc.enlaces.forEach((link, i) => {
                 let isBase64 = link.trim().startsWith('data:image');
@@ -2239,166 +2067,92 @@ function exportarExcel(soloFacturados = false) {
                 hasLinks = true;
             });
         }
-        
         if (doc.linkFotos && doc.linkFotos.length > 0) {
             let linksArray = Array.isArray(doc.linkFotos) ? doc.linkFotos : (doc.linkFotos.trim() !== '' ? [{nombre: 'Documento/Foto', url: doc.linkFotos}] : []);
             linksArray.forEach((link, idx) => {
                 let nombreLink = (typeof link === 'object') ? link.nombre : `Doc_Técnico_${idx+1}`;
                 let urlLink = (typeof link === 'object') ? link.url : link;
                 if (!urlLink || urlLink.trim() === '') return;
-                
                 let isBase64 = urlLink.trim().startsWith('data:image');
                 let actionAttr = isBase64 ? `download="${nombreLink.replace(/\s+/g, '_')}.jpg"` : `target="_blank"`;
                 let icon = nombreLink === 'Ficha del servicio' ? 'fa-file-signature' : (nombreLink === 'Guía de despacho' ? 'fa-truck' : 'fa-camera');
                 let btnColor = nombreLink === 'Ficha del servicio' ? 'btn-primary' : (nombreLink === 'Guía de despacho' ? 'btn-warning text-dark' : 'btn-info text-white');
-                
                 contEnlaces.innerHTML += `<a href="${urlLink}" ${actionAttr} class="btn btn-sm ${btnColor} shadow-sm rounded-pill fw-bold"><i class="fas ${icon} me-1"></i> ${nombreLink}</a>`;
                 hasLinks = true;
             });
         }
-        
         if(!hasLinks) contEnlaces.innerHTML = '<span class="text-muted small fst-italic p-2">No hay documentos adjuntos en este requerimiento.</span>';
-
         new bootstrap.Modal(document.getElementById('modalDetallesReq')).show();
     }
-// ==========================================
-// CARGA MASIVA DE REQUERIMIENTOS VIA EXCEL
-// ==========================================
+
 function cargarRequerimientosExcel() {
     const archivo = document.getElementById('archivoMasivoReq').files[0];
-    if (!archivo) {
-        alert("Por favor, selecciona un archivo Excel con los requerimientos.");
-        return;
-    }
-
+    if (!archivo) { alert("Por favor, selecciona un archivo Excel con los requerimientos."); return; }
     if(!confirm("¿Estás seguro de cargar estos registros a la base de datos de Firebase?")) return;
 
     const reader = new FileReader();
     reader.onload = function(e) {
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, {type: 'array'});
-        // Convertimos a JSON usando la primera fila como cabecera
         const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {defval: ""});
-        
-        if(json.length === 0) {
-            alert("El archivo Excel parece estar vacío.");
-            return;
-        }
+        if(json.length === 0) { alert("El archivo Excel parece estar vacío."); return; }
 
-        let procesados = 0;
-        let ignorados = 0;
-        const totalRegistros = json.length;
+        let procesados = 0; let ignorados = 0; const totalRegistros = json.length;
 
         json.forEach((fila) => {
-            // Función interna para buscar columnas sin importar mayúsculas/minúsculas o espacios extra
             const buscarColumna = (palabraClave) => {
                 const claveReal = Object.keys(fila).find(k => k.toLowerCase().includes(palabraClave.toLowerCase()));
                 return claveReal ? String(fila[claveReal]).trim() : '';
             };
 
             const req = buscarColumna('req');
-            if (!req) {
-                ignorados++;
-                verificarProgreso();
-                return; // Saltamos filas vacías
-            }
+            if (!req) { ignorados++; verificarProgreso(); return; }
 
-	    // Mapeo de columnas a variables
-            const nv_st = buscarColumna('nv st');
-            const nv_comer = buscarColumna('nv comer');
-            const numLocal = buscarColumna('local');
-            const cadena = buscarColumna('cadena');
-            const nombreLocal = buscarColumna('nombre local');
-            const idAplica = buscarColumna('id');
+            const nv_st = buscarColumna('nv st'); const nv_comer = buscarColumna('nv comer');
+            const numLocal = buscarColumna('local'); const cadena = buscarColumna('cadena');
+            const nombreLocal = buscarColumna('nombre local'); const idAplica = buscarColumna('id');
             const estadoActual = buscarColumna('estado actual') || buscarColumna('estado');
             const estadoWalmart = buscarColumna('estado walmart') || buscarColumna('walmart');
-            
-            // 👇 AGREGA ESTA LÍNEA 👇
             const ejecutivaExcel = buscarColumna('ejecutiva');
-            // 👆 ------------------ 👆
+            const tecnico = buscarColumna('tecnico'); const prioridad = buscarColumna('prioridad');
+            const monto = buscarColumna('monto'); const fechaAprob = buscarColumna('fecha aprob');
+            const fechaInstal = buscarColumna('fecha instal'); const observacion = buscarColumna('observacion');
 
-            const tecnico = buscarColumna('tecnico');
-            const prioridad = buscarColumna('prioridad');
-            const monto = buscarColumna('monto');
-            const fechaAprob = buscarColumna('fecha aprob');
-            const fechaInstal = buscarColumna('fecha instal');
-            const observacion = buscarColumna('observacion');
-
-            // Construir nombre del local combinando los datos
             let nombreCompletoLocal = nombreLocal;
             if (numLocal) nombreCompletoLocal = `${numLocal} - ${nombreLocal}`;
-            if (cadena && !nombreCompletoLocal.toLowerCase().includes(cadena.toLowerCase())) {
-                nombreCompletoLocal = `${cadena} ${nombreCompletoLocal}`;
-            }
+            if (cadena && !nombreCompletoLocal.toLowerCase().includes(cadena.toLowerCase())) { nombreCompletoLocal = `${cadena} ${nombreCompletoLocal}`; }
 
-            // Lógica para interpretar el ESTADO ACTUAL (Sistema Maquipan)
-            let ocRecibida = false;
-            let servicioRealizado = false;
-            let enviadoFacturar = false;
+            let ocRecibida = false; let servicioRealizado = false; let enviadoFacturar = false;
             const estadoActualMin = estadoActual.toLowerCase();
 
-            if (estadoActualMin.includes('facturad') || estadoActualMin.includes('terminad')) {
-                ocRecibida = true; servicioRealizado = true; enviadoFacturar = true;
-            } else if (estadoActualMin.includes('realizad') || estadoActualMin.includes('pte. facturar') || estadoActualMin.includes('pendiente facturar')) {
-                ocRecibida = true; servicioRealizado = true;
-            } else if (estadoActualMin.includes('oc') || estadoActualMin.includes('aprobado')) {
-                ocRecibida = true;
-            }
+            if (estadoActualMin.includes('facturad') || estadoActualMin.includes('terminad')) { ocRecibida = true; servicioRealizado = true; enviadoFacturar = true; } 
+            else if (estadoActualMin.includes('realizad') || estadoActualMin.includes('pte. facturar') || estadoActualMin.includes('pendiente facturar')) { ocRecibida = true; servicioRealizado = true; } 
+            else if (estadoActualMin.includes('oc') || estadoActualMin.includes('aprobado')) { ocRecibida = true; }
 
-            // Formatear moneda
             let valorCotizado = monto;
             if (monto && !monto.includes('$')) {
                 let numerico = monto.replace(/\D/g, "");
                 if (numerico) valorCotizado = "$" + new Intl.NumberFormat("es-CL").format(numerico);
             }
 
-            // Crear el objeto para Firebase
             const payload = {
-                reqNumber: req,
-                local: nombreCompletoLocal || 'N/A',
-                ejecutiva: ejecutivaExcel || 'Carga Histórica',
-                fecha: new Date().toISOString().split('T')[0], 
-                equipo: 'N/A', 
-                idAplica: idAplica || 'N/A',
-                serie: 'N/A',
-                prioridad: prioridad || 'Normal',
-                tecnico: tecnico || 'Sin asignar',
-                repuestos: [],
-                enlaces: [],
-                observaciones: observacion || 'N/A',
-                valorCot: valorCotizado || '',
-                numCot: '',
-                numOC: '',
-                numNV_ST: nv_st,
-                numNV_Comer: nv_comer,
-                fechaAprob: fechaAprob,
-                fechaInstal: fechaInstal,
-                reqInstalacion: '',
-                ocRecibida: ocRecibida,
-                servicioRealizado: servicioRealizado,
-                linkFotos: [],
-                enviadoFacturar: enviadoFacturar,
-                obsEjecutiva: `Estado importado: ${estadoActual}`,
-                estadoWalmart: estadoWalmart, // <--- AQUÍ GUARDAMOS EL ESTADO DE WALMART EXACTO DEL EXCEL
-                enviadoPlanificador: false,
-                fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+                reqNumber: req, local: nombreCompletoLocal || 'N/A', ejecutiva: ejecutivaExcel || 'Carga Histórica',
+                fecha: new Date().toISOString().split('T')[0], equipo: 'N/A', idAplica: idAplica || 'N/A',
+                serie: 'N/A', prioridad: prioridad || 'Normal', tecnico: tecnico || 'Sin asignar', repuestos: [],
+                enlaces: [], observaciones: observacion || 'N/A', valorCot: valorCotizado || '', numCot: '',
+                numOC: '', numNV_ST: nv_st, numNV_Comer: nv_comer, fechaAprob: fechaAprob, fechaInstal: fechaInstal,
+                reqInstalacion: '', ocRecibida: ocRecibida, servicioRealizado: servicioRealizado, linkFotos: [],
+                enviadoFacturar: enviadoFacturar, obsEjecutiva: `Estado importado: ${estadoActual}`,
+                estadoWalmart: estadoWalmart, enviadoPlanificador: false, fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            // Guardar en la base de datos
-            db.collection("cotizaciones").add(payload).then(() => {
-                procesados++;
-                verificarProgreso();
-            }).catch(err => {
-                console.error("Error al subir el REQ: " + req, err);
-                ignorados++;
-                verificarProgreso();
-            });
+            db.collection("cotizaciones").add(payload).then(() => { procesados++; verificarProgreso(); }).catch(err => { console.error(err); ignorados++; verificarProgreso(); });
         });
 
         function verificarProgreso() {
             if ((procesados + ignorados) === totalRegistros) {
                 alert(`¡Carga masiva completada!\n\nRegistros subidos: ${procesados}\nFilas vacías/ignoradas: ${ignorados}`);
-                document.getElementById('archivoMasivoReq').value = ''; // Limpiar el input
+                document.getElementById('archivoMasivoReq').value = '';
             }
         }
     };
